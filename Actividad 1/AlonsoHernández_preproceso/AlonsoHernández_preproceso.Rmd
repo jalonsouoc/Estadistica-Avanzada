@@ -1,0 +1,469 @@
+---
+title: "Actividdad 1 - Preproceso de datos"
+author: "Jorge Alonso Hernández"
+date: '`r format(Sys.Date(),"%e de %B, %Y")`'
+output: 
+  pdf_document: 
+    toc: yes
+    toc_depth: 2
+  html_document: 
+    toc: yes
+    toc_depth: 2
+classoption: a4paper
+---
+
+```{r load_libraries, include=FALSE}
+library(plyr)
+library(stringr)
+library(VIM)
+library(lubridate)
+library(ggplot2)
+library(stringr)
+````
+
+# 1. Carga del archivo
+
+Para iniciar la carga del fichero primero revisamos el documento facilitado para comprobar el separador utilizado, comprobando que el separador utilizado es ";".
+
+Generaremos una variable a la que denominaremos "ruta_csv" que almacenará la ruta a nuestro fichero, la cual obtendremos con la función:
+
+````
+file.choose()
+````
+
+Una vez tenemos la dirección del fichero realizamos la carga del fichero
+
+````{r chunck1}
+ruta_csv <- "C:\\Users\\Jorge\\Desktop\\Rstudio Workspace\\Estadística Avanzada\\Actividad 1\\train3.csv"
+seguros <- read.csv2(ruta_csv,na.strings="NA")
+
+sapply(seguros,class)
+````
+
+Observando el tipo de datos con el que R ha interpretado cada una de las variables podemos apreciar que ha asignado correctamente las variables cuantitativas discretas con el tipo de dato entero, sin embargo algunas variables cuantitativas continuas como la edad no ha sido capaz de asignarle el tipo de dato numérico que es el que le corresponde. Respecto de las variables cualitativas el programa no ha sabido asignarle correctamente el tipo de datos, ya que las ha reconocido como el tipo de datos carácter.
+
+
+
+````{r chunk2}
+summary(seguros)
+
+````
+
+
+# 2. Duplicación de códigos
+
+Comprobamos la existencia de valores duplicados para la variable ClaimNumber.
+
+````{r chunk3}
+seguros$ClaimNumber[duplicated(seguros$ClaimNumber)]
+````
+
+Observamos que existen varios registros con el código duplicado, por lo tanto debemos de asignarle un nuevo valor. Obtendremos el valor máximo de la variable ClaimNumber y le sumaremos uno a la parte entera para asignar el nuevo valor.
+
+`````{r chunk4}
+# Obtenemos los indices de los valores a reemplazar
+indicesDuplicados <- which(duplicated(seguros$ClaimNumber))
+
+ for (i in 1:length(indicesDuplicados)){
+   #Obtenemos el valor máximo de ClaimNumber en cada iteración
+   valorMaximo <- max(seguros$ClaimNumber)
+   
+   #Reemplazamos
+     seguros$ClaimNumber[indicesDuplicados[i]] <- paste("WC", as.character(as.integer(str_extract(valorMaximo, pattern = "[0-9]+")) + 1), sep="")
+ }
+
+#Comprobamos que no quede ningun valro duplicado
+seguros$ClaimNumber[duplicated(seguros$ClaimNumber)]
+````
+
+Como se puede apreciar ya no queda ningún valor duplicado para la variable ClaimNumber.
+
+# 3. Nombres de las variables
+
+Simplificamos el nombre de las variables especificadas de la siguiente forma:
+
+```{r chunck5, results = 'hide'}
+seguros = rename(seguros, c(InitialIncurredCalimsCost = "IniCost", UltimateIncurredClaimCost = "UltCost", HoursWorkedPerWeek = "HoursWeek", DaysWorkedPerWeek = "DaysWeek"))
+````
+
+Comprobamos que se ha realizado el cambio de forma satisfactoria.
+
+````{r chunk6}
+names(seguros)
+````
+
+# 4. Normalización de los datos cualitativos
+
+## 4.1. Marital Status
+
+Para asegurar la consistencia de los datos de la variable "MaritalStatus" reemplazamos los registros que no estén abreviados por su abreviatura, también le asignamos el valor "unknown" a aquellos registros que no estén cumplimentados y por último nos aseguramos de que las abreviaturas se encuentren en mayúsculas.
+
+
+````{r chunk7}
+
+seguros$MaritalStatus[seguros$MaritalStatus == "married"] <- "M"
+seguros$MaritalStatus[seguros$MaritalStatus == "single"] <- "S"
+seguros$MaritalStatus[seguros$MaritalStatus == "unknown"] <- "U"
+seguros$MaritalStatus[seguros$MaritalStatus == "divorced"] <- "D"
+seguros$MaritalStatus[seguros$MaritalStatus == "widowed"] <- "W"
+seguros$MaritalStatus[seguros$MaritalStatus == ""] <- "U"
+
+seguros$MaritalStatus <- toupper(seguros$MaritalStatus)
+
+levels(factor(seguros$MaritalStatus))
+       
+````
+Como podemos apreciar los datos quedan entre los valores establecidos para esta variable.
+
+## 4.2. Género
+
+Como realizamos en el apartado anterior, para asegurar la consistencia de los datos de la variable "Gender" transformamos aquellos valores que no estén entre los definidos para el género por el valor "unknown" y posteriormente nos aseguramos de que las abreviaturas estén en mayúsculas.
+
+````{r chunk8}
+table(seguros$Gender)
+seguros$Gender[seguros$Gender == "Fm"] <- "U"
+
+seguros$Gender <- toupper(seguros$Gender)
+
+levels(factor(seguros$Gender))
+````
+
+Comprobamos que los valores están entre los establecidos.
+
+# 5. Normalización de los datos cuantitativos
+
+## 5.1. IniCost y UltCost
+
+Para iniciar la normalización de estas variables primero comprobamos el tipo de dato de cada una de ellas.
+
+````{r chunk9}
+
+class(seguros$IniCost)
+class(seguros$UltCost)
+````
+
+Se puede ver que la variable IniCost ya la tenemos normalizada y con su tipo de datos correcto, sin embargo la variable UltCos la tenemos como tipo de dato caracter, debemos convertirla en tipo entero, para ello primero sustituiremos el caracter separador decimal de la coma al punto y posteriormente reemplazaremos el caracter "K" y convertiremos en entero redondeando los decimales.  
+
+`````{r chunk10, results = 'hide'}
+
+seguros$UltCost <- sub(",",".", seguros$UltCost, fixed = TRUE) 
+seguros$UltCost = as.numeric(sub("K", "e3", seguros$UltCost, fixed = TRUE))
+seguros$UltCost <- as.integer(round(seguros$UltCost, digit = 0))
+````
+
+Una vez realizada la normalización comprobamos el tipo de dato de nuevo para ver que es el correcto y mostramos los primeros valores de cada variable.
+
+````{r chunk11}
+head(seguros$IniCost)
+class(seguros$UltCost)
+head(seguros$UltCost)
+````
+
+## 5.2. Edad
+
+Para asegurar que los datos de la edad están en el formato correcto, primero nos aseguramos de que si existe algún número decimal este tenga el punto como símbolo de separador decimal en lugar de la coma y transformamos el tipo de dato a entero Una vez realizado esto redondeamos aquellos valores decimales de forma que queden números enteros únicamente.
+
+`````{r chunk12}
+seguros$Age <- sub(",",".", seguros$Age, fixed = TRUE)
+seguros$Age = as.integer(seguros$Age)
+seguros$Age <- round(seguros$Age)
+
+levels(factor(seguros$Age))
+````
+
+De esta foma los valores de Edad quedan con el formato correcto
+
+## 5.3. WeeklyWages, HoursWeek, DaysWeek
+
+Comprobamos el tipo de dato que tiene asignada cada una de estas variables
+````{r chunk13}
+class(seguros$WeeklyWages)
+class(seguros$HoursWeek)
+class(seguros$DaysWeek)
+````
+
+Como podemos observar tenemos el formato correcto, ya que tanto HoursWeek como WeeklyWages tienen el tipo de dato numeérico y DaysWeek tiene el tipo de dato entero.
+
+Una vez que conocemos los tipos de datos realizamos la sustitución de la coma como símbolo separador de decimales por el punto para las variables numéricas "WeeklyWages" y "HoursWeek". Para la variable "DaysWeek" no es necesario realizar esta conversión para su posterior redondeo debido a que ya tenemos la variable con el tipo de dato entero
+
+````{r chunk14}
+seguros$WeeklyWages <- as.numeric(sub(",",".", seguros$WeeklyWages, fixed = TRUE))
+seguros$HoursWeek <- as.numeric(sub(",",".", seguros$HoursWeek, fixed = TRUE))
+
+
+
+hist(x = seguros$DaysWeek, main = "Histograma días semanales", xlab = "DaysWeek", ylab = "Frequency", col = "blue")
+plot(seguros$HoursWeek, ylab = "HoursWeek", xlab = "Index")
+plot(seguros$WeeklyWages, ylab = "WagesWeek", xlab = "Index")
+````
+
+# 6. Valores atípicos
+
+Para comprobar los valores atípicos que puedan existir utilizaremos los diagramas de caja.
+
+En primer lugar comprobaremos la variable Age:
+
+````{r chunk15}
+boxplot(seguros$Age,main="Box Plot Age", col="gray",outbg="red",xlab = "Age", ylab="Values")
+````
+
+En el diagrama de cajas podemos observar que hay un valor extremo, el cual utilizaremos como valor centinela para el posterior reemplazo por el valor NA. Para esta variable reemplazaremos por el valor centinela aquellos valores inferiores a 0 y superiores a 100.
+
+````{r chunk16}
+val.centinela <- max(seguros$Age)
+seguros$Age[seguros$Age > 100] = val.centinela
+seguros$Age[seguros$Age < 0] = val.centinela
+ 
+seguros$Age[seguros$Age == val.centinela] <- NA
+
+summary(seguros$Age)
+
+````
+
+Podemos ver que se localizaron 12 valores atípicos.
+ 
+Comprobamos la variable WeeklyWages : 
+ 
+````{r chunk17}
+boxplot(seguros$WeeklyWages,main="Box Plot WeeklyWages", col="gray", xlab = "WeeklyWages", ylab="Values" )
+````
+
+Podemos ver que existen varios valores atípicos para esta variable, consideraremos atípicos los valores superiores a 4000 y los inferiroes a 0, utilizaremos el valor máximo como valor centinela y lo reemplazamos por NA.
+
+````{r chunk18}
+val.centinela <- max(seguros$WeeklyWages)
+
+seguros$WeeklyWages[seguros$WeeklyWages > 4000] = val.centinela
+seguros$WeeklyWages[seguros$WeeklyWages < 0] = val.centinela
+
+seguros$WeeklyWages[seguros$WeeklyWages == val.centinela] <- NA
+
+summary(seguros$WeeklyWages)
+````
+
+En este caso tenemos 8 valores atípicos.
+
+Comprobamos la variable DaysWeek:
+
+`````{r chunk19}
+boxplot(seguros$DaysWeek ,main="Box Plot DaysWeek", col="gray",xlab = "DaysWeek", ylab="Values")
+````
+
+Podemos observar que para esta variable no existen valores atípicos debido a que todos están entre 1 y 7 que corresponderían a los días de la semana, por lo tanto no es necesaria ninguna transformación.
+
+Comprobamos la variable HoursWeek:
+
+`````{r chunk20}
+boxplot(seguros$HoursWeek, main="Box Plot HoursWeek", col="gray", xlab = "HoursWeek", ylab = "Values")
+````
+
+Para este caso podemos ver que también hay varios valores atípicos, en este caso consideraremos atípicos aquellos valores superiores a 70, que sería el equivalente a trabajar 10 horas al día todos los días de la semana, y los valores inferiores a 0.
+
+````{r chunk21}
+val.centinela <- max(seguros$HoursWeek)
+seguros$HoursWeek[seguros$HoursWeek > 70] = val.centinela
+seguros$HoursWeek[seguros$HoursWeek < 0] = val.centinela
+
+seguros$HoursWeek[seguros$HoursWeek == val.centinela] <- NA
+
+summary(seguros$HoursWeek)
+
+````
+Para este caso tenemos bastantes valores atípicos, un total de 245.
+ 
+Comprobamos la variable IniCost
+
+````{r chunk22}
+boxplot(seguros$IniCost, main="Box Plot IniCost", col="gray", xlab = "IniCost", ylab = "Values")
+````
+
+Para esta variable vemos que hay un valor extremo y algunos valores atípicos, consideraremos atípicos aquellos valores superiroes a 500000 y menores a 0.
+
+````{r chunk23}
+val.centinela <- max(seguros$IniCost)
+seguros$IniCost[seguros$IniCost > 500000] = val.centinela
+seguros$IniCost[seguros$IniCost < 0] = val.centinela
+
+seguros$IniCost[seguros$IniCost == val.centinela] <- NA
+
+summary(seguros$IniCost)
+````
+
+Comprobamos la variable UltCost
+
+`````{r chunk24}
+boxplot(seguros$UltCost, main="Box Plot UltCost", col="gray", xlab = "UltCost", ylab = "Values")
+````
+
+En este caso vemos la existencia de varios valores extremos y de algunos valores atípicos, por eso consideraremos atípicos aquellos valores inferiroes a 0 y superiores a 750000.
+
+````{r chunk25}
+
+val.centinela <- max(seguros$UltCost)
+seguros$UltCost[seguros$UltCost > 750000] = val.centinela
+seguros$UltCost[seguros$UltCost < 0] = val.centinela
+
+seguros$UltCost[seguros$UltCost == val.centinela] <- NA
+
+summary(seguros$UltCost)
+````
+
+
+# 7. Imputación de valores
+
+Una vez obtenidos los valores anómalos vamos a realizar la imputación de estos, en primer lugar utilizaremos la media aritmética para la variable Age:
+
+`````{r chunk26}
+seguros$Age[is.na(seguros$Age)] <- round(mean(seguros$Age, na.rm = TRUE))
+levels(factor(seguros$Age))
+````
+
+Comprobamos que se han reemplazado los valores anómalos correctamente.
+
+
+Para las variables IniCost, UltCost, DaysWeek, WeeklyWages y HoursWeek emplearemos la imputación por vecinos más cercanos, utilizando la distancia de Gower:
+
+````{r chunk27, warning=FALSE}
+column_names <- c('IniCost','UltCost','DaysWeek', 'WeeklyWages', 'HoursWeek')
+seguros <- kNN(data = seguros, variable = column_names, k = 10, dist_var = 'Gender', imp_var = FALSE)
+````
+
+
+# 8. Preparación de los datos
+
+## 8.1. Tiempo de abertura del expediente
+
+Para poder calcular el tiempo que se tarda en abrir el expediente desde el suceso del accidente primero debemos transformar el tipo de dato de las ariables DateTimeOfAccident y dtReportered al tipo de dato Date, para poder realizar la conversión primero debemos de eliminar la hora de ámbas variables 
+
+````{r chunk28}
+# Obtenenos la fecha sin la hora
+dtAccident <- t(as.data.frame(strsplit(seguros$DateTimeOfAccident, "T")))
+row.names(dtAccident) = NULL
+
+dtReportered <- t(as.data.frame(strsplit(seguros$DateReported, "T")))
+row.names(dtReportered) = NULL
+
+````
+Una vez tenemos sólo la fecha realizamos la conversión de las variables al tipo de dato Date:
+
+````{r chunk29}
+seguros$DateTimeOfAccident <- ymd(dtAccident[,1])
+
+seguros$DateReported <- ymd(dtReportered[,1])
+class(seguros$DateReported)
+head(seguros$DateReported)
+class(seguros$DateTimeOfAccident)
+head(seguros$DateTimeOfAccident)
+````
+
+Una vez comprobado que se ha realizado la conversión correctamente obtendremos la diferencia en días que existe entre la fecha en la que se reporta el accidente y la fecha en la que se produjo el accidente, almacenando esta información en una nueva variable que denominaremos Time.
+
+````{r chunk30}
+seguros$Time <- seguros$DateReported - seguros$DateTimeOfAccident
+head(seguros$Time)
+````
+
+## 8.2. Diferencia entre IniCost y UltCost
+
+Igual que realizamos en el apartado anterior, obtendremos la diferencia entre el coste inicial y final y lo almacenamos en una nueva variable que denominaremos DifCost : 
+
+````{r chunk31}
+seguros$DifCost <- seguros$UltCost - seguros$IniCost
+
+#Mostramos la distribución de la diferencia entre el coste inicial y final
+plot(seguros$DifCost, ylab = "DifCost", xlab = "Index")
+````
+
+# 9. Estudio descriptivo
+
+## 9.1. Funciones de medida robustas
+
+Para obtener medidas robustas de nuestros datos en pirmer lugar definimos una función que permita calcular la media recortada, dicha función se va a encargar de ordenar el vector de datos y posteriormente a eliminar los elementos necesarios al inicio y final de dicho vector para el calculo de la media:
+
+````{r chunk32}
+media.recortada <- function(x, perc=0.05 ){
+ 
+  # Ordenamos el vector
+  x <- sort(x, decreasing = FALSE, index.return = FALSE)
+  # Obtenemos el número de elementos 
+  n <- length(x)
+ 
+  # Obtenemso el número de elementos a eliminar al principio y al final del vector
+  nValoresExluidos <- round(n * perc)
+  indiceSuperior <- n - nValoresExluidos
+  
+  # Eliminamos del vector los primeros y últimos nValoresExcluidos
+  x <-  x[nValoresExluidos:indiceSuperior]
+  
+ return(mean(x))
+}
+
+````
+
+Por otro lado definimos una función que permita obtener la media winsor, dicha función se encargara de ordenar el vector y posteriormente sustituirá los elementos iniciales y finales por el valor de corte en ámbas partes del vector para el calculo de la media 
+
+````{r chunk33}
+media.winsor <- function(x, perc=0.05){
+
+    # Ordenamos el vector
+  x <- sort(x, decreasing = FALSE, index.return = FALSE)
+  # Obtenemos el número de elementos 
+  n <- length(x)
+ 
+    # Obtenemso el número de elementos a sustituir al principio y al final del vector
+  nValoresSustituir <- round(n * perc)
+  
+  #Obtenemos los valores por los que vamos a sustituir los nValoresSustutir al inicio y al final
+  valorInferior <- x[nValoresSustituir + 1]
+  valorSuperior <- x[n - nValoresSustituir - 1]
+  indiceSuperior <- n - nValoresSustituir
+  
+  #SUstituimos los elementos
+  for(i in 1:nValoresSustituir){
+    x[i] <- valorInferior
+  }
+  
+  for(i in indiceSuperior:n ){
+    x[i] <- valorSuperior
+  }
+  
+ return(mean(x))
+}
+
+````
+
+## 9.2. Estudio descriptivo de las variables cuantitativas
+
+Para realizar el estudio descriptivo calcularemos la media, la media recortada con precisión del 5% y del 20%, la media winsor con precisión del 5% y del 20% la mediana y los cuartiles de las variables: 
+````{r chunk34}
+
+Age <- c(mean(seguros$Age),media.recortada(seguros$Age),media.recortada(seguros$Age, 0.20),media.winsor(seguros$Age),media.winsor(seguros$Age, 0.20), median(seguros$Age),quantile(seguros$Age),var(seguros$Age),sd(seguros$Age))
+
+WeeklyWages <- c(mean(seguros$WeeklyWages),media.recortada(seguros$WeeklyWages), media.recortada(seguros$WeeklyWages, 0.20),media.winsor(seguros$WeeklyWages), media.winsor(seguros$WeeklyWages, 0.20),median(seguros$WeeklyWages),quantile(seguros$WeeklyWages),var(seguros$WeeklyWages),sd(seguros$WeeklyWages))
+
+DaysWeek <- c(mean(seguros$DaysWeek),media.recortada(seguros$DaysWeek), media.recortada(seguros$DaysWeek, 0.20),media.winsor(seguros$DaysWeek), media.winsor(seguros$DaysWeek, 0.20),median(seguros$DaysWeek),quantile(seguros$DaysWeek),var(seguros$DaysWeek),sd(seguros$DaysWeek))
+
+HoursWeek <- c(mean(seguros$HoursWeek),media.recortada(seguros$HoursWeek),media.recortada(seguros$HoursWeek,0.20),media.winsor(seguros$HoursWeek), media.winsor(seguros$HoursWeek, 0.20),median(seguros$HoursWeek),quantile(seguros$HoursWeek),var(seguros$HoursWeek),sd(seguros$HoursWeek))
+
+IniCost <- c(mean(seguros$IniCost),media.recortada(seguros$IniCost),media.recortada(seguros$IniCost, 0.20),media.winsor(seguros$IniCost), media.winsor(seguros$IniCost,0.20),median(seguros$IniCost),quantile(seguros$IniCost),var(seguros$IniCost),sd(seguros$IniCost))
+
+UltCost <- c(mean(seguros$UltCost),media.recortada(seguros$UltCost),media.recortada(seguros$UltCost,0.20),media.winsor(seguros$UltCost),media.winsor(seguros$UltCost,0.20),median(seguros$UltCost),quantile(seguros$UltCost),var(seguros$UltCost),sd(seguros$UltCost))
+
+tablaDatos <- cbind (Age,WeeklyWages, DaysWeek,HoursWeek, IniCost, UltCost)
+row.names(tablaDatos) <- c("Media", "Media recortada 5%", "Media recirtada 20%", "Media winsor 5%", "Media winsor 20%", "Mediana", "Cuartil 0", "Cuartil 25", "Cuartil 50", "Cuartil 75", "Cuartil 100", "Varianza", "Desviación")
+
+tablaDatos
+
+
+
+
+````
+
+# 10. Archivo final
+
+Exportamos los datos en un fichero csv:
+
+````{r chunk35}
+  write.csv2(seguros, "train_clean.csv")
+````
+

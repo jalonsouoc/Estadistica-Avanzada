@@ -1,0 +1,17 @@
+---
+title: "Actividad 2 - Analítica descriptiva e inferencial"
+author: "Jorge Alonso Hernández"
+date: '`r format(Sys.Date(),"%e de %B, %Y")`'
+output: 
+  pdf_document: 
+    toc: yes
+    toc_depth: 2
+  html_document: 
+    toc: yes
+    toc_depth: 2
+classoption: a4paper
+---
+
+
+
+

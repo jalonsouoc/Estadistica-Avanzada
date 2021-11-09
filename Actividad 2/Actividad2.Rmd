@@ -12,9 +12,14 @@ output:
 classoption: a4paper
 ---
 
+
+```{r}
+if (!require('nortest')) install.packages('nortest'); library('nortest')
+````
+
 # 1 Lectura del fichero y preparación de los datos
 
-Para iniciar la arga del archivo primero revisamos el documento facilitado. Generaremos una variable ala que denominaremos ruta_csv que almacenará la ruta de nuestro fichero, la cual obtenemos con la función :
+Para iniciar la carga del archivo primero revisamos el documento facilitado. Generaremos una variable ala que denominaremos ruta_csv que almacenará la ruta de nuestro fichero, la cual obtenemos con la función :
 
 ````
 file.choose()
@@ -39,7 +44,34 @@ head(claim)
 # 2 Coste de los siniestros
 ## 2.1 Análisis visual
 
+Para realizar el análisis visual primero visualizaremos el diagrama de caja de la variable "UltCost"
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(claim$UltCost, main="Box Plot UltCost", col="gray", xlab = "UltCost", ylab = "Values")
+````
+
+Ahora mostramos el diagrama de cajas de la variable "UltCost" a escala logarítmica:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(log(claim$UltCost), main="Box Plot UltCost", col="gray", xlab = "UltCost", ylab = "Values")
+````
+
+
 ## 2.2 Comprobación de normalidad
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+hist(claim$UltCost, main="Histograma UltCost")
+````
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+hist(log(claim$UltCost), main="Histograma UltCost")
+````
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+lillie.test(claim$UltCost)
+lillie.test(log(claim$UltCost))
+````
+
 
 ## 2.3 Intervalo de confianza de la media poblacional de la variable UltCost
 

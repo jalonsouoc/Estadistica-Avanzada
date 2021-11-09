@@ -3,14 +3,89 @@ title: "Actividad 2 - Analítica descriptiva e inferencial"
 author: "Jorge Alonso Hernández"
 date: '`r format(Sys.Date(),"%e de %B, %Y")`'
 output: 
-  pdf_document: 
+  html_document: 
     toc: yes
     toc_depth: 2
-  html_document: 
+  pdf_document: 
     toc: yes
     toc_depth: 2
 classoption: a4paper
 ---
+
+# 1 Lectura del fichero y preparación de los datos
+
+# 2 Coste de los siniestros
+## 2.1 Análisis visual
+
+## 2.2 Comprobación de normalidad
+
+## 2.3 Intervalo de confianza de la media poblacional de la variable UltCost
+
+# 3 Coste inicial y final de los siniestros
+## 3.1 Justificación del test a aplicar
+
+## 3.2 Escribid la hipótesis nula y la alternativa
+
+## 3.3 Cálculos
+
+## 3.4 Conclusión
+
+## 3.5 Comprobación
+
+# 4 Diferencia de salario según género
+## 4.1 Análisis visual
+
+## 4.2 Interpretación
+
+## 4.3 Escribid la hipótesis nula y la alternativa
+
+## 4.4 Justificación del test a aplicar
+
+## 4.5 Cálculos
+
+## 4.6 Conclusión
+
+## 4.7 Comprobación
+
+# 5 Salario semanal (II)
+## 5.1 Escribid la hipótesis nula y la alternativa
+
+## 5.2 Justificación del test a aplicar
+
+## 5.3 Cálculos
+
+## 5.4 Conclusión
+
+## 5.5 Comprobación
+
+# 6 Diferencia de jornada según género
+## 6.1 Análisis visual
+
+## 6.2 Interpretación
+
+## 6.3 Hipótesis nula y alternativa
+
+## 6.4 TIpo de test
+
+## 6.5 Cálculos
+
+## 6.6 Conclusión
+
+## 6.7 Comprobación
+
+# 7 Salario por hora
+## 7.1 Hipótesis nula y alternativa
+
+## 7.2 Tipo de test
+
+## 7.3 Cálculos
+
+## 7.4 Conclusión
+
+## 7.5 Comprobación
+
+# 8 Resumen ejecutivo
+
 
 
 

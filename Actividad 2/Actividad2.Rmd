@@ -14,6 +14,28 @@ classoption: a4paper
 
 # 1 Lectura del fichero y preparación de los datos
 
+Para iniciar la arga del archivo primero revisamos el documento facilitado. Generaremos una variable ala que denominaremos ruta_csv que almacenará la ruta de nuestro fichero, la cual obtenemos con la función :
+
+````
+file.choose()
+````
+
+Una vez tenemos la ruta del fichero realizamos la carga de los datos:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+ruta_csv <- "C:\\Users\\Jorge\\Desktop\\Rstudio Workspace\\Estadística Avanzada\\Actividad 2\\train_clean2.csv"
+claim <- read.csv(ruta_csv,na.strings="NA")
+
+sapply(claim,class)
+````
+
+Podemos observar los tipos de datos con los que se han cargado cada una de las variables , y vemos que estos son correctos. Mostramos ahora una muestra de los datos para comprobar que la carga se ha realizado correctamente.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+head(claim)
+````
+
+
 # 2 Coste de los siniestros
 ## 2.1 Análisis visual
 

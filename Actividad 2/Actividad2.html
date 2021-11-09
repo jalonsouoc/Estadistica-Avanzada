@@ -229,6 +229,60 @@ pre code {
 
 <div id="lectura-del-fichero-y-preparación-de-los-datos" class="section level1">
 <h1>1 Lectura del fichero y preparación de los datos</h1>
+<p>Para iniciar la arga del archivo primero revisamos el documento facilitado. Generaremos una variable ala que denominaremos ruta_csv que almacenará la ruta de nuestro fichero, la cual obtenemos con la función :</p>
+<pre><code>file.choose()</code></pre>
+<p>Una vez tenemos la ruta del fichero realizamos la carga de los datos:</p>
+<pre class="r"><code>ruta_csv &lt;- &quot;C:\\Users\\Jorge\\Desktop\\Rstudio Workspace\\Estadística Avanzada\\Actividad 2\\train_clean2.csv&quot;
+claim &lt;- read.csv(ruta_csv,na.strings=&quot;NA&quot;)
+
+sapply(claim,class)</code></pre>
+<pre><code>##                  X        ClaimNumber DateTimeOfAccident       DateReported 
+##          &quot;integer&quot;        &quot;character&quot;        &quot;character&quot;        &quot;character&quot; 
+##                Age             Gender      MaritalStatus  DependentChildren 
+##          &quot;integer&quot;        &quot;character&quot;        &quot;character&quot;          &quot;integer&quot; 
+##    DependentsOther        WeeklyWages   PartTimeFullTime          HoursWeek 
+##          &quot;integer&quot;          &quot;numeric&quot;        &quot;character&quot;          &quot;numeric&quot; 
+##           DaysWeek   ClaimDescription            IniCost            UltCost 
+##          &quot;integer&quot;        &quot;character&quot;          &quot;integer&quot;          &quot;integer&quot; 
+##               Time 
+##          &quot;integer&quot;</code></pre>
+<p>Podemos observar los tipos de datos con los que se han cargado cada una de las variables , y vemos que estos son correctos. Mostramos ahora una muestra de los datos para comprobar que la carga se ha realizado correctamente.</p>
+<pre class="r"><code>head(claim)</code></pre>
+<pre><code>##   X ClaimNumber   DateTimeOfAccident         DateReported Age Gender
+## 1 1   WC8285054 2002-04-09T07:00:00Z 2002-07-05T00:00:00Z  48      M
+## 2 2   WC6982224 1999-01-07T11:00:00Z 1999-01-20T00:00:00Z  43      F
+## 3 3   WC5481426 1996-03-25T00:00:00Z 1996-04-14T00:00:00Z  30      M
+## 4 4   WC9775968 2005-06-22T13:00:00Z 2005-07-22T00:00:00Z  41      M
+## 5 5   WC2634037 1990-08-29T08:00:00Z 1990-09-27T00:00:00Z  36      M
+## 6 6   WC6828422 1999-06-21T11:00:00Z 1999-09-09T00:00:00Z  50      M
+##   MaritalStatus DependentChildren DependentsOther WeeklyWages PartTimeFullTime
+## 1             M                 0               0      500.00                F
+## 2             M                 0               0      509.34                F
+## 3             M                 0               0      709.10                F
+## 4             M                 0               0      555.46                F
+## 5             M                 0               0      377.10                F
+## 6             M                 0               0      200.00                F
+##   HoursWeek DaysWeek
+## 1      38.0        5
+## 2      37.5        5
+## 3      38.0        5
+## 4      38.0        5
+## 5      38.0        5
+## 6      38.0        5
+##                                                         ClaimDescription
+## 1                      LIFTING TYRE INJURY TO RIGHT ARM AND WRIST INJURY
+## 2             STEPPED AROUND CRATES AND TRUCK TRAY FRACTURE LEFT FOREARM
+## 3                                       CUT ON SHARP EDGE CUT LEFT THUMB
+## 4                                   DIGGING LOWER BACK LOWER BACK STRAIN
+## 5 REACHING ABOVE SHOULDER LEVEL ACUTE MUSCLE STRAIN LEFT SIDE OF STOMACH
+## 6                                     STRUCK HEAD ON HEAD LACERATED HEAD
+##   IniCost UltCost Time
+## 1    1500    4303   87
+## 2    5500    6106   13
+## 3    1700    2099   20
+## 4   15000   16283   30
+## 5    2800    3772   29
+## 6     500     747   80</code></pre>
 </div>
 <div id="coste-de-los-siniestros" class="section level1">
 <h1>2 Coste de los siniestros</h1>

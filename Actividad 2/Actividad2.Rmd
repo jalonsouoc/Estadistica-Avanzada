@@ -28,7 +28,7 @@ file.choose()
 Una vez tenemos la ruta del fichero realizamos la carga de los datos:
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-ruta_csv <- "C:\\Users\\Jorge\\Desktop\\Rstudio Workspace\\Estadística Avanzada\\Actividad 2\\train_clean2.csv"
+ruta_csv <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Estadística Avanzada\\Actividad 2\\train_clean2.csv"
 claim <- read.csv(ruta_csv,na.strings="NA")
 
 sapply(claim,class)
@@ -57,23 +57,55 @@ boxplot(log(claim$UltCost), main="Box Plot UltCost", col="gray", xlab = "UltCost
 ````
 
 
+Podemos observar de los gráficos que existe una asimetría en la distribución de la variable UltCost encontrandose la moyoría de los datos por encima del tercer cuartil a diferencia de la escala logarítmica de la variable que si encontramos una simetría en los datos.
+
 ## 2.2 Comprobación de normalidad
+
+Mostramos la distribución de los datos de la variable UltCost
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 hist(claim$UltCost, main="Histograma UltCost")
 ````
 
+Nos encontramos con una asimetría a la derecha en los datos. Aplicamos el contrastre de normalidad de Lilliefors para comprobar la normalidad de la distribución de los datos.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+lillie.test(claim$UltCost)
+````
+
+Como podemos comprobar dado que el p valor es inferior a 0.05 no no sencontramos ante una distribución normal de los datos.
+
+Realizamos el estudio para la escala logarítmica de la variable UltCost.
+
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 hist(log(claim$UltCost), main="Histograma UltCost")
 ````
 
+Como podemos observar en el gráfico nos encontramos ante una distribución simétrica
+
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
-lillie.test(claim$UltCost)
 lillie.test(log(claim$UltCost))
 ````
 
+En este caso observamos que el p valor es superior al 0.05 por lo que nos encontramos ante una distribución normal.
 
 ## 2.3 Intervalo de confianza de la media poblacional de la variable UltCost
+
+Calculamos el intevalo de confianza al 95% de la media poblacional  de la variable UltCost
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+alfa <- 1-0.95
+sd <- sd(claim$UltCost)
+n <- nrow(claim)
+SE <- sd / sqrt(n)
+z <- qnorm(alfa/2, lower.tail=FALSE)
+L <- mean(claim$UltCost) - z*SE
+U <- mean(claim$UltCost) + z*SE
+round(c(L,U),2)
+
+````
+
+Podemos concluir con un 95% de confianza que el coste total pagado por siniestro se encutra entre los valores 9938,86 y 10356.47
 
 # 3 Coste inicial y final de los siniestros
 ## 3.1 Justificación del test a aplicar

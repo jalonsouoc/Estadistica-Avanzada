@@ -127,9 +127,14 @@ Definimos la hipótesis nula y alternativa:
 # 4 Diferencia de salario según género
 ## 4.1 Análisis visual
 
-## 4.2 Interpretación
+## 4.2 Interpretación 
 
 ## 4.3 Escribid la hipótesis nula y la alternativa
+
+Definimos la hipótesis nula y alternativa:
+
+* **Hipótesis nula:** el promedio del salario semanal de los hombres es igual al promedio salarial semanal de las mujeres
+* **Hipótesis alternativa:** el promedio salarial semanal de los hombres es mayor que el promedio salarial semanal de las mujeres
 
 ## 4.4 Justificación del test a aplicar
 
@@ -142,6 +147,10 @@ Definimos la hipótesis nula y alternativa:
 # 5 Salario semanal (II)
 ## 5.1 Escribid la hipótesis nula y la alternativa
 
+Definimos la hipótesis nula y alternativa:
+
+* **Hipótesis nula:** el promedio de salario semanal de los hombres es igual al promedio de salario semanal de las mujeres
+* **Hipótesis alternativa:** el promedio de salario semanal de los hombres es al menos 50 euros mayor que el salario promedio semanal de las mujeres
 ## 5.2 Justificación del test a aplicar
 
 ## 5.3 Cálculos
@@ -156,6 +165,10 @@ Definimos la hipótesis nula y alternativa:
 ## 6.2 Interpretación
 
 ## 6.3 Hipótesis nula y alternativa
+Definimos la hipótesis nula y alternativa:
+
+* **Hipótesis nula:** la proporción de hombres que trabajan a tiempo completo es igual a la proporción de mujeres que trabajan a tiempo completo
+* **Hipótesis alternativa:** la proporción de hombres que trabajan a tiempo completo es diferente a la proporción de mujeres que trabajan a tiempo completo
 
 ## 6.4 TIpo de test
 
@@ -167,6 +180,11 @@ Definimos la hipótesis nula y alternativa:
 
 # 7 Salario por hora
 ## 7.1 Hipótesis nula y alternativa
+
+Definimos la hipótesis nula y alternativa:
+
+* **Hipótesis nula:** el salario por hora trabajada de los hombres es igual al salario por hora trabajada de las mujeres
+* **Hipótesis alternativa:** el salario por hora trabajada de los hombres es mayor que el salario por horas trabajadas de las mujeres
 
 ## 7.2 Tipo de test
 

@@ -173,7 +173,7 @@ boxplot(man, main="Box Plot WeeklyWages Man", col="gray", xlab = "WeeklyWages", 
 
 ## 4.2 Interpretación 
 
-Podemosobservar que en ámbos casos la mayoría de datos para ámbos sexos se localizan en el mismo intervalo, si podemos observar que para hombres existen más valores extremos que para las mujeres es decir que hay una mayor cantidad de  horas semanalaes que se encuentran poo encima del límite superior y más valores inferiores al límite inferior en hombres.
+Podemosobservar que en ámbos casos la mayoría de datos para ámbos sexos se localizan en el mismo intervalo, si podemos observar que para hombres existen más valores extremos que para las mujeres es decir que hay una mayor cantidad de salarios semanalaes que se encuentran por encima del límite superior y más valores inferiores al límite inferior en hombres que en mujeres.
 
 ## 4.3 Escribid la hipótesis nula y la alternativa
 
@@ -183,6 +183,8 @@ Definimos la hipótesis nula y alternativa:
 * **Hipótesis alternativa:** el promedio salarial semanal de los hombres es mayor que el promedio salarial semanal de las mujeres
 
 ## 4.4 Justificación del test a aplicar
+
+
 
 ## 4.5 Cálculos
 

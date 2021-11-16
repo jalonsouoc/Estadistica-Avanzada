@@ -110,7 +110,7 @@ Podemos concluir con un 95% de confianza que el coste total pagado por siniestro
 # 3 Coste inicial y final de los siniestros
 ## 3.1 Justificación del test a aplicar
 
-Para la pregunta definida, el contraste a aplicar es un contraste de una muestra, ya que no se requiere la división de nuestra muestra en dos.
+Para la pregunta definida, el contraste a aplicar es un contraste de dos muestras ya que por un lado tenemos la muestra de la variable IniCost y por el otro la muestra de la variable UltCost. El contraste se aplica sobre la varianza y es un contraste bilateral.
 
 ## 3.2 Escribid la hipótesis nula y la alternativa
 Definimos la hipótesis nula y alternativa:
@@ -119,6 +119,22 @@ Definimos la hipótesis nula y alternativa:
 * **Hipótesis alternativa:** el valor medio de la estimación inicial del coste realizado por la compañía es diferente al valor medio del coste total pagado por siniestro
 
 ## 3.3 Cálculos
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+alfa <- 1-0.95
+#H <- claim$IniCost
+#D <- Claim$UltCost
+mean1 <- mean(claim$IniCost)
+mena2 <- mean(claim$UltCost)
+n1 <- nrow(claim$IniCost)
+n2 <- nrow(claim$UltCost)
+sd1 <- sd(claim$IniCost)
+sd2 <- sd(claim$UltCost)
+
+fobs <- sd1^2 / sd2^2
+
+
+````
 
 ## 3.4 Conclusión
 

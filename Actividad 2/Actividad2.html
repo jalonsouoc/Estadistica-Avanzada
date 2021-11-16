@@ -166,7 +166,7 @@ pre code {
 
 <h1 class="title toc-ignore">Actividad 2 - Analítica descriptiva e inferencial</h1>
 <h4 class="author">Jorge Alonso Hernández</h4>
-<h4 class="date">15 de November, 2021</h4>
+<h4 class="date">16 de November, 2021</h4>
 
 </div>
 
@@ -200,7 +200,6 @@ pre code {
 <li><a href="#salario-semanal-ii">5 Salario semanal (II)</a>
 <ul>
 <li><a href="#escribid-la-hipótesis-nula-y-la-alternativa-2">5.1 Escribid la hipótesis nula y la alternativa</a></li>
-<li><a href="#justificación-del-test-a-aplicar-2">5.2 Justificación del test a aplicar</a></li>
 <li><a href="#cálculos-2">5.3 Cálculos</a></li>
 <li><a href="#conclusión-2">5.4 Conclusión</a></li>
 <li><a href="#comprobación-2">5.5 Comprobación</a></li>
@@ -354,6 +353,17 @@ round(c(L,U),2)</code></pre>
 </div>
 <div id="cálculos" class="section level2">
 <h2>3.3 Cálculos</h2>
+<pre class="r"><code>alfa &lt;- 1-0.95
+#H &lt;- claim$IniCost
+#D &lt;- Claim$UltCost
+mean1 &lt;- mean(claim$IniCost)
+mena2 &lt;- mean(claim$UltCost)
+n1 &lt;- nrow(claim$IniCost)
+n2 &lt;- nrow(claim$UltCost)
+sd1 &lt;- sd(claim$IniCost)
+sd2 &lt;- sd(claim$UltCost)
+
+fobs &lt;- sd1^2 / sd2^2</code></pre>
 </div>
 <div id="conclusión" class="section level2">
 <h2>3.4 Conclusión</h2>
@@ -372,6 +382,11 @@ round(c(L,U),2)</code></pre>
 </div>
 <div id="escribid-la-hipótesis-nula-y-la-alternativa-1" class="section level2">
 <h2>4.3 Escribid la hipótesis nula y la alternativa</h2>
+<p>Definimos la hipótesis nula y alternativa:</p>
+<ul>
+<li><strong>Hipótesis nula:</strong> el promedio del salario semanal de los hombres es igual al promedio salarial semanal de las mujeres</li>
+<li><strong>Hipótesis alternativa:</strong> el promedio salarial semanal de los hombres es mayor que el promedio salarial semanal de las mujeres</li>
+</ul>
 </div>
 <div id="justificación-del-test-a-aplicar-1" class="section level2">
 <h2>4.4 Justificación del test a aplicar</h2>
@@ -390,9 +405,11 @@ round(c(L,U),2)</code></pre>
 <h1>5 Salario semanal (II)</h1>
 <div id="escribid-la-hipótesis-nula-y-la-alternativa-2" class="section level2">
 <h2>5.1 Escribid la hipótesis nula y la alternativa</h2>
-</div>
-<div id="justificación-del-test-a-aplicar-2" class="section level2">
-<h2>5.2 Justificación del test a aplicar</h2>
+<p>Definimos la hipótesis nula y alternativa:</p>
+<ul>
+<li><strong>Hipótesis nula:</strong> el promedio de salario semanal de los hombres es igual al promedio de salario semanal de las mujeres</li>
+<li><strong>Hipótesis alternativa:</strong> el promedio de salario semanal de los hombres es al menos 50 euros mayor que el salario promedio semanal de las mujeres ## 5.2 Justificación del test a aplicar</li>
+</ul>
 </div>
 <div id="cálculos-2" class="section level2">
 <h2>5.3 Cálculos</h2>
@@ -414,6 +431,11 @@ round(c(L,U),2)</code></pre>
 </div>
 <div id="hipótesis-nula-y-alternativa" class="section level2">
 <h2>6.3 Hipótesis nula y alternativa</h2>
+<p>Definimos la hipótesis nula y alternativa:</p>
+<ul>
+<li><strong>Hipótesis nula:</strong> la proporción de hombres que trabajan a tiempo completo es igual a la proporción de mujeres que trabajan a tiempo completo</li>
+<li><strong>Hipótesis alternativa:</strong> la proporción de hombres que trabajan a tiempo completo es diferente a la proporción de mujeres que trabajan a tiempo completo</li>
+</ul>
 </div>
 <div id="tipo-de-test" class="section level2">
 <h2>6.4 TIpo de test</h2>
@@ -432,6 +454,11 @@ round(c(L,U),2)</code></pre>
 <h1>7 Salario por hora</h1>
 <div id="hipótesis-nula-y-alternativa-1" class="section level2">
 <h2>7.1 Hipótesis nula y alternativa</h2>
+<p>Definimos la hipótesis nula y alternativa:</p>
+<ul>
+<li><strong>Hipótesis nula:</strong> el salario por hora trabajada de los hombres es igual al salario por hora trabajada de las mujeres</li>
+<li><strong>Hipótesis alternativa:</strong> el salario por hora trabajada de los hombres es mayor que el salario por horas trabajadas de las mujeres</li>
+</ul>
 </div>
 <div id="tipo-de-test-1" class="section level2">
 <h2>7.2 Tipo de test</h2>

@@ -15,6 +15,7 @@ classoption: a4paper
 
 ```{r}
 if (!require('nortest')) install.packages('nortest'); library('nortest')
+if (!require('ggplot2')) install.packages('ggplot2'); library('ggplot2')
 ````
 
 # 1 Lectura del fichero y preparación de los datos
@@ -207,6 +208,10 @@ Para este caso se aplicará un contraste de hipótesis sobre dos muestras, una p
 
 # 6 Diferencia de jornada según género
 ## 6.1 Análisis visual
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data=claim, aes(x=Gender,fill=PartTimeFullTime))+geom_bar()+ggtitle("PartTimeFulltime por Género")
+````
 
 ## 6.2 Interpretación
 

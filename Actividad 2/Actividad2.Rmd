@@ -166,14 +166,9 @@ boxplot(log(woman), main="Box Plot WeeklyWages Woman", col="gray", xlab = "Weekl
 boxplot(log(man), main="Box Plot WeeklyWages Man", col="gray", xlab = "WeeklyWages", ylab = "Values")
 ````
 
-````{r echo=TRUE, message=FALSE, warning=FALSE}
-boxplot(woman, main="Box Plot WeeklyWages Woman", col="gray", xlab = "WeeklyWages", ylab = "Values")
-boxplot(man, main="Box Plot WeeklyWages Man", col="gray", xlab = "WeeklyWages", ylab = "Values")
-````
-
 ## 4.2 Interpretación 
 
-Podemosobservar que en ámbos casos la mayoría de datos para ámbos sexos se localizan en el mismo intervalo, si podemos observar que para hombres existen más valores extremos que para las mujeres es decir que hay una mayor cantidad de salarios semanalaes que se encuentran por encima del límite superior y más valores inferiores al límite inferior en hombres que en mujeres.
+Podemos observar que en ámbos casos la mayoría de datos para ámbos sexos se localizan en el mismo intervalo, si podemos observar que para hombres existen más valores extremos que para las mujeres es decir que hay una mayor cantidad de salarios semanalaes que se encuentran por encima del límite superior y más valores inferiores al límite inferior en hombres que en mujeres.
 
 ## 4.3 Escribid la hipótesis nula y la alternativa
 
@@ -184,7 +179,7 @@ Definimos la hipótesis nula y alternativa:
 
 ## 4.4 Justificación del test a aplicar
 
-
+Para este caso se aplicará un contraste de hipótesis sobre dos muestras, una para cada sexo, aplicado sobre la media del salario semanal y unilateralmente por la derecha dado que se pretende comprobar si el salario semalan de los hombres es mayor al de las mujeres.
 
 ## 4.5 Cálculos
 
@@ -199,6 +194,7 @@ Definimos la hipótesis nula y alternativa:
 
 * **Hipótesis nula:** el promedio de salario semanal de los hombres es igual al promedio de salario semanal de las mujeres
 * **Hipótesis alternativa:** el promedio de salario semanal de los hombres es al menos 50 euros mayor que el salario promedio semanal de las mujeres
+
 ## 5.2 Justificación del test a aplicar
 
 ## 5.3 Cálculos

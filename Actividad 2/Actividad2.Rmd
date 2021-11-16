@@ -122,16 +122,20 @@ Definimos la hipótesis nula y alternativa:
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
 alfa <- 1-0.95
-#H <- claim$IniCost
-#D <- Claim$UltCost
-mean1 <- mean(claim$IniCost)
-mena2 <- mean(claim$UltCost)
-n1 <- nrow(claim$IniCost)
-n2 <- nrow(claim$UltCost)
-sd1 <- sd(claim$IniCost)
-sd2 <- sd(claim$UltCost)
+H <- claim$IniCost
+D <- claim$UltCost
+mean1 <- mean(H)
+mena2 <- mean(D)
+n1 <- nrow(H)
+n2 <- nrow(D)
+sd1 <- sd(H)
+sd2 <- sd(D)
 
 fobs <- sd1^2 / sd2^2
+
+fcritL <- qf(alfa/2, df1=n1-1, df2=n2-2)
+fcritU <- qf(1 - alfa/2, df1=n1-1, df2=n2-2)
+pvalor <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2)) * 2
 
 
 ````
@@ -140,10 +144,29 @@ fobs <- sd1^2 / sd2^2
 
 ## 3.5 Comprobación
 
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+t.test(claim$IniCost,claim$UltCost)
+````
+
 # 4 Diferencia de salario según género
 ## 4.1 Análisis visual
 
+En primer lugar para poder realizar el estudio obtenemos las muestras para mujeres y hombres de la variable WeeklyWages
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+woman <- claim$WeeklyWages[claim$Gender == "F"]
+man <- claim$WeeklyWages[claim$Gender == "M"]
+````
+
+Mostramos ahora los diagrama de cajas para los hombres y las mujeres de la variable WeeklyWages
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(log(woman), main="Box Plot WeeklyWages Woman", col="gray", xlab = "WeeklyWages", ylab = "Values")
+boxplot(log(man), main="Box Plot WeeklyWages Man", col="gray", xlab = "WeeklyWages", ylab = "Values")
+````
+
 ## 4.2 Interpretación 
+
 
 ## 4.3 Escribid la hipótesis nula y la alternativa
 

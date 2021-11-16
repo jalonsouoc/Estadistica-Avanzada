@@ -197,6 +197,8 @@ Definimos la hipótesis nula y alternativa:
 
 ## 5.2 Justificación del test a aplicar
 
+Para este caso se aplicará un contraste de hipótesis sobre dos muestras, una paracada sexo, aplicado sobre la media salarial semanal y unilateralmente por la derecha dado que s epretende comprobar si el salario promedio de los hombres es al menos 50 euros mayor que el de las mujeres.
+
 ## 5.3 Cálculos
 
 ## 5.4 Conclusión

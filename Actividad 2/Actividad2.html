@@ -166,7 +166,7 @@ pre code {
 
 <h1 class="title toc-ignore">Actividad 2 - Analítica descriptiva e inferencial</h1>
 <h4 class="author">Jorge Alonso Hernández</h4>
-<h4 class="date">16 de November, 2021</h4>
+<h4 class="date">20 de November, 2021</h4>
 
 </div>
 
@@ -422,12 +422,82 @@ man &lt;- claim$WeeklyWages[claim$Gender == &quot;M&quot;]</code></pre>
 </div>
 <div id="cálculos-1" class="section level2">
 <h2>4.5 Cálculos</h2>
+<p>Inicialmente realizamos el test de …</p>
+<pre class="r"><code>alfa &lt;- 1 - 0.95
+H &lt;- man
+D &lt;- woman
+mean1 &lt;- mean(H)
+n1 &lt;- length(H)
+s1 &lt;- sd(H)
+mean2 &lt;- mean(D)
+n2 &lt;- length(D)
+s2 &lt;- sd(D)
+c(mean1, mean2, s1, s2, n1, n2)</code></pre>
+<pre><code>## [1]   449.4311   381.3649   253.5549   213.6499 38904.0000 11620.0000</code></pre>
+<pre class="r"><code>fobs &lt;- s1^2/s2^2
+fcritL &lt;- qf(alfa/2, df1=n1-1, df2=n2-1)
+fcritU &lt;- qf(1 - alfa/2, df1=n1-2, df2=n2-2)
+pvalue &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
+c(fobs, fcritL, fcritU, pvalue)</code></pre>
+<pre><code>## [1]  1.408441e+00  9.712342e-01  1.029861e+00 5.030028e-109</code></pre>
+<pre class="r"><code>alfa &lt;- 1 - 0.95
+H &lt;- man
+D &lt;- woman
+mean1 &lt;- mean(H)
+n1 &lt;- length(H)
+s1 &lt;- sd(H)
+mean2 &lt;- mean(D)
+n2 &lt;- length(D)
+s2 &lt;- sd(D)
+c(mean1, mean2, s1, s2, n1, n2)</code></pre>
+<pre><code>## [1]   449.4311   381.3649   253.5549   213.6499 38904.0000 11620.0000</code></pre>
+<pre class="r"><code>fobs &lt;- s1^2/s2^2
+fcritL &lt;- qf(alfa/2, df1=n1-1, df2=n2-1)
+fcritU &lt;- qf(1 - alfa/2, df1=n1-2, df2=n2-2)
+pvalue &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
+c(fobs, fcritL, fcritU, pvalue)</code></pre>
+<pre><code>## [1]  1.408441e+00  9.712342e-01  1.029861e+00 5.030028e-109</code></pre>
+<p>varianzas diferentes</p>
+<pre class="r"><code>dfMean = mean1 -mean2
+
+t &lt;- dfMean/sqrt((s1^2/n1 + s2^2/n2))
+pvalor &lt;- pnorm(t, lower.tail = FALSE)
+zcrit &lt;- qnorm(alfa)
+c(pvalor, zcrit)</code></pre>
+<pre><code>## [1]  7.435311e-183  -1.644854e+00</code></pre>
+<pre class="r"><code>v &lt;- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
+v</code></pre>
+<pre><code>## [1] 22842.33</code></pre>
 </div>
 <div id="conclusión-1" class="section level2">
 <h2>4.6 Conclusión</h2>
 </div>
 <div id="comprobación-1" class="section level2">
 <h2>4.7 Comprobación</h2>
+<pre class="r"><code>var.test(H,D)</code></pre>
+<pre><code>## 
+##  F test to compare two variances
+## 
+## data:  H and D
+## F = 1.4084, num df = 38903, denom df = 11619, p-value &lt; 2.2e-16
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  1.367605 1.450156
+## sample estimates:
+## ratio of variances 
+##           1.408441</code></pre>
+<pre class="r"><code>t.test(H,D)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  H and D
+## t = 28.813, df = 22274, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  63.43579 72.69661
+## sample estimates:
+## mean of x mean of y 
+##  449.4311  381.3649</code></pre>
 </div>
 </div>
 <div id="salario-semanal-ii" class="section level1">
@@ -446,6 +516,7 @@ man &lt;- claim$WeeklyWages[claim$Gender == &quot;M&quot;]</code></pre>
 </div>
 <div id="cálculos-2" class="section level2">
 <h2>5.3 Cálculos</h2>
+<p>\ Para este caso el test de igualdad de varianzas nos sirve el del ejercicio anterior</p>
 </div>
 <div id="conclusión-2" class="section level2">
 <h2>5.4 Conclusión</h2>
@@ -469,7 +540,7 @@ man &lt;- claim$WeeklyWages[claim$Gender == &quot;M&quot;]</code></pre>
 <p>Definimos la hipótesis nula y alternativa:</p>
 <ul>
 <li><strong>Hipótesis nula:</strong> la proporción de hombres que trabajan a tiempo completo es igual a la proporción de mujeres que trabajan a tiempo completo</li>
-<li><strong>Hipótesis alternativa:</strong> la proporción de hombres que trabajan a tiempo completo es diferente a la proporción de mujeres que trabajan a tiempo completo</li>
+<li><strong>Hipótesis alternativa:</strong> la proporción de hombres que trabajan a tiempo completo es menor a la proporción de mujeres que trabajan a tiempo completo</li>
 </ul>
 </div>
 <div id="tipo-de-test" class="section level2">
@@ -477,12 +548,48 @@ man &lt;- claim$WeeklyWages[claim$Gender == &quot;M&quot;]</code></pre>
 </div>
 <div id="cálculos-3" class="section level2">
 <h2>6.5 Cálculos</h2>
+<pre class="r"><code>woman &lt;- claim$PartTimeFullTime[claim$Gender == &quot;F&quot;]
+man &lt;- claim$PartTimeFullTime[claim$Gender == &quot;M&quot;]
+
+x1 &lt;- man[man == &#39;P&#39;]
+x2 &lt;- woman[woman == &#39;P&#39;]
+
+n1 &lt;- length(man)
+n2 &lt;- length(woman)
+
+p1 &lt;- sum(length(x1))/n1
+p2 &lt;- sum(length(x2))/n2
+
+c(p1,p2)</code></pre>
+<pre><code>## [1] 0.05104874 0.22555938</code></pre>
+<pre class="r"><code>p &lt;- (n1*p1 + n2* p2) / (n1+n2)
+zobs &lt;- (p1-p2)/(sqrt(p*(1-p)*(1/n1+1/n2)))
+
+pvalue &lt;- pnorm(zobs, lower.tail=FALSE)
+
+c(zobs, pvalue)</code></pre>
+<pre><code>## [1] -57.3423   1.0000</code></pre>
 </div>
 <div id="conclusión-3" class="section level2">
 <h2>6.6 Conclusión</h2>
 </div>
 <div id="comprobación-3" class="section level2">
 <h2>6.7 Comprobación</h2>
+<pre class="r"><code>success &lt;- c(p1*n1, p2*n2)
+nn &lt;- c(n1,n2)
+prop.test(success, nn, alternative=&quot;less&quot;, correct=FALSE)</code></pre>
+<pre><code>## 
+##  2-sample test for equality of proportions without continuity
+##  correction
+## 
+## data:  success out of nn
+## X-squared = 3288.1, df = 1, p-value &lt; 2.2e-16
+## alternative hypothesis: less
+## 95 percent confidence interval:
+##  -1.0000000 -0.1678743
+## sample estimates:
+##     prop 1     prop 2 
+## 0.05104874 0.22555938</code></pre>
 </div>
 </div>
 <div id="salario-por-hora" class="section level1">

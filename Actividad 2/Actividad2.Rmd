@@ -271,8 +271,9 @@ Para este caso se aplicará un contraste de hipótesis sobre dos muestras, una p
 # 6 Diferencia de jornada según género
 ## 6.1 Análisis visual
 
-````{r echo=TRUE, message=FALSE, warning=FALSE}
+Mostramos un diagrama de barras con las categorías de la variabl ePartTimeFullTime según el género.
 
+````{r echo=TRUE, message=FALSE, warning=FALSE}
 ggplot(data=claim, aes(x=Gender,fill=PartTimeFullTime))+geom_bar()+ggtitle("PartTimeFulltime por Género")
 ````
 

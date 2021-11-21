@@ -111,7 +111,7 @@ Podemos concluir con un 95% de confianza que el coste total pagado por siniestro
 # 3 Coste inicial y final de los siniestros
 ## 3.1 Justificación del test a aplicar
 
-Para la pregunta definida, el contraste a aplicar es un contraste de dos muestras ya que por un lado tenemos la muestra de la variable IniCost y por el otro la muestra de la variable UltCost. El contraste se aplica sobre la media de la diferencia de las variables emparajadas.Dicho contraste es un contraste bilateral.
+Para la pregunta definida, el contraste a aplicar es un contraste de dos muestras emparejadas ya que por un lado tenemos la muestra de la variable IniCost y por el otro la muestra de la variable UltCost. El contraste se aplica sobre la media de la diferencia de las variables emparajadas.Dicho contraste es un contraste bilateral.
 
 ## 3.2 Escribid la hipótesis nula y la alternativa
 Definimos la hipótesis nula y alternativa:
@@ -123,7 +123,7 @@ Definimos la hipótesis nula y alternativa:
                                           
 ## 3.3 Cálculos
 
-Aplicamos los cálculos relativos al contraste de dosmuestras emparejadas sobre la media
+Aplicamos los cálculos relativos al contraste de dos muestras emparejadas sobre la media
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
 alfa <- 1-0.95
@@ -257,20 +257,50 @@ Observamos de nuevo que el pvalor devuelto es inferior al alfa definido por lo q
 
 Definimos la hipótesis nula y alternativa:
 
-* **Hipótesis nula:** el promedio de salario semanal de los hombres es igual al promedio de salario semanal de las mujeres
-* **Hipótesis alternativa:** el promedio de salario semanal de los hombres es al menos 50 euros mayor que el salario promedio semanal de las mujeres
-
+* **Hipótesis nula:** el promedio de la diferencia del salario semanal del hombre y la mujer es igual a 50.
+                                                  $$H_0: µ_d = 50$$
+* **Hipótesis alternativa:** el promedio de la diferencia del salario semanal del hombre y la mujer es mayor que 50.
+                                                  $$H_1: µ_d > 50$$
+                                                  
 ## 5.2 Justificación del test a aplicar
 
-Para este caso se aplicará un contraste de hipótesis sobre dos muestras, una paracada sexo, aplicado sobre la media salarial semanal y unilateralmente por la derecha dado que s epretende comprobar si el salario promedio de los hombres es al menos 50 euros mayor que el de las mujeres.
+Para este caso se aplicará un contraste de hipótesis sobre dos muestras emparejadas, una para cada sexo, aplicado sobre la diferencia de la media salarial semanal y unilateralmente por la derecha dado que se pretende comprobar si el salario promedio de los hombres es al menos 50 euros mayor que el de las mujeres.
 
 ## 5.3 Cálculos
 
-\\ Para este caso el test de igualdad de varianzas nos sirve el del ejercicio anterior
+
+Aplicamos los cálculos relativos al contraste de dos muestras emparejadas sobre la media.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+woman <- claim$WeeklyWages[claim$Gender == "F"]
+man <- claim$WeeklyWages[claim$Gender == "M"]
+
+mean <- mean(d)
+s <- sd(d)
+n<- length(d)
+
+tobs <- (mean - 50)/(s/sqrt(n))
+tcrit <- qt(alfa, df=n-1)
+pvalue <- pt(tobs, lower.tail=FALSE, df=n-1)
+c(tobs, tcrit, pvalue)
+````
+
+Podemos ver que el valor observado es de -21.287 , que el valor crítico es de -1.64488 y el p valor es de 1.
 
 ## 5.4 Conclusión
 
+Observamos que el p valor devuelto es superior al alfa definido que es de 0.05 por lo que podemos asumir que la hipóteis nula es cierta y por tanto rechazamos la hipótesis alternativa de que el promedio del salario de lo shombres es al menos 50 euros mayor que el de las mujeres con un 95% de confianza.
+
 ## 5.5 Comprobación
+
+Realizamos la comprobación utilizando la función de R t.test
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+t.test(claim$IniCost,claim$UltCost, paired=TRUE, alternative="greater", mu=50)
+````
+
+Podemos observar que la función acepta la hipótesis nula debido a que el p valor es superior al alfa definido de 0.05, por lo que con un 95% de confianza el promedio del salario de los hombres no es al menos 50 euros mayor que el de las mujeres.
+
 
 # 6 Diferencia de jornada según género
 ## 6.1 Análisis visual

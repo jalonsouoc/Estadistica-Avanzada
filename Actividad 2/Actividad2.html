@@ -476,7 +476,8 @@ c(tobs, tcrit, pvalue)</code></pre>
 ## sample estimates:
 ## ratio of variances 
 ##           1.408441</code></pre>
-<p>Podemos comprobar que</p>
+<p>Podemos comprobar que el p valor devuelto por la función también es inferior a 0.05 por lo que son varianzas desconocidas diferentes.</p>
+<p>Realizamos la comprobación del contraste de hipótesis empelando la función R t.test</p>
 <pre class="r"><code>t.test(H,D)</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
@@ -489,6 +490,7 @@ c(tobs, tcrit, pvalue)</code></pre>
 ## sample estimates:
 ## mean of x mean of y 
 ##  449.4311  381.3649</code></pre>
+<p>Observamos de nuevo que el pvalor devuelto es inferior al alfa definido por lo que comprobamso que se rechaza la hipótesis nula.</p>
 </div>
 </div>
 <div id="salario-semanal-ii" class="section level1">
@@ -497,23 +499,46 @@ c(tobs, tcrit, pvalue)</code></pre>
 <h2>5.1 Escribid la hipótesis nula y la alternativa</h2>
 <p>Definimos la hipótesis nula y alternativa:</p>
 <ul>
-<li><strong>Hipótesis nula:</strong> el promedio de salario semanal de los hombres es igual al promedio de salario semanal de las mujeres</li>
-<li><strong>Hipótesis alternativa:</strong> el promedio de salario semanal de los hombres es al menos 50 euros mayor que el salario promedio semanal de las mujeres</li>
+<li><strong>Hipótesis nula:</strong> el promedio de la diferencia del salario semanal del hombre y la mujer es igual a 50. <span class="math display">\[H_0: µ_d = 50\]</span></li>
+<li><strong>Hipótesis alternativa:</strong> el promedio de la diferencia del salario semanal del hombre y la mujer es mayor que 50. <span class="math display">\[H_1: µ_d &gt; 50\]</span></li>
 </ul>
 </div>
 <div id="justificación-del-test-a-aplicar-2" class="section level2">
 <h2>5.2 Justificación del test a aplicar</h2>
-<p>Para este caso se aplicará un contraste de hipótesis sobre dos muestras, una paracada sexo, aplicado sobre la media salarial semanal y unilateralmente por la derecha dado que s epretende comprobar si el salario promedio de los hombres es al menos 50 euros mayor que el de las mujeres.</p>
+<p>Para este caso se aplicará un contraste de hipótesis sobre dos muestras, una paracada sexo, aplicado sobre la media salarial semanal y unilateralmente por la derecha dado que se pretende comprobar si el salario promedio de los hombres es al menos 50 euros mayor que el de las mujeres.</p>
 </div>
 <div id="cálculos-2" class="section level2">
 <h2>5.3 Cálculos</h2>
-<p>\ Para este caso el test de igualdad de varianzas nos sirve el del ejercicio anterior</p>
+<pre class="r"><code>woman &lt;- claim$WeeklyWages[claim$Gender == &quot;F&quot;]
+man &lt;- claim$WeeklyWages[claim$Gender == &quot;M&quot;]
+
+mean &lt;- mean(d)
+s &lt;- sd(d)
+n&lt;- length(d)
+
+tobs &lt;- (mean - 50)/(s/sqrt(n))
+tcrit &lt;- qt(alfa, df=n-1)
+pvalue &lt;- pt(tobs, lower.tail=FALSE, df=n-1)
+c(tobs, tcrit, pvalue)</code></pre>
+<pre><code>## [1] -21.282732  -1.644884   1.000000</code></pre>
 </div>
 <div id="conclusión-2" class="section level2">
 <h2>5.4 Conclusión</h2>
 </div>
 <div id="comprobación-2" class="section level2">
 <h2>5.5 Comprobación</h2>
+<pre class="r"><code>t.test(claim$IniCost,claim$UltCost, paired=TRUE, alternative=&quot;greater&quot;, mu=50)</code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  claim$IniCost and claim$UltCost
+## t = -21.283, df = 50525, p-value = 1
+## alternative hypothesis: true difference in means is greater than 50
+## 95 percent confidence interval:
+##  -2330.107       Inf
+## sample estimates:
+## mean of the differences 
+##               -2159.352</code></pre>
 </div>
 </div>
 <div id="diferencia-de-jornada-según-género" class="section level1">

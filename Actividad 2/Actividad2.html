@@ -557,8 +557,8 @@ df$Percentage &lt;- c(percentageMP, percentageMF, percentageFP, percentageFF)</c
 <h2>6.3 Hipótesis nula y alternativa</h2>
 <p>Definimos la hipótesis nula y alternativa:</p>
 <ul>
-<li><strong>Hipótesis nula:</strong> la proporción de mujeres que trabajan a tiempo completo es igual a la proporción de hombres que trabajan a tiempo completo <span class="math display">\[H_0 = H_1\]</span></li>
-<li><strong>Hipótesis alternativa:</strong> la proporción de mujeres que trabajan a tiempo completo es mayor a la proporción de mujeres que trabajan a tiempo completo <span class="math display">\[H_0 &gt; H_1\]</span></li>
+<li><strong>Hipótesis nula:</strong> la proporción de mujeres que trabajan a tiempo completo es igual a la proporción de hombres que trabajan a tiempo completo <span class="math display">\[H_0: p_1 = p_2\]</span></li>
+<li><strong>Hipótesis alternativa:</strong> la proporción de mujeres que trabajan a tiempo completo es mayor a la proporción de mujeres que trabajan a tiempo completo <span class="math display">\[H_1: p_1&gt;p_2\]</span></li>
 </ul>
 </div>
 <div id="tipo-de-test" class="section level2">
@@ -567,45 +567,48 @@ df$Percentage &lt;- c(percentageMP, percentageMF, percentageFP, percentageFF)</c
 </div>
 <div id="cálculos-3" class="section level2">
 <h2>6.5 Cálculos</h2>
-<pre class="r"><code>x1 &lt;- man[man == &#39;P&#39;]
-x2 &lt;- woman[woman == &#39;P&#39;]
+<pre class="r"><code>alfa &lt;- 1-0.95
+x1 &lt;- woman[woman == &#39;P&#39;]
+x2 &lt;- man[man == &#39;P&#39;]
 
-n1 &lt;- length(man)
-n2 &lt;- length(woman)
+n1 &lt;- length(woman)
+n2 &lt;- length(man)
 
 p1 &lt;- sum(length(x1))/n1
 p2 &lt;- sum(length(x2))/n2
 
 c(p1,p2)</code></pre>
-<pre><code>## [1] 0.05104874 0.22555938</code></pre>
+<pre><code>## [1] 0.22555938 0.05104874</code></pre>
 <pre class="r"><code>p &lt;- (n1*p1 + n2* p2) / (n1+n2)
-zobs &lt;- (p1-p2)/(sqrt(p*(1-p)*(1/n1+1/n2)))
+zobs &lt;- (p1-p2)/(sqrt((p*(1-p))*(1/n1+1/n2)))
+zcrit &lt;- qnorm(alfa, lower.tail = FALSE)
 
 pvalue &lt;- pnorm(zobs, lower.tail=FALSE)
 
-c(zobs, pvalue)</code></pre>
-<pre><code>## [1] -57.3423   1.0000</code></pre>
+c(zobs, zcrit,pvalue)</code></pre>
+<pre><code>## [1] 57.342302  1.644854  0.000000</code></pre>
 </div>
 <div id="conclusión-3" class="section level2">
 <h2>6.6 Conclusión</h2>
 </div>
 <div id="comprobación-3" class="section level2">
 <h2>6.7 Comprobación</h2>
+<p>Realizamos la comprobación utilizando la función de R prop.test.</p>
 <pre class="r"><code>success &lt;- c(p1*n1, p2*n2)
 nn &lt;- c(n1,n2)
-prop.test(success, nn, alternative=&quot;less&quot;, correct=FALSE)</code></pre>
+prop.test(success, nn, alternative=&quot;greater&quot;, correct=FALSE)</code></pre>
 <pre><code>## 
 ##  2-sample test for equality of proportions without continuity
 ##  correction
 ## 
 ## data:  success out of nn
 ## X-squared = 3288.1, df = 1, p-value &lt; 2.2e-16
-## alternative hypothesis: less
+## alternative hypothesis: greater
 ## 95 percent confidence interval:
-##  -1.0000000 -0.1678743
+##  0.1678743 1.0000000
 ## sample estimates:
 ##     prop 1     prop 2 
-## 0.05104874 0.22555938</code></pre>
+## 0.22555938 0.05104874</code></pre>
 </div>
 </div>
 <div id="salario-por-hora" class="section level1">

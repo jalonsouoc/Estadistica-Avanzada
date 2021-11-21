@@ -274,10 +274,35 @@ Para este caso se aplicará un contraste de hipótesis sobre dos muestras, una p
 Mostramos un diagrama de barras con las categorías de la variabl ePartTimeFullTime según el género.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
+#Obtenemos las muestras para hombres y para mujeres
+woman <- claim$PartTimeFullTime[claim$Gender == "F"]
+man <- claim$PartTimeFullTime[claim$Gender == "M"]
+
+#Calculamos la frecuencia de cada una de las variables y obtenemos sus porcentajes
+df <- data.frame("Gender" = c("M", "M", "F", "F"), "PartTimeFullTime" = c("P", "F", "P", "F"))
+df$freq <- c(length(man[man == "P"]), length(man[man == "F"]), length(woman[woman == "P"]),length(woman[woman == "F"]))
+percentageMP <- (df$freq[df$Gender == "M" & df$PartTimeFullTime == "P"]/length(man)) * 100 
+percentageMF <- (df$freq[df$Gender == "M" & df$PartTimeFullTime == "F"]/length(man)) * 100
+percentageFP <- (df$freq[df$Gender == "F" & df$PartTimeFullTime == "P"]/length(woman)) * 100 
+percentageFF <- (df$freq[df$Gender == "F" & df$PartTimeFullTime == "F"]/length(woman)) * 100
+df$Percentage <- c(percentageMP, percentageMF, percentageFP, percentageFF)
+````
+
+Mostramos el diagrama de barras de los porcentajes.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data=df, aes(x=Gender, fill=PartTimeFullTime, y=Percentage))+geom_col()+ggtitle("Porcentaje PartTimeFulltime por Género")
+````
+
+Mostramos también el gráfico con los datos totales.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
 ggplot(data=claim, aes(x=Gender,fill=PartTimeFullTime))+geom_bar()+ggtitle("PartTimeFulltime por Género")
 ````
 
 ## 6.2 Interpretación
+
+De los gráficos obtenidos en el apartado anterior podemos observar que el porcentaje de mujeres que tienen jornada a tiempo parcial es mayor al porcentaje de los hombres que tienen dicha jornada. También podemos observar que la muestra posee un mayor número de registros para hombres que para mujeres. Podemos observar también que del total de registros hay un mayor número de mujeres que trabajan a tiempo parcial que de hombres.
 
 ## 6.3 Hipótesis nula y alternativa
 Definimos la hipótesis nula y alternativa:
@@ -289,9 +314,6 @@ Definimos la hipótesis nula y alternativa:
 
 ## 6.5 Cálculos
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-
-woman <- claim$PartTimeFullTime[claim$Gender == "F"]
-man <- claim$PartTimeFullTime[claim$Gender == "M"]
 
 x1 <- man[man == 'P']
 x2 <- woman[woman == 'P']

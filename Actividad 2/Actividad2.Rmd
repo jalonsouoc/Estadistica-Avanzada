@@ -307,10 +307,14 @@ De los gráficos obtenidos en el apartado anterior podemos observar que el porce
 ## 6.3 Hipótesis nula y alternativa
 Definimos la hipótesis nula y alternativa:
 
-* **Hipótesis nula:** la proporción de hombres que trabajan a tiempo completo es igual a la proporción de mujeres que trabajan a tiempo completo
-* **Hipótesis alternativa:** la proporción de hombres que trabajan a tiempo completo es menor a la proporción de mujeres que trabajan a tiempo completo
+* **Hipótesis nula:** la proporción de mujeres que trabajan a tiempo completo es igual a la proporción de hombres que trabajan a tiempo completo
+                                                        $$H_0 = H_1$$
+* **Hipótesis alternativa:** la proporción de mujeres que trabajan a tiempo completo es mayor a la proporción de mujeres que trabajan a tiempo completo
+                                                        $$H_0 > H_1$$
 
 ## 6.4 TIpo de test
+
+Para este caso se va a utilizar un contraste de hipótesis sobre dos muestras, una para hombre sy otra para mujeres, aplicado sobre la proporción del tipo de jornada laboral y unilateralmente por la derecha dado que se pretende comprobar que la proporción de mujeres sea mayor a la de hombres.
 
 ## 6.5 Cálculos
 ````{r echo=TRUE, message=FALSE, warning=FALSE}

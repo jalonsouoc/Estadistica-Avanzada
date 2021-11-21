@@ -336,35 +336,37 @@ ggplot(data=claim, aes(x=Gender,fill=PartTimeFullTime))+geom_bar()+ggtitle("Part
 
 ## 6.2 Interpretación
 
-De los gráficos obtenidos en el apartado anterior podemos observar que el porcentaje de mujeres que tienen jornada a tiempo parcial es mayor al porcentaje de los hombres que tienen dicha jornada. También podemos observar que la muestra posee un mayor número de registros para hombres que para mujeres. Podemos observar también que del total de registros hay un mayor número de mujeres que trabajan a tiempo parcial que de hombres.
+De los gráficos obtenidos en el apartado anterior podemos observar que el porcentaje de hombres que trabajan a jornada completa es mayor al porcentaje de mujeres que trabaja a tiempo completo. También podemos observar que la muestra posee un mayor número de registros para hombres que para mujeres. 
 
 ## 6.3 Hipótesis nula y alternativa
 Definimos la hipótesis nula y alternativa:
 
-* **Hipótesis nula:** la proporción de mujeres que trabajan a tiempo completo es igual a la proporción de hombres que trabajan a tiempo completo
+* **Hipótesis nula:** la proporción de hombres que trabajan a tiempo completo es igual a la proporción de mujeres que trabajan a tiempo completo
                                                         $$H_0: p_1 = p_2$$
-* **Hipótesis alternativa:** la proporción de mujeres que trabajan a tiempo completo es mayor a la proporción de mujeres que trabajan a tiempo completo
-                                                        $$H_1: p_1>p_2$$
+* **Hipótesis alternativa:** la proporción de hombres que trabajan a tiempo completo es diferente a la proporción de mujeres que trabajan a tiempo completo
+                                                        $$H_1: p_1 ≠ p_2$$
 
 ## 6.4 Tipo de test
 
-Para este caso se va a utilizar un contraste de hipótesis sobre dos muestras, una para hombres y otra para mujeres, aplicado sobre la proporción del tipo de jornada laboral y unilateralmente por la derecha dado que se pretende comprobar que la proporción de mujeres sea mayor a la de hombres.
+Para este caso se va a utilizar un contraste de hipótesis sobre dos muestras, una para hombres y otra para mujeres, aplicado sobre la proporción del tipo de jornada laboral. el contraste a aplicar es un contraste bilateral.
 
 ## 6.5 Cálculos
-````{r echo=TRUE, message=FALSE, warning=FALSE}
-alfa <- 1-0.95
-x1 <- woman[woman == 'P']
-x2 <- man[man == 'P']
 
-n1 <- length(woman)
-n2 <- length(man)
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+alfa <- 1-0.95
+x1 <- man[man == 'F']
+x2 <- woman[woman == 'F']
+
+n1 <- length(man)
+n2 <- length(woman)
 
 p1 <- sum(length(x1))/n1
 p2 <- sum(length(x2))/n2
 
 c(p1,p2)
 
-p <- (n1*p1 + n2* p2) / (n1+n2)
+p <- (n1*p1 + n2*p2) / (n1+n2)
 zobs <- (p1-p2)/(sqrt((p*(1-p))*(1/n1+1/n2)))
 zcrit <- qnorm(alfa, lower.tail = FALSE)
 
@@ -411,6 +413,26 @@ Definimos la hipótesis nula y alternativa:
 ## 7.5 Comprobación
 
 # 8 Resumen ejecutivo
+
+a lo largo de la actividad se han dado respuesta a diversas preguntas que se han formulado mediante contrastes de hipótesis. Las preguntas que han sido respondidas y sus correspondientes respuestas son:
+
+* ¿Podemos aceptar que no hay diferencias entre IniCost y UltCost?
+
+Con un 95% de confianza podemos aceptar que no hay diferencias entre IniCost y UltCost. 
+
+* ¿Podemos aceptar que los hombres cobran más que las mujeres en promedio a la semana?
+
+Con un 95% de confianza podemos aceptar que los hombres cobran más en promedio a la semana que las mujeres.
+
+* ¿Podemos aceptar que los hombres cobran al menos 50 euros más que las mujeres en promedio a la semana?
+
+Coun un 95% de confianza podemo rechazar que los hombres cobran al menos 50 euros más que las muejres en promedio a la semana.
+
+* ¿La proporción de personas que trabajan a tiempo completo es diferente para hombres que para mujeres?
+
+
+
+* ¿Podemos afirmar que los hombres cobran más que las mujeres por hora trabajada?
 
 
 

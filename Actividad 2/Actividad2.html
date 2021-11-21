@@ -417,8 +417,8 @@ man &lt;- claim$WeeklyWages[claim$Gender == &quot;M&quot;]</code></pre>
 <h2>4.3 Escribid la hipótesis nula y la alternativa</h2>
 <p>Definimos la hipótesis nula y alternativa:</p>
 <ul>
-<li><strong>Hipótesis nula:</strong> el promedio del salario semanal de los hombres es igual al promedio salarial semanal de las mujeres</li>
-<li><strong>Hipótesis alternativa:</strong> el promedio salarial semanal de los hombres es mayor que el promedio salarial semanal de las mujeres</li>
+<li><strong>Hipótesis nula:</strong> el promedio del salario semanal de los hombres es igual al promedio salarial semanal de las mujeres <span class="math display">\[H_O: µ_1 = µ_2\]</span></li>
+<li><strong>Hipótesis alternativa:</strong> el promedio salarial semanal de los hombres es mayor que el promedio salarial semanal de las mujeres <span class="math display">\[H_1: µ_1 &gt; µ_2\]</span></li>
 </ul>
 </div>
 <div id="justificación-del-test-a-aplicar-1" class="section level2">
@@ -427,7 +427,7 @@ man &lt;- claim$WeeklyWages[claim$Gender == &quot;M&quot;]</code></pre>
 </div>
 <div id="cálculos-1" class="section level2">
 <h2>4.5 Cálculos</h2>
-<p>Inicialmente realizamos el test de …</p>
+<p>Inicialmente realizamos el test de homoscedasticidad para comprobar si las varianzas son iguales o diferentes</p>
 <pre class="r"><code>alfa &lt;- 1 - 0.95
 H &lt;- man
 D &lt;- woman
@@ -440,45 +440,30 @@ s2 &lt;- sd(D)
 c(mean1, mean2, s1, s2, n1, n2)</code></pre>
 <pre><code>## [1]   449.4311   381.3649   253.5549   213.6499 38904.0000 11620.0000</code></pre>
 <pre class="r"><code>fobs &lt;- s1^2/s2^2
-fcritL &lt;- qf(alfa/2, df1=n1-1, df2=n2-1)
-fcritU &lt;- qf(1 - alfa/2, df1=n1-2, df2=n2-2)
+fcritL &lt;- qf(alfa, df1=n1-1, df2=n2-1)
+fcritU &lt;- qf(1 - alfa, df1=n1-2, df2=n2-2)
 pvalue &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
 c(fobs, fcritL, fcritU, pvalue)</code></pre>
-<pre><code>## [1]  1.408441e+00  9.712342e-01  1.029861e+00 5.030028e-109</code></pre>
-<pre class="r"><code>alfa &lt;- 1 - 0.95
-H &lt;- man
-D &lt;- woman
-mean1 &lt;- mean(H)
-n1 &lt;- length(H)
-s1 &lt;- sd(H)
-mean2 &lt;- mean(D)
-n2 &lt;- length(D)
-s2 &lt;- sd(D)
-c(mean1, mean2, s1, s2, n1, n2)</code></pre>
-<pre><code>## [1]   449.4311   381.3649   253.5549   213.6499 38904.0000 11620.0000</code></pre>
-<pre class="r"><code>fobs &lt;- s1^2/s2^2
-fcritL &lt;- qf(alfa/2, df1=n1-1, df2=n2-1)
-fcritU &lt;- qf(1 - alfa/2, df1=n1-2, df2=n2-2)
-pvalue &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
-c(fobs, fcritL, fcritU, pvalue)</code></pre>
-<pre><code>## [1]  1.408441e+00  9.712342e-01  1.029861e+00 5.030028e-109</code></pre>
-<p>varianzas diferentes</p>
-<pre class="r"><code>dfMean = mean1 -mean2
+<pre><code>## [1]  1.408441e+00  9.757988e-01  1.024996e+00 5.030028e-109</code></pre>
+<p>Dado que el pvalor es inferior al alfa definido de 0.05 podemos asumir que las varianzas son diferente por lo tanto aplicaremos el estadístico del contraste de dosmuestras sobre la media con varianzas desconocidas diferentes.</p>
+<pre class="r"><code>alfa &lt;- 1-0.95
+dfMean = mean1 -mean2
+v &lt;- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
 
-t &lt;- dfMean/sqrt((s1^2/n1 + s2^2/n2))
-pvalor &lt;- pnorm(t, lower.tail = FALSE)
-zcrit &lt;- qnorm(alfa)
-c(pvalor, zcrit)</code></pre>
-<pre><code>## [1]  7.435311e-183  -1.644854e+00</code></pre>
-<pre class="r"><code>v &lt;- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
-v</code></pre>
-<pre><code>## [1] 22842.33</code></pre>
+tobs &lt;- dfMean/sqrt((s1^2/n1 + s2^2/n2))
+tcrit &lt;- qt(alfa, v)
+pvalue &lt;- pt(abs(tobs), df=v, lower.tail=FALSE)*2
+c(tobs, tcrit, pvalue)</code></pre>
+<pre><code>## [1]   2.881270e+01  -1.644920e+00  2.391262e-179</code></pre>
+<p>Podemos observar que el valor observado es 28.8127 , el valor crítico es - 1.64492 y el p valor es de 2.391262e-179.</p>
 </div>
 <div id="conclusión-1" class="section level2">
 <h2>4.6 Conclusión</h2>
+<p>Dado que hemos obtenido un valor inferior al alfa definido de 0.05 podemos rechazar la hipótesis nula de que el promedio salarial de los hombres e sigual al promedio salarial de las mujeres, por lo que se acepta la hipótesis alternativa de que el promedio salarial de los hombres es superior al de las mujeres.</p>
 </div>
 <div id="comprobación-1" class="section level2">
 <h2>4.7 Comprobación</h2>
+<p>Realizamos la comprobación del test de homoscedasticidad con la función de R var.test.</p>
 <pre class="r"><code>var.test(H,D)</code></pre>
 <pre><code>## 
 ##  F test to compare two variances
@@ -491,6 +476,7 @@ v</code></pre>
 ## sample estimates:
 ## ratio of variances 
 ##           1.408441</code></pre>
+<p>Podemos comprobar que</p>
 <pre class="r"><code>t.test(H,D)</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test

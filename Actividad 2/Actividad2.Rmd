@@ -184,15 +184,17 @@ Podemos observar que en ámbos casos la mayoría de datos para ámbos sexos se l
 Definimos la hipótesis nula y alternativa:
 
 * **Hipótesis nula:** el promedio del salario semanal de los hombres es igual al promedio salarial semanal de las mujeres
+                                                  $$H_O: µ_1 = µ_2$$
 * **Hipótesis alternativa:** el promedio salarial semanal de los hombres es mayor que el promedio salarial semanal de las mujeres
-
+                                                  $$H_1: µ_1 > µ_2$$
+                                                  
 ## 4.4 Justificación del test a aplicar
 
 Para este caso se aplicará un contraste de hipótesis sobre dos muestras, una para cada sexo, aplicado sobre la media del salario semanal y unilateralmente por la derecha dado que se pretende comprobar si el salario semalan de los hombres es mayor al de las mujeres.
 
 ## 4.5 Cálculos
 
-Inicialmente realizamos el test de ...
+Inicialmente realizamos el test de homoscedasticidad para comprobar si las varianzas son iguales o diferentes
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -208,53 +210,47 @@ s2 <- sd(D)
 c(mean1, mean2, s1, s2, n1, n2)
 
 fobs <- s1^2/s2^2
-fcritL <- qf(alfa/2, df1=n1-1, df2=n2-1)
-fcritU <- qf(1 - alfa/2, df1=n1-2, df2=n2-2)
+fcritL <- qf(alfa, df1=n1-1, df2=n2-1)
+fcritU <- qf(1 - alfa, df1=n1-2, df2=n2-2)
 pvalue <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
 c(fobs, fcritL, fcritU, pvalue)
 ````
 
+Dado que el pvalor  es inferior al alfa definido de 0.05 podemos asumir que las varianzas son diferente por lo tanto aplicaremos el estadístico del contraste de dosmuestras sobre la media con varianzas desconocidas diferentes.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-alfa <- 1 - 0.95
-H <- man
-D <- woman
-mean1 <- mean(H)
-n1 <- length(H)
-s1 <- sd(H)
-mean2 <- mean(D)
-n2 <- length(D)
-s2 <- sd(D)
-c(mean1, mean2, s1, s2, n1, n2)
-
-fobs <- s1^2/s2^2
-fcritL <- qf(alfa/2, df1=n1-1, df2=n2-1)
-fcritU <- qf(1 - alfa/2, df1=n1-2, df2=n2-2)
-pvalue <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
-c(fobs, fcritL, fcritU, pvalue)
-````
-
-varianzas diferentes
-
-````{r echo=TRUE, message=FALSE, warning=FALSE}
-
+alfa <- 1-0.95
 dfMean = mean1 -mean2
-
-t <- dfMean/sqrt((s1^2/n1 + s2^2/n2))
-pvalor <- pnorm(t, lower.tail = FALSE)
-zcrit <- qnorm(alfa)
-c(pvalor, zcrit)
 v <- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
-v
+
+tobs <- dfMean/sqrt((s1^2/n1 + s2^2/n2))
+tcrit <- qt(alfa, v)
+pvalue <- pt(abs(tobs), df=v, lower.tail=FALSE)*2
+c(tobs, tcrit, pvalue)
 ````
+
+Podemos observar que el valor observado es 28.8127 , el valor crítico es - 1.64492 y el p valor es de 2.391262e-179.
 
 ## 4.6 Conclusión
 
+Dado que hemos obtenido un valor inferior al alfa definido de 0.05 podemos rechazar la hipótesis nula de que el promedio salarial de los hombres e sigual al promedio salarial de las mujeres, por lo que se acepta la hipótesis alternativa de que el promedio salarial de los hombres es superior al de las mujeres.
+
 ## 4.7 Comprobación
+
+Realizamos la comprobación del test de homoscedasticidad con la función de R var.test.
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 var.test(H,D)
+````
+
+Podemos comprobar que el p valor devuelto por la función también es inferior a 0.05 por lo que son varianzas desconocidas diferentes.
+
+Realizamos la comprobación del contraste de hipótesis empelando la función R t.test
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
 t.test(H,D)
 ````
+
+Observamos de nuevo que el pvalor devuelto es inferior al alfa definido por lo que comprobamso que se rechaza la hipótesis nula.
 
 # 5 Salario semanal (II)
 ## 5.1 Escribid la hipótesis nula y la alternativa

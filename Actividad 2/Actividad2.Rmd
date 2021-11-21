@@ -111,7 +111,7 @@ Podemos concluir con un 95% de confianza que el coste total pagado por siniestro
 # 3 Coste inicial y final de los siniestros
 ## 3.1 Justificación del test a aplicar
 
-Para la pregunta definida, el contraste a aplicar es un contraste de dos muestras ya que por un lado tenemos la muestra de la variable IniCost y por el otro la muestra de la variable UltCost. El contraste se aplica sobre la media de la diferencia de ámbas variables y es un contraste bilateral.
+Para la pregunta definida, el contraste a aplicar es un contraste de dos muestras ya que por un lado tenemos la muestra de la variable IniCost y por el otro la muestra de la variable UltCost. El contraste se aplica sobre la media de la diferencia de las variables emparajadas.Dicho contraste es un contraste bilateral.
 
 ## 3.2 Escribid la hipótesis nula y la alternativa
 Definimos la hipótesis nula y alternativa:
@@ -123,10 +123,11 @@ Definimos la hipótesis nula y alternativa:
                                           
 ## 3.3 Cálculos
 
+Aplicamos los cálculos relativos al contraste de dosmuestras emparejadas sobre la media
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
 alfa <- 1-0.95
-d <- claim$UltCost - claim$IniCost
+d <- claim$IniCost- claim$UltCost 
 mean <- mean(d)
 s <- sd(d)
 n <- length(d)
@@ -134,42 +135,28 @@ n <- length(d)
 tobs <- mean/(s/sqrt(n))
 tcritL <- qt(alfa/2, df=n-1)
 tcritU <- qt(1-alfa/2, df=n-1)
-pvalue <- pt(abs(tobs), lower.tail=FALSE, df=n-1)
+pvalue <- pt(tobs, lower.tail=FALSE, df=n-1)
 
 c(mean,s,n, tobs)
 c(tobs, tcritL,tcritU,pvalue)
 ````
 
-`````{r echo=TRUE, message=FALSE, warning=FALSE}
-#Eliminar
-alfa <- 1-0.95
-H <- claim$UltCost
-D <- claim$IniCost
-mean1 <- mean(H)
-mean2 <- mean(D)
-n1 <- nrow(H)
-n2 <- nrow(D)
-sd1 <- sd(H)
-sd2 <- sd(D)
+Podemos ver que el valor observado es de -20.801, que el valro critico por la izquierda es de -1.96, el valor crítico por la derecha es de 1.96 y el p valor es de 1.
 
-fobs <- sd1^2 / sd2^2
-
-fcritL <- qf(alfa/2, df1=n1-1, df2=n2-2)
-fcritU <- qf(1 - alfa/2, df1=n1-1, df2=n2-2)
-pvalor <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2)) * 2
-
-c(mean1, mean2, sd1,sd2,n1,n2)
-c(fobs,fcritL, fcritU, pvalor)
-````
 
 ## 3.4 Conclusión
 
+Dado que el pvalor devuelto por la función es superior al alfa definido de 0.05 podemos definir que la hipótesis nula es cierta por tanto podemos aceptar que no hay diferencias entre IniCost y UltCost con un 95% de confinza.
+
 ## 3.5 Comprobación
 
+Realizamos la comprobación utilizando la función de R t.test
+
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-var.test(H,D)
 t.test(claim$IniCost,claim$UltCost, paired=TRUE, alternative="greater")
 ````
+
+Podemos observar que la función acepta la hipótesis nula debido a que el p valor es superior al alfa definido de 0.05.
 
 # 4 Diferencia de salario según género
 ## 4.1 Análisis visual

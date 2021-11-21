@@ -344,7 +344,7 @@ round(c(L,U),2)</code></pre>
 <h1>3 Coste inicial y final de los siniestros</h1>
 <div id="justificación-del-test-a-aplicar" class="section level2">
 <h2>3.1 Justificación del test a aplicar</h2>
-<p>Para la pregunta definida, el contraste a aplicar es un contraste de dos muestras ya que por un lado tenemos la muestra de la variable IniCost y por el otro la muestra de la variable UltCost. El contraste se aplica sobre la varianza y es un contraste bilateral.</p>
+<p>Para la pregunta definida, el contraste a aplicar es un contraste de dos muestras ya que por un lado tenemos la muestra de la variable IniCost y por el otro la muestra de la variable UltCost. El contraste se aplica sobre la media de la diferencia de las variables emparajadas.Dicho contraste es un contraste bilateral.</p>
 </div>
 <div id="escribid-la-hipótesis-nula-y-la-alternativa" class="section level2">
 <h2>3.2 Escribid la hipótesis nula y la alternativa</h2>
@@ -356,8 +356,9 @@ round(c(L,U),2)</code></pre>
 </div>
 <div id="cálculos" class="section level2">
 <h2>3.3 Cálculos</h2>
+<p>Aplicamos los cálculos relativos al contraste de dosmuestras emparejadas sobre la media</p>
 <pre class="r"><code>alfa &lt;- 1-0.95
-d &lt;- claim$UltCost - claim$IniCost
+d &lt;- claim$IniCost- claim$UltCost 
 mean &lt;- mean(d)
 s &lt;- sd(d)
 n &lt;- length(d)
@@ -365,51 +366,21 @@ n &lt;- length(d)
 tobs &lt;- mean/(s/sqrt(n))
 tcritL &lt;- qt(alfa/2, df=n-1)
 tcritU &lt;- qt(1-alfa/2, df=n-1)
-pvalue &lt;- pt(abs(tobs), lower.tail=FALSE, df=n-1)
+pvalue &lt;- pt(tobs, lower.tail=FALSE, df=n-1)
 
 c(mean,s,n, tobs)</code></pre>
-<pre><code>## [1]  2159.35241 23334.31573 50526.00000    20.80108</code></pre>
+<pre><code>## [1] -2159.35241 23334.31573 50526.00000   -20.80108</code></pre>
 <pre class="r"><code>c(tobs, tcritL,tcritU,pvalue)</code></pre>
-<pre><code>## [1]  2.080108e+01 -1.960011e+00  1.960011e+00  5.337677e-96</code></pre>
-<pre class="r"><code>#Eliminar
-alfa &lt;- 1-0.95
-H &lt;- claim$UltCost
-D &lt;- claim$IniCost
-mean1 &lt;- mean(H)
-mean2 &lt;- mean(D)
-n1 &lt;- nrow(H)
-n2 &lt;- nrow(D)
-sd1 &lt;- sd(H)
-sd2 &lt;- sd(D)
-
-fobs &lt;- sd1^2 / sd2^2
-
-fcritL &lt;- qf(alfa/2, df1=n1-1, df2=n2-2)
-fcritU &lt;- qf(1 - alfa/2, df1=n1-1, df2=n2-2)
-pvalor &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2)) * 2
-
-c(mean1, mean2, sd1,sd2,n1,n2)</code></pre>
-<pre><code>## [1] 10147.667  7988.315 23947.190 20660.699</code></pre>
-<pre class="r"><code>c(fobs,fcritL, fcritU, pvalor)</code></pre>
-<pre><code>## [1] 1.343443      Inf</code></pre>
+<pre><code>## [1] -20.801081  -1.960011   1.960011   1.000000</code></pre>
+<p>Podemos ver que el valor observado es de -20.801, que el valro critico por la izquierda es de -1.96, el valor crítico por la derecha es de 1.96 y el p valor es de 1.</p>
 </div>
 <div id="conclusión" class="section level2">
 <h2>3.4 Conclusión</h2>
+<p>Dado que el pvalor devuelto por la función es superior al alfa definido de 0.05 podemos definir que la hipótesis nula es cierta por tanto podemos aceptar que no hay diferencias entre IniCost y UltCost con un 95% de confinza.</p>
 </div>
 <div id="comprobación" class="section level2">
 <h2>3.5 Comprobación</h2>
-<pre class="r"><code>var.test(H,D)</code></pre>
-<pre><code>## 
-##  F test to compare two variances
-## 
-## data:  H and D
-## F = 1.3434, num df = 50525, denom df = 50525, p-value &lt; 2.2e-16
-## alternative hypothesis: true ratio of variances is not equal to 1
-## 95 percent confidence interval:
-##  1.320217 1.367077
-## sample estimates:
-## ratio of variances 
-##           1.343443</code></pre>
+<p>Realizamos la comprobación utilizando la función de R t.test</p>
 <pre class="r"><code>t.test(claim$IniCost,claim$UltCost, paired=TRUE, alternative=&quot;greater&quot;)</code></pre>
 <pre><code>## 
 ##  Paired t-test
@@ -422,6 +393,7 @@ c(mean1, mean2, sd1,sd2,n1,n2)</code></pre>
 ## sample estimates:
 ## mean of the differences 
 ##               -2159.352</code></pre>
+<p>Podemos observar que la función acepta la hipótesis nula debido a que el p valor es superior al alfa definido de 0.05.</p>
 </div>
 </div>
 <div id="diferencia-de-salario-según-género" class="section level1">

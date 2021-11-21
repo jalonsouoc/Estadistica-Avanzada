@@ -350,17 +350,33 @@ round(c(L,U),2)</code></pre>
 <h2>3.2 Escribid la hipótesis nula y la alternativa</h2>
 <p>Definimos la hipótesis nula y alternativa:</p>
 <ul>
-<li><strong>Hipótesis nula:</strong> el valor medio de la estimación inciial del coste realizado por la compañía es igual al valor medio del coste total pagado por siniestro</li>
-<li><strong>Hipótesis alternativa:</strong> el valor medio de la estimación inicial del coste realizado por la compañía es diferente al valor medio del coste total pagado por siniestro</li>
+<li><strong>Hipótesis nula:</strong> la diferencia de las medias de las variables UltCost e IniCost es igual a cero <span class="math display">\[H_0: µ_d = 0\]</span></li>
+<li><strong>Hipótesis alternativa:</strong> la diferencia de las medias de las variables UltCost e IniCost es igual a cero <span class="math display">\[H_1: µ_d ≠ 0\]</span></li>
 </ul>
 </div>
 <div id="cálculos" class="section level2">
 <h2>3.3 Cálculos</h2>
 <pre class="r"><code>alfa &lt;- 1-0.95
-H &lt;- claim$IniCost
-D &lt;- claim$UltCost
+d &lt;- claim$UltCost - claim$IniCost
+mean &lt;- mean(d)
+s &lt;- sd(d)
+n &lt;- length(d)
+
+tobs &lt;- mean/(s/sqrt(n))
+tcritL &lt;- qt(alfa/2, df=n-1)
+tcritU &lt;- qt(1-alfa/2, df=n-1)
+pvalue &lt;- pt(abs(tobs), lower.tail=FALSE, df=n-1)
+
+c(mean,s,n, tobs)</code></pre>
+<pre><code>## [1]  2159.35241 23334.31573 50526.00000    20.80108</code></pre>
+<pre class="r"><code>c(tobs, tcritL,tcritU,pvalue)</code></pre>
+<pre><code>## [1]  2.080108e+01 -1.960011e+00  1.960011e+00  5.337677e-96</code></pre>
+<pre class="r"><code>#Eliminar
+alfa &lt;- 1-0.95
+H &lt;- claim$UltCost
+D &lt;- claim$IniCost
 mean1 &lt;- mean(H)
-mena2 &lt;- mean(D)
+mean2 &lt;- mean(D)
 n1 &lt;- nrow(H)
 n2 &lt;- nrow(D)
 sd1 &lt;- sd(H)
@@ -370,25 +386,42 @@ fobs &lt;- sd1^2 / sd2^2
 
 fcritL &lt;- qf(alfa/2, df1=n1-1, df2=n2-2)
 fcritU &lt;- qf(1 - alfa/2, df1=n1-1, df2=n2-2)
-pvalor &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2)) * 2</code></pre>
+pvalor &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2)) * 2
+
+c(mean1, mean2, sd1,sd2,n1,n2)</code></pre>
+<pre><code>## [1] 10147.667  7988.315 23947.190 20660.699</code></pre>
+<pre class="r"><code>c(fobs,fcritL, fcritU, pvalor)</code></pre>
+<pre><code>## [1] 1.343443      Inf</code></pre>
 </div>
 <div id="conclusión" class="section level2">
 <h2>3.4 Conclusión</h2>
 </div>
 <div id="comprobación" class="section level2">
 <h2>3.5 Comprobación</h2>
-<pre class="r"><code>t.test(claim$IniCost,claim$UltCost)</code></pre>
+<pre class="r"><code>var.test(H,D)</code></pre>
 <pre><code>## 
-##  Welch Two Sample t-test
+##  F test to compare two variances
+## 
+## data:  H and D
+## F = 1.3434, num df = 50525, denom df = 50525, p-value &lt; 2.2e-16
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  1.320217 1.367077
+## sample estimates:
+## ratio of variances 
+##           1.343443</code></pre>
+<pre class="r"><code>t.test(claim$IniCost,claim$UltCost, paired=TRUE, alternative=&quot;greater&quot;)</code></pre>
+<pre><code>## 
+##  Paired t-test
 ## 
 ## data:  claim$IniCost and claim$UltCost
-## t = -15.346, df = 98925, p-value &lt; 2.2e-16
-## alternative hypothesis: true difference in means is not equal to 0
+## t = -20.801, df = 50525, p-value = 1
+## alternative hypothesis: true difference in means is greater than 0
 ## 95 percent confidence interval:
-##  -2435.136 -1883.569
+##  -2330.107       Inf
 ## sample estimates:
-## mean of x mean of y 
-##  7988.315 10147.667</code></pre>
+## mean of the differences 
+##               -2159.352</code></pre>
 </div>
 </div>
 <div id="diferencia-de-salario-según-género" class="section level1">
@@ -585,11 +618,15 @@ zcrit &lt;- qnorm(alfa, lower.tail = FALSE)
 
 pvalue &lt;- pnorm(zobs, lower.tail=FALSE)
 
-c(zobs, zcrit,pvalue)</code></pre>
+c(p1,p2)</code></pre>
+<pre><code>## [1] 0.22555938 0.05104874</code></pre>
+<pre class="r"><code>c(zobs, zcrit,pvalue)</code></pre>
 <pre><code>## [1] 57.342302  1.644854  0.000000</code></pre>
 </div>
 <div id="conclusión-3" class="section level2">
 <h2>6.6 Conclusión</h2>
+<p>COn los resultados de los cálculos podemos rechazar la hipótesis nula debido a que el p-valor es inferior a nuestro alfa de 0.05, por lo que podemos concluir que la proporción de mujeres que trabajana tiempo parcial es superior a la proporción de hombres que trabajana a tiempo parcial con un nivel de confianza del 95%.</p>
+<p>Podemos ver que el valor observado obtenido es 57.3423 y el valor crítico es de 1.64485.</p>
 </div>
 <div id="comprobación-3" class="section level2">
 <h2>6.7 Comprobación</h2>
@@ -609,6 +646,7 @@ prop.test(success, nn, alternative=&quot;greater&quot;, correct=FALSE)</code></p
 ## sample estimates:
 ##     prop 1     prop 2 
 ## 0.22555938 0.05104874</code></pre>
+<p>Podemos observar que la función también rechaza la hipótesis nula.</p>
 </div>
 </div>
 <div id="salario-por-hora" class="section level1">
@@ -617,7 +655,7 @@ prop.test(success, nn, alternative=&quot;greater&quot;, correct=FALSE)</code></p
 <h2>7.1 Hipótesis nula y alternativa</h2>
 <p>Definimos la hipótesis nula y alternativa:</p>
 <ul>
-<li><strong>Hipótesis nula:</strong> el salario por hora trabajada de los hombres es igual al salario por hora trabajada de las mujeres</li>
+<li><strong>Hipótesis nula:</strong> el salario por hora trabajada de los hombres es igual al salario por hora trabajada de las mujeres <span class="math display">\[H_0: \]</span></li>
 <li><strong>Hipótesis alternativa:</strong> el salario por hora trabajada de los hombres es mayor que el salario por horas trabajadas de las mujeres</li>
 </ul>
 </div>

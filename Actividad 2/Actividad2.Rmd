@@ -111,22 +111,42 @@ Podemos concluir con un 95% de confianza que el coste total pagado por siniestro
 # 3 Coste inicial y final de los siniestros
 ## 3.1 Justificación del test a aplicar
 
-Para la pregunta definida, el contraste a aplicar es un contraste de dos muestras ya que por un lado tenemos la muestra de la variable IniCost y por el otro la muestra de la variable UltCost. El contraste se aplica sobre la varianza y es un contraste bilateral.
+Para la pregunta definida, el contraste a aplicar es un contraste de dos muestras ya que por un lado tenemos la muestra de la variable IniCost y por el otro la muestra de la variable UltCost. El contraste se aplica sobre la media de la diferencia de ámbas variables y es un contraste bilateral.
 
 ## 3.2 Escribid la hipótesis nula y la alternativa
 Definimos la hipótesis nula y alternativa:
 
-* **Hipótesis nula:** el valor medio de la estimación inciial del coste realizado por la compañía es igual al valor medio del coste total pagado por siniestro
-* **Hipótesis alternativa:** el valor medio de la estimación inicial del coste realizado por la compañía es diferente al valor medio del coste total pagado por siniestro
-
+* **Hipótesis nula:** la diferencia de las medias de las variables UltCost e IniCost es igual a cero
+                                          $$H_0: µ_d = 0$$
+* **Hipótesis alternativa:** la diferencia de las medias de las variables UltCost e IniCost es igual a cero
+                                          $$H_1: µ_d ≠ 0$$
+                                          
 ## 3.3 Cálculos
+
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
 alfa <- 1-0.95
-H <- claim$IniCost
-D <- claim$UltCost
+d <- claim$UltCost - claim$IniCost
+mean <- mean(d)
+s <- sd(d)
+n <- length(d)
+
+tobs <- mean/(s/sqrt(n))
+tcritL <- qt(alfa/2, df=n-1)
+tcritU <- qt(1-alfa/2, df=n-1)
+pvalue <- pt(abs(tobs), lower.tail=FALSE, df=n-1)
+
+c(mean,s,n, tobs)
+c(tobs, tcritL,tcritU,pvalue)
+````
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+#Eliminar
+alfa <- 1-0.95
+H <- claim$UltCost
+D <- claim$IniCost
 mean1 <- mean(H)
-mena2 <- mean(D)
+mean2 <- mean(D)
 n1 <- nrow(H)
 n2 <- nrow(D)
 sd1 <- sd(H)
@@ -138,7 +158,8 @@ fcritL <- qf(alfa/2, df1=n1-1, df2=n2-2)
 fcritU <- qf(1 - alfa/2, df1=n1-1, df2=n2-2)
 pvalor <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2)) * 2
 
-
+c(mean1, mean2, sd1,sd2,n1,n2)
+c(fobs,fcritL, fcritU, pvalor)
 ````
 
 ## 3.4 Conclusión
@@ -146,8 +167,8 @@ pvalor <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1,
 ## 3.5 Comprobación
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-
-t.test(claim$IniCost,claim$UltCost)
+var.test(H,D)
+t.test(claim$IniCost,claim$UltCost, paired=TRUE, alternative="greater")
 ````
 
 # 4 Diferencia de salario según género
@@ -344,6 +365,8 @@ c(zobs, zcrit,pvalue)
 
 COn los resultados de los cálculos podemos rechazar la hipótesis nula debido a que el p-valor es inferior a nuestro alfa de 0.05, por lo que podemos concluir que la proporción de mujeres que trabajana tiempo parcial es superior a la proporción de hombres que trabajana a tiempo parcial con un nivel de confianza del 95%.
 
+Podemos ver que el valor observado obtenido es 57.3423 y el valor crítico es de 1.64485.
+
 ## 6.7 Comprobación
 
 Realizamos la comprobación utilizando la función de R prop.test.       
@@ -354,12 +377,15 @@ nn <- c(n1,n2)
 prop.test(success, nn, alternative="greater", correct=FALSE)
 ````
 
+Podemos observar que la función también rechaza la hipótesis  nula.
+
 # 7 Salario por hora
 ## 7.1 Hipótesis nula y alternativa
 
 Definimos la hipótesis nula y alternativa:
 
 * **Hipótesis nula:** el salario por hora trabajada de los hombres es igual al salario por hora trabajada de las mujeres
+                                                    $$H_0: $$
 * **Hipótesis alternativa:** el salario por hora trabajada de los hombres es mayor que el salario por horas trabajadas de las mujeres
 
 ## 7.2 Tipo de test

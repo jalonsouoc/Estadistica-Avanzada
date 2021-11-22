@@ -440,11 +440,11 @@ s2 &lt;- sd(D)
 c(mean1, mean2, s1, s2, n1, n2)</code></pre>
 <pre><code>## [1]   449.4311   381.3649   253.5549   213.6499 38904.0000 11620.0000</code></pre>
 <pre class="r"><code>fobs &lt;- s1^2/s2^2
-fcritL &lt;- qf(alfa, df1=n1-1, df2=n2-1)
-fcritU &lt;- qf(1 - alfa, df1=n1-2, df2=n2-2)
+fcritL &lt;- qf(alfa, df1=n1-1, df2=n2-2)
+fcritU &lt;- qf(1 - alfa, df1=n1-1, df2=n2-2)
 pvalue &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
 c(fobs, fcritL, fcritU, pvalue)</code></pre>
-<pre><code>## [1]  1.408441e+00  9.757988e-01  1.024996e+00 5.030028e-109</code></pre>
+<pre><code>## [1]  1.408441e+00  9.757980e-01  1.024996e+00 5.030028e-109</code></pre>
 <p>Dado que el p valor es inferior al alfa definido de 0.05 podemos asumir que las varianzas son diferente por lo tanto aplicaremos el estadístico del contraste de dos muestras sobre la media con varianzas desconocidas diferentes.</p>
 <pre class="r"><code>alfa &lt;- 1-0.95
 dfMean = mean1 -mean2
@@ -603,18 +603,17 @@ c(p1,p2)</code></pre>
 <pre class="r"><code>p &lt;- (n1*p1 + n2*p2) / (n1+n2)
 zobs &lt;- (p1-p2)/(sqrt((p*(1-p))*(1/n1+1/n2)))
 zcrit &lt;- qnorm(alfa, lower.tail = FALSE)
-
 pvalue &lt;- pnorm(zobs, lower.tail=FALSE)
 
 c(p1,p2)</code></pre>
 <pre><code>## [1] 0.9489513 0.7744406</code></pre>
 <pre class="r"><code>c(zobs, zcrit,pvalue)</code></pre>
 <pre><code>## [1] 57.342302  1.644854  0.000000</code></pre>
+<p>Podemos ver que el valor observado obtenido es 57.3423, el valor crítico es de 1.64485 y el p valor es de 0.</p>
 </div>
 <div id="conclusión-3" class="section level2">
 <h2>6.6 Conclusión</h2>
-<p>Con los resultados de los cálculos podemos rechazar la hipótesis nula debido a que el p-valor es inferior a nuestro alfa de 0.05, por lo que podemos concluir que la proporción de mujeres que trabajan a tiempo parcial es superior a la proporción de hombres que trabajan a tiempo parcial con un nivel de confianza del 95%.</p>
-<p>Podemos ver que el valor observado obtenido es 57.3423 y el valor crítico es de 1.64485.</p>
+<p>Con los resultados de los cálculos podemos rechazar la hipótesis nula debido a que el p-valor es inferior a nuestro alfa de 0.05, por lo que podemos concluir que la proporción de hombres que trabajan a tiempo completo es diferente a la proporción de mujeres que trabajan a tiempo completo con un nivel de confianza del 95%</p>
 </div>
 <div id="comprobación-3" class="section level2">
 <h2>6.7 Comprobación</h2>
@@ -643,21 +642,81 @@ prop.test(success, nn, alternative=&quot;greater&quot;, correct=FALSE)</code></p
 <h2>7.1 Hipótesis nula y alternativa</h2>
 <p>Definimos la hipótesis nula y alternativa:</p>
 <ul>
-<li><strong>Hipótesis nula:</strong> el salario por hora trabajada de los hombres es igual al salario por hora trabajada de las mujeres <span class="math display">\[H_0: \]</span></li>
-<li><strong>Hipótesis alternativa:</strong> el salario por hora trabajada de los hombres es mayor que el salario por horas trabajadas de las mujeres <span class="math display">\[H_1: \]</span></li>
+<li><strong>Hipótesis nula:</strong> el promedio del salario por hora trabajada de los hombres es igual al promedio del salario por hora trabajada de las mujeres <span class="math display">\[H_0: µ_1 = µ_2 \]</span></li>
+<li><strong>Hipótesis alternativa:</strong> el promedio del salario por hora trabajada de los hombres es mayor que el `promedio del salario por horas trabajadas de las mujeres <span class="math display">\[H_1: µ_1 &gt; µ_2\]</span></li>
 </ul>
 </div>
 <div id="tipo-de-test-1" class="section level2">
 <h2>7.2 Tipo de test</h2>
+<p>Para este caso se va a utilizar un contraste de hipótesis sobre dos muestras, una correspondiente al salario por hora de los hombres y otra al salario por hora de las mujeres. Aplicaremos el contraste de hipótesis sobre la media del salario por hora. El contraste de hipótesis a utilizar es un contraste unilateral por la derecha.</p>
 </div>
 <div id="cálculos-4" class="section level2">
 <h2>7.3 Cálculos</h2>
+<p>Incialmente para poder aplicar el contraste de hipótesis debemos de calcular el salario por hora tanto para hombres como para mujeres</p>
+<pre class="r"><code>#Obtenemos el salario por horas
+claim$HourWages &lt;- round((claim$WeeklyWages/claim$DaysWeek)/(claim$HoursWeek/claim$DaysWeek),2)
+head(claim$HourWages)</code></pre>
+<pre><code>## [1] 13.16 13.58 18.66 14.62  9.92  5.26</code></pre>
+<pre class="r"><code>#Obtenemos la muestra para hombres y mujeres
+woman &lt;- claim$HourWages[claim$Gender == &quot;F&quot;]
+man &lt;- claim$HourWages[claim$Gender == &quot;M&quot;]</code></pre>
+<p>Realizamos el test de homoscedasticidad para comprobar si las varianzas son iguales o diferentes</p>
+<pre class="r"><code>alfa &lt;- 1-0.95
+H &lt;- man
+D &lt;- woman
+mean1 &lt;- mean(H)
+n1 &lt;- length(H)
+s1 &lt;- sd(H)
+mean2 &lt;- mean(D)
+n2 &lt;- length(D)
+s2 &lt;- sd(D)
+c(mean1, mean2, s1,s2,n1,n2)</code></pre>
+<pre><code>## [1]    11.829776    11.763123     7.349630     9.303727 38904.000000
+## [6] 11620.000000</code></pre>
+<pre class="r"><code>fobs &lt;- s1^2/s2^2
+fcrit &lt;- qf(alfa, df1=n1-1, df2=n2-2)
+pvalue &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
+c(fobs, fcrit, pvalue)</code></pre>
+<pre><code>## [1]  6.240466e-01  9.757980e-01 3.524475e-236</code></pre>
+<p>Dado que el p valor es inferior al alfa que hemos definido de 0.05 podemos asumir que las varianzas son diferentes por lo tanto aplicaremos el estadístico del contraste de dos muestras sobre la media con varianzas desconocidas diferentes.</p>
+<pre class="r"><code>alfa &lt;- 1 - 0.95
+dfMean &lt;- mean1 - mean2
+v &lt;- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
+tobs &lt;- dfMean/sqrt((s1^2/n1 + s2^2/n2))
+tcrit &lt;- qt(alfa, v)
+pvalue &lt;- pt(abs(tobs), df=v, lower.tail=FALSE)*2
+c(tobs, tcrit, pvalue)</code></pre>
+<pre><code>## [1]  0.7090120 -1.6449493  0.4783274</code></pre>
 </div>
 <div id="conclusión-4" class="section level2">
 <h2>7.4 Conclusión</h2>
 </div>
 <div id="comprobación-4" class="section level2">
 <h2>7.5 Comprobación</h2>
+<pre class="r"><code>var.test(H,D)</code></pre>
+<pre><code>## 
+##  F test to compare two variances
+## 
+## data:  H and D
+## F = 0.62405, num df = 38903, denom df = 11619, p-value &lt; 2.2e-16
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  0.6059530 0.6425295
+## sample estimates:
+## ratio of variances 
+##          0.6240466</code></pre>
+<pre class="r"><code>t.test(H,D)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  H and D
+## t = 0.70901, df = 16186, p-value = 0.4783
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.1176142  0.2509208
+## sample estimates:
+## mean of x mean of y 
+##  11.82978  11.76312</code></pre>
 </div>
 </div>
 <div id="resumen-ejecutivo" class="section level1">
@@ -674,10 +733,13 @@ prop.test(success, nn, alternative=&quot;greater&quot;, correct=FALSE)</code></p
 <ul>
 <li>¿Podemos aceptar que los hombres cobran al menos 50 euros más que las mujeres en promedio a la semana?</li>
 </ul>
-<p>Coun un 95% de confianza podemo rechazar que los hombres cobran al menos 50 euros más que las muejres en promedio a la semana.</p>
+<p>Coun un 95% de confianza podemos rechazar que los hombres cobran al menos 50 euros más que las muejres en promedio a la semana.</p>
 <ul>
-<li><p>¿La proporción de personas que trabajan a tiempo completo es diferente para hombres que para mujeres?</p></li>
-<li><p>¿Podemos afirmar que los hombres cobran más que las mujeres por hora trabajada?</p></li>
+<li>¿La proporción de personas que trabajan a tiempo completo es diferente para hombres que para mujeres?</li>
+</ul>
+<p>Con un 95% de confianza podemos aceptar que la proporción de personas que trabajan a tiempo completo es diferente para hombres y mujeres</p>
+<ul>
+<li>¿Podemos afirmar que los hombres cobran más que las mujeres por hora trabajada?</li>
 </ul>
 </div>
 

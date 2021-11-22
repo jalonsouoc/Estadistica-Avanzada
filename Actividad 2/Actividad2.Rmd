@@ -210,8 +210,8 @@ s2 <- sd(D)
 c(mean1, mean2, s1, s2, n1, n2)
 
 fobs <- s1^2/s2^2
-fcritL <- qf(alfa, df1=n1-1, df2=n2-1)
-fcritU <- qf(1 - alfa, df1=n1-2, df2=n2-2)
+fcritL <- qf(alfa, df1=n1-1, df2=n2-2)
+fcritU <- qf(1 - alfa, df1=n1-1, df2=n2-2)
 pvalue <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
 c(fobs, fcritL, fcritU, pvalue)
 ````
@@ -409,9 +409,73 @@ Para este caso se va a utilizar un contraste de hipótesis sobre dos muestras, u
 
 ## 7.3 Cálculos
 
+Incialmente para poder aplicar el contraste de hipótesis debemos de calcular el salario por hora tanto para hombres como para mujeres
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+#Obtenemos el salario por horas
+claim$HourWages <- round((claim$WeeklyWages/claim$DaysWeek)/(claim$HoursWeek/claim$DaysWeek),2)
+head(claim$HourWages)
+
+#Obtenemos la muestra para hombres y mujeres
+woman <- claim$HourWages[claim$Gender == "F"]
+man <- claim$HourWages[claim$Gender == "M"]
+````
+
+Realizamos el test de homoscedasticidad para comprobar si las varianzas son iguales o diferentes
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+alfa <- 1-0.95
+H <- man
+D <- woman
+mean1 <- mean(H)
+n1 <- length(H)
+s1 <- sd(H)
+mean2 <- mean(D)
+n2 <- length(D)
+s2 <- sd(D)
+c(mean1, mean2, s1,s2,n1,n2)
+
+fobs <- s1^2/s2^2
+fcrit <- qf(alfa, df1=n1-1, df2=n2-2)
+pvalue <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
+c(fobs, fcrit, pvalue)
+````
+
+Dado que el p valor es inferior al alfa que hemos definido de 0.05 podemos asumir que las varianzas son diferentes por lo tanto aplicaremos el estadístico del contraste de dos muestras sobre la media con varianzas desconocidas diferentes.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+alfa <- 1 - 0.95
+dfMean <- mean1 - mean2
+v <- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
+tobs <- dfMean/sqrt((s1^2/n1 + s2^2/n2))
+tcrit <- qt(alfa, v)
+pvalue <- pt(abs(tobs), df=v, lower.tail=FALSE)*2
+c(tobs, tcrit, pvalue)
+````
+
+Podemos observar que el valor observado es 0.709, el valor crítico es -1.6449 y el p valor es 0.4783274.
+
 ## 7.4 Conclusión
 
+Podemos observar en los cálculos realizados en el apartado anterior que el p valor es mayor al alfa definido de 0.05 por lo que podemos aceptar la hipótesisis nula y podemos asumir que el promedio de salario por hora de los hombres es igual al promedio de salario por hora de las mujeres.
+
 ## 7.5 Comprobación
+
+Realizamos la comprobación del test de homoscedasticidad con la función de R var.test.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+var.test(H,D)
+````
+
+Podemos comprobar que el p valor devuelto por la función también es inferior a 0.05 por lo que son varianzas desconocids diferentes.
+
+Realizamos la comprobaciópn del contraste de hipótesis empleando la función de R t.test.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+t.test(H,D)
+````
+
+Observamos que el p valor devuelto por la función es el mísmo que el obtenido mediante los cálculos por lo que comprobamos que se acepta la hipótesis nula definida.
 
 # 8 Resumen ejecutivo
 
@@ -431,11 +495,11 @@ Coun un 95% de confianza podemos rechazar que los hombres cobran al menos 50 eur
 
 * ¿La proporción de personas que trabajan a tiempo completo es diferente para hombres que para mujeres?
 
-Con un 95% de confianza podemos aceptar que la proporción de personas que trabajan a tiempo completo es diferente para hombres y mujeres
+Con un 95% de confianza podemos aceptar que la proporción de personas que trabajan a tiempo completo es diferente para hombres y mujeres.
 
 * ¿Podemos afirmar que los hombres cobran más que las mujeres por hora trabajada?
 
-
+Con un 95% de confianza podemos rechazar que los hombres cobran más que las mujeres por hora trabajada.
 
 
 

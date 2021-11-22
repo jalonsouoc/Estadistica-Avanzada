@@ -369,18 +369,17 @@ c(p1,p2)
 p <- (n1*p1 + n2*p2) / (n1+n2)
 zobs <- (p1-p2)/(sqrt((p*(1-p))*(1/n1+1/n2)))
 zcrit <- qnorm(alfa, lower.tail = FALSE)
-
 pvalue <- pnorm(zobs, lower.tail=FALSE)
 
 c(p1,p2)
 c(zobs, zcrit,pvalue)
 ````
 
+Podemos ver que el valor observado obtenido es 57.3423, el valor crítico es de 1.64485 y el p valor es de 0.
+
 ## 6.6 Conclusión
 
-Con los resultados de los cálculos podemos rechazar la hipótesis nula debido a que el p-valor es inferior a nuestro alfa de 0.05, por lo que podemos concluir que la proporción de mujeres que trabajan a tiempo parcial es superior a la proporción de hombres que trabajan a tiempo parcial con un nivel de confianza del 95%.
-
-Podemos ver que el valor observado obtenido es 57.3423 y el valor crítico es de 1.64485.
+Con los resultados de los cálculos podemos rechazar la hipótesis nula debido a que el p-valor es inferior a nuestro alfa de 0.05, por lo que podemos concluir que la proporción de hombres que trabajan a tiempo completo es diferente a la proporción de mujeres que trabajan a tiempo completo con un nivel de confianza del 95%
 
 ## 6.7 Comprobación
 
@@ -426,11 +425,11 @@ Con un 95% de confianza podemos aceptar que los hombres cobran más en promedio 
 
 * ¿Podemos aceptar que los hombres cobran al menos 50 euros más que las mujeres en promedio a la semana?
 
-Coun un 95% de confianza podemo rechazar que los hombres cobran al menos 50 euros más que las muejres en promedio a la semana.
+Coun un 95% de confianza podemos rechazar que los hombres cobran al menos 50 euros más que las muejres en promedio a la semana.
 
 * ¿La proporción de personas que trabajan a tiempo completo es diferente para hombres que para mujeres?
 
-
+Con un 95% de confianza podemos aceptar que la proporción de personas que trabajan a tiempo completo es diferente para hombres y mujeres
 
 * ¿Podemos afirmar que los hombres cobran más que las mujeres por hora trabajada?
 

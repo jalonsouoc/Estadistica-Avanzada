@@ -405,7 +405,7 @@ Definimos la hipótesis nula y alternativa:
                                                     
 ## 7.2 Tipo de test
 
-
+Para este caso se va a utilizar un contraste de hipótesis sobre dos muestras, una correspondiente al salario por hora de los hombres y otra al salario por hora de las mujeres. Aplicaremos el contraste de hipótesis sobre la media del salario por hora. El contraste de hipótesis a utilizar es un contraste unilateral por la derecha.
 
 ## 7.3 Cálculos
 

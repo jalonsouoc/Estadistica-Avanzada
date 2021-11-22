@@ -398,12 +398,14 @@ Podemos observar que la función también rechaza la hipótesis nula.
 
 Definimos la hipótesis nula y alternativa:
 
-* **Hipótesis nula:** el salario por hora trabajada de los hombres es igual al salario por hora trabajada de las mujeres
-                                                    $$H_0: $$
-* **Hipótesis alternativa:** el salario por hora trabajada de los hombres es mayor que el salario por horas trabajadas de las mujeres
-                                                    $$H_1: $$
+* **Hipótesis nula:** el promedio del salario por hora trabajada de los hombres es igual al promedio del salario por hora trabajada de las mujeres
+                                                    $$H_0: µ_1 = µ_2 $$
+* **Hipótesis alternativa:** el promedio del salario por hora trabajada de los hombres es mayor que el `promedio del salario por horas trabajadas de las mujeres
+                                                    $$H_1: µ_1 > µ_2$$
                                                     
 ## 7.2 Tipo de test
+
+
 
 ## 7.3 Cálculos
 

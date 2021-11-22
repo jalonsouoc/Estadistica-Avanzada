@@ -1,0 +1,1162 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  a4paper]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Actividad 2 - Analítica descriptiva e inferencial},
+  pdfauthor={Jorge Alonso Hernández},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Actividad 2 - Analítica descriptiva e inferencial}
+\author{Jorge Alonso Hernández}
+\date{22 de November, 2021}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{require}\NormalTok{(}\StringTok{\textquotesingle{}nortest\textquotesingle{}}\NormalTok{)) }\FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}nortest\textquotesingle{}}\NormalTok{); }\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}nortest\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: nortest
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{require}\NormalTok{(}\StringTok{\textquotesingle{}ggplot2\textquotesingle{}}\NormalTok{)) }\FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}ggplot2\textquotesingle{}}\NormalTok{); }\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}ggplot2\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: ggplot2
+\end{verbatim}
+
+\hypertarget{lectura-del-fichero-y-preparaciuxf3n-de-los-datos}{%
+\section{1 Lectura del fichero y preparación de los
+datos}\label{lectura-del-fichero-y-preparaciuxf3n-de-los-datos}}
+
+Para iniciar la carga del archivo primero revisamos el documento
+facilitado. Generaremos una variable ala que denominaremos ruta\_csv que
+almacenará la ruta de nuestro fichero, la cual obtenemos con la función:
+
+\begin{verbatim}
+file.choose()
+\end{verbatim}
+
+Una vez tenemos la ruta del fichero realizamos la carga de los datos:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ruta\_csv }\OtherTok{\textless{}{-}} \StringTok{"C:}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Users}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Jorge}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Documents}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Rstudio Workspace}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Estadística Avanzada}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Actividad 2}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{train\_clean2.csv"}
+\NormalTok{claim }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(ruta\_csv,}\AttributeTok{na.strings=}\StringTok{"NA"}\NormalTok{)}
+
+\FunctionTok{sapply}\NormalTok{(claim,class)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  X        ClaimNumber DateTimeOfAccident       DateReported 
+##          "integer"        "character"        "character"        "character" 
+##                Age             Gender      MaritalStatus  DependentChildren 
+##          "integer"        "character"        "character"          "integer" 
+##    DependentsOther        WeeklyWages   PartTimeFullTime          HoursWeek 
+##          "integer"          "numeric"        "character"          "numeric" 
+##           DaysWeek   ClaimDescription            IniCost            UltCost 
+##          "integer"        "character"          "integer"          "integer" 
+##               Time 
+##          "integer"
+\end{verbatim}
+
+Podemos observar los tipos de datos con los que se han cargado cada una
+de las variables , y vemos que estos son correctos. Mostramos ahora una
+muestra de los datos para comprobar que la carga se ha realizado
+correctamente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(claim)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   X ClaimNumber   DateTimeOfAccident         DateReported Age Gender
+## 1 1   WC8285054 2002-04-09T07:00:00Z 2002-07-05T00:00:00Z  48      M
+## 2 2   WC6982224 1999-01-07T11:00:00Z 1999-01-20T00:00:00Z  43      F
+## 3 3   WC5481426 1996-03-25T00:00:00Z 1996-04-14T00:00:00Z  30      M
+## 4 4   WC9775968 2005-06-22T13:00:00Z 2005-07-22T00:00:00Z  41      M
+## 5 5   WC2634037 1990-08-29T08:00:00Z 1990-09-27T00:00:00Z  36      M
+## 6 6   WC6828422 1999-06-21T11:00:00Z 1999-09-09T00:00:00Z  50      M
+##   MaritalStatus DependentChildren DependentsOther WeeklyWages PartTimeFullTime
+## 1             M                 0               0      500.00                F
+## 2             M                 0               0      509.34                F
+## 3             M                 0               0      709.10                F
+## 4             M                 0               0      555.46                F
+## 5             M                 0               0      377.10                F
+## 6             M                 0               0      200.00                F
+##   HoursWeek DaysWeek
+## 1      38.0        5
+## 2      37.5        5
+## 3      38.0        5
+## 4      38.0        5
+## 5      38.0        5
+## 6      38.0        5
+##                                                         ClaimDescription
+## 1                      LIFTING TYRE INJURY TO RIGHT ARM AND WRIST INJURY
+## 2             STEPPED AROUND CRATES AND TRUCK TRAY FRACTURE LEFT FOREARM
+## 3                                       CUT ON SHARP EDGE CUT LEFT THUMB
+## 4                                   DIGGING LOWER BACK LOWER BACK STRAIN
+## 5 REACHING ABOVE SHOULDER LEVEL ACUTE MUSCLE STRAIN LEFT SIDE OF STOMACH
+## 6                                     STRUCK HEAD ON HEAD LACERATED HEAD
+##   IniCost UltCost Time
+## 1    1500    4303   87
+## 2    5500    6106   13
+## 3    1700    2099   20
+## 4   15000   16283   30
+## 5    2800    3772   29
+## 6     500     747   80
+\end{verbatim}
+
+\hypertarget{coste-de-los-siniestros}{%
+\section{2 Coste de los siniestros}\label{coste-de-los-siniestros}}
+
+\hypertarget{anuxe1lisis-visual}{%
+\subsection{2.1 Análisis visual}\label{anuxe1lisis-visual}}
+
+Para realizar el análisis visual primero visualizaremos el diagrama de
+caja de la variable ``UltCost''
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boxplot}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{UltCost, }\AttributeTok{main=}\StringTok{"Box Plot UltCost"}\NormalTok{, }\AttributeTok{col=}\StringTok{"gray"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"UltCost"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Values"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Actividad2_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+Ahora mostramos el diagrama de cajas de la variable ``UltCost'' a escala
+logarítmica:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boxplot}\NormalTok{(}\FunctionTok{log}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{UltCost), }\AttributeTok{main=}\StringTok{"Box Plot UltCost"}\NormalTok{, }\AttributeTok{col=}\StringTok{"gray"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"UltCost"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Values"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Actividad2_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+Podemos observar de los gráficos que existe una asimetría en la
+distribución de la variable UltCost encontrándose la mayoría de los
+datos por encima del tercer cuartil a diferencia de la escala
+logarítmica de la variable que si encontramos una simetría en los datos.
+
+\hypertarget{comprobaciuxf3n-de-normalidad}{%
+\subsection{2.2 Comprobación de
+normalidad}\label{comprobaciuxf3n-de-normalidad}}
+
+Mostramos la distribución de los datos de la variable UltCost
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{UltCost, }\AttributeTok{main=}\StringTok{"Histograma UltCost"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Actividad2_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+Nos encontramos con una asimetría a la derecha en los datos. Aplicamos
+el contraste de normalidad de Lilliefors para comprobar la normalidad de
+la distribución de los datos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{UltCost)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  claim$UltCost
+## D = 0.33597, p-value < 2.2e-16
+\end{verbatim}
+
+Como podemos comprobar dado que el p valor es inferior a 0.05 no nos
+encontramos ante una distribución normal de los datos.
+
+Realizamos el estudio para la escala logarítmica de la variable UltCost.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(}\FunctionTok{log}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{UltCost), }\AttributeTok{main=}\StringTok{"Histograma UltCost"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Actividad2_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+Como podemos observar en el gráfico nos encontramos ante una
+distribución simétrica
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(}\FunctionTok{log}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{UltCost))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  log(claim$UltCost)
+## D = 0.0029142, p-value = 0.375
+\end{verbatim}
+
+En este caso observamos que el p valor es superior al 0.05 por lo que
+nos encontramos ante una distribución normal.
+
+\hypertarget{intervalo-de-confianza-de-la-media-poblacional-de-la-variable-ultcost}{%
+\subsection{2.3 Intervalo de confianza de la media poblacional de la
+variable
+UltCost}\label{intervalo-de-confianza-de-la-media-poblacional-de-la-variable-ultcost}}
+
+Calculamos el intervalo de confianza al 95\% de la media poblacional de
+la variable UltCost
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alfa }\OtherTok{\textless{}{-}} \DecValTok{1}\FloatTok{{-}0.95}
+\NormalTok{sd }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{UltCost)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(claim)}
+\NormalTok{SE }\OtherTok{\textless{}{-}}\NormalTok{ sd }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(n)}
+\NormalTok{z }\OtherTok{\textless{}{-}} \FunctionTok{qnorm}\NormalTok{(alfa}\SpecialCharTok{/}\DecValTok{2}\NormalTok{, }\AttributeTok{lower.tail=}\ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{L }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{UltCost) }\SpecialCharTok{{-}}\NormalTok{ z}\SpecialCharTok{*}\NormalTok{SE}
+\NormalTok{U }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{UltCost) }\SpecialCharTok{+}\NormalTok{ z}\SpecialCharTok{*}\NormalTok{SE}
+\FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(L,U),}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  9938.86 10356.47
+\end{verbatim}
+
+Podemos concluir con un 95\% de confianza que el coste total pagado por
+siniestro se encuentra entre los valores 9938,86 y 10356.47
+
+\hypertarget{coste-inicial-y-final-de-los-siniestros}{%
+\section{3 Coste inicial y final de los
+siniestros}\label{coste-inicial-y-final-de-los-siniestros}}
+
+\hypertarget{justificaciuxf3n-del-test-a-aplicar}{%
+\subsection{3.1 Justificación del test a
+aplicar}\label{justificaciuxf3n-del-test-a-aplicar}}
+
+Para la pregunta definida, el contraste a aplicar es un contraste de dos
+muestras emparejadas ya que por un lado tenemos la muestra de la
+variable IniCost y por el otro la muestra de la variable UltCost. El
+contraste se aplica sobre la media de la diferencia de las variables
+emparajadas. Dicho contraste es un contraste bilateral.
+
+\hypertarget{escribid-la-hipuxf3tesis-nula-y-la-alternativa}{%
+\subsection{3.2 Escribid la hipótesis nula y la
+alternativa}\label{escribid-la-hipuxf3tesis-nula-y-la-alternativa}}
+
+Definimos la hipótesis nula y alternativa:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Hipótesis nula:} la diferencia de las medias de las variables
+  UltCost e IniCost es igual a cero \[H_0: µ_d = 0\]
+\item
+  \textbf{Hipótesis alternativa:} la diferencia de las medias de las
+  variables UltCost e IniCost es igual a cero \[H_1: µ_d ≠ 0\]
+\end{itemize}
+
+\hypertarget{cuxe1lculos}{%
+\subsection{3.3 Cálculos}\label{cuxe1lculos}}
+
+Aplicamos los cálculos relativos al contraste de dos muestras
+emparejadas sobre la media
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alfa }\OtherTok{\textless{}{-}} \DecValTok{1}\FloatTok{{-}0.95}
+\NormalTok{d }\OtherTok{\textless{}{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{IniCost}\SpecialCharTok{{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{UltCost }
+\NormalTok{mean }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(d)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(d)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(d)}
+
+\NormalTok{tobs }\OtherTok{\textless{}{-}}\NormalTok{ mean}\SpecialCharTok{/}\NormalTok{(s}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(n))}
+\NormalTok{tcritL }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(alfa}\SpecialCharTok{/}\DecValTok{2}\NormalTok{, }\AttributeTok{df=}\NormalTok{n}\DecValTok{{-}1}\NormalTok{)}
+\NormalTok{tcritU }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{alfa}\SpecialCharTok{/}\DecValTok{2}\NormalTok{, }\AttributeTok{df=}\NormalTok{n}\DecValTok{{-}1}\NormalTok{)}
+\NormalTok{pvalue }\OtherTok{\textless{}{-}} \FunctionTok{pt}\NormalTok{(tobs, }\AttributeTok{lower.tail=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{df=}\NormalTok{n}\DecValTok{{-}1}\NormalTok{)}
+
+\FunctionTok{c}\NormalTok{(mean,s,n, tobs)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -2159.35241 23334.31573 50526.00000   -20.80108
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(tobs, tcritL,tcritU,pvalue)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -20.801081  -1.960011   1.960011   1.000000
+\end{verbatim}
+
+Podemos ver que el valor observado es de -20.801, que el valor critico
+por la izquierda es de -1.96, el valor crítico por la derecha es de 1.96
+y el p valor es de 1.
+
+\hypertarget{conclusiuxf3n}{%
+\subsection{3.4 Conclusión}\label{conclusiuxf3n}}
+
+Dado que el p valor devuelto por la función es superior al alfa definido
+de 0.05 podemos definir que la hipótesis nula es cierta por tanto
+podemos aceptar que no hay diferencias entre IniCost y UltCost con un
+95\% de confianza.
+
+\hypertarget{comprobaciuxf3n}{%
+\subsection{3.5 Comprobación}\label{comprobaciuxf3n}}
+
+Realizamos la comprobación utilizando la función de R t.test
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{t.test}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{IniCost,claim}\SpecialCharTok{$}\NormalTok{UltCost, }\AttributeTok{paired=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{alternative=}\StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Paired t-test
+## 
+## data:  claim$IniCost and claim$UltCost
+## t = -20.801, df = 50525, p-value = 1
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  -2330.107       Inf
+## sample estimates:
+## mean of the differences 
+##               -2159.352
+\end{verbatim}
+
+Podemos observar que la función acepta la hipótesis nula debido a que el
+p valor es superior al alfa definido de 0.05.
+
+\hypertarget{diferencia-de-salario-seguxfan-guxe9nero}{%
+\section{4 Diferencia de salario según
+género}\label{diferencia-de-salario-seguxfan-guxe9nero}}
+
+\hypertarget{anuxe1lisis-visual-1}{%
+\subsection{4.1 Análisis visual}\label{anuxe1lisis-visual-1}}
+
+En primer lugar, para poder realizar el estudio obtenemos las muestras
+para mujeres y hombres de la variable WeeklyWages
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{woman }\OtherTok{\textless{}{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{WeeklyWages[claim}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"F"}\NormalTok{]}
+\NormalTok{man }\OtherTok{\textless{}{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{WeeklyWages[claim}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"M"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Mostramos ahora los diagramas de cajas para los hombres y las mujeres de
+la variable WeeklyWages.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boxplot}\NormalTok{(}\FunctionTok{log}\NormalTok{(woman), }\AttributeTok{main=}\StringTok{"Box Plot WeeklyWages Woman"}\NormalTok{, }\AttributeTok{col=}\StringTok{"gray"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"WeeklyWages"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Values"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Actividad2_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boxplot}\NormalTok{(}\FunctionTok{log}\NormalTok{(man), }\AttributeTok{main=}\StringTok{"Box Plot WeeklyWages Man"}\NormalTok{, }\AttributeTok{col=}\StringTok{"gray"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"WeeklyWages"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Values"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Actividad2_files/figure-latex/unnamed-chunk-14-2.pdf}
+
+\hypertarget{interpretaciuxf3n}{%
+\subsection{4.2 Interpretación}\label{interpretaciuxf3n}}
+
+Podemos observar que en ambos casos la mayoría de datos para ambos sexos
+se localizan en el mismo intervalo, si podemos observar que para hombres
+existen más valores extremos que para las mujeres es decir que hay una
+mayor cantidad de salarios semanales que se encuentran por encima del
+límite superior y más valores inferiores al límite inferior en hombres
+que en mujeres.
+
+\hypertarget{escribid-la-hipuxf3tesis-nula-y-la-alternativa-1}{%
+\subsection{4.3 Escribid la hipótesis nula y la
+alternativa}\label{escribid-la-hipuxf3tesis-nula-y-la-alternativa-1}}
+
+Definimos la hipótesis nula y alternativa:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Hipótesis nula:} el promedio del salario semanal de los
+  hombres es igual al promedio salarial semanal de las mujeres
+  \[H_O: µ_1 = µ_2\]
+\item
+  \textbf{Hipótesis alternativa:} el promedio salarial semanal de los
+  hombres es mayor que el promedio salarial semanal de las mujeres
+  \[H_1: µ_1 > µ_2\]
+\end{itemize}
+
+\hypertarget{justificaciuxf3n-del-test-a-aplicar-1}{%
+\subsection{4.4 Justificación del test a
+aplicar}\label{justificaciuxf3n-del-test-a-aplicar-1}}
+
+Para este caso se aplicará un contraste de hipótesis sobre dos muestras,
+una para cada sexo, aplicado sobre la media del salario semanal y
+unilateralmente por la derecha dado que se pretende comprobar si el
+salario semanal de los hombres es mayor al de las mujeres.
+
+\hypertarget{cuxe1lculos-1}{%
+\subsection{4.5 Cálculos}\label{cuxe1lculos-1}}
+
+Inicialmente realizamos el test de homoscedasticidad para comprobar si
+las varianzas son iguales o diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alfa }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{{-}} \FloatTok{0.95}
+\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ man}
+\NormalTok{D }\OtherTok{\textless{}{-}}\NormalTok{ woman}
+\NormalTok{mean1 }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(H)}
+\NormalTok{n1 }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(H)}
+\NormalTok{s1 }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(H)}
+\NormalTok{mean2 }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(D)}
+\NormalTok{n2 }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(D)}
+\NormalTok{s2 }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(D)}
+\FunctionTok{c}\NormalTok{(mean1, mean2, s1, s2, n1, n2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]   449.4311   381.3649   253.5549   213.6499 38904.0000 11620.0000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fobs }\OtherTok{\textless{}{-}}\NormalTok{ s1}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{s2}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{fcritL }\OtherTok{\textless{}{-}} \FunctionTok{qf}\NormalTok{(alfa, }\AttributeTok{df1=}\NormalTok{n1}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{df2=}\NormalTok{n2}\DecValTok{{-}2}\NormalTok{)}
+\NormalTok{fcritU }\OtherTok{\textless{}{-}} \FunctionTok{qf}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alfa, }\AttributeTok{df1=}\NormalTok{n1}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{df2=}\NormalTok{n2}\DecValTok{{-}2}\NormalTok{)}
+\NormalTok{pvalue }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(}\FunctionTok{pf}\NormalTok{(fobs, }\AttributeTok{df1=}\NormalTok{n1}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{df2=}\NormalTok{n2}\DecValTok{{-}2}\NormalTok{, }\AttributeTok{lower.tail=}\ConstantTok{FALSE}\NormalTok{), }\FunctionTok{pf}\NormalTok{(fobs, }\AttributeTok{df1=}\NormalTok{n1}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{df2=}\NormalTok{n2}\DecValTok{{-}2}\NormalTok{))}\SpecialCharTok{*}\DecValTok{2}
+\FunctionTok{c}\NormalTok{(fobs, fcritL, fcritU, pvalue)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  1.408441e+00  9.757980e-01  1.024996e+00 5.030028e-109
+\end{verbatim}
+
+Dado que el p valor es inferior al alfa definido de 0.05 podemos asumir
+que las varianzas son diferente por lo tanto aplicaremos el estadístico
+del contraste de dos muestras sobre la media con varianzas desconocidas
+diferentes.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alfa }\OtherTok{\textless{}{-}} \DecValTok{1}\FloatTok{{-}0.95}
+\NormalTok{dfMean }\OtherTok{=}\NormalTok{ mean1 }\SpecialCharTok{{-}}\NormalTok{mean2}
+\NormalTok{v }\OtherTok{\textless{}{-}}\NormalTok{ ((s1}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n1)}\SpecialCharTok{+}\NormalTok{(s2}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n2))}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/}\NormalTok{ (((s2}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n1)}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{(n1}\DecValTok{{-}1}\NormalTok{)) }\SpecialCharTok{+}\NormalTok{ ((s2}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n2)}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{(n2}\DecValTok{{-}1}\NormalTok{)))}
+
+\NormalTok{tobs }\OtherTok{\textless{}{-}}\NormalTok{ dfMean}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{((s1}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n1 }\SpecialCharTok{+}\NormalTok{ s2}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n2))}
+\NormalTok{tcrit }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(alfa, v)}
+\NormalTok{pvalue }\OtherTok{\textless{}{-}} \FunctionTok{pt}\NormalTok{(}\FunctionTok{abs}\NormalTok{(tobs), }\AttributeTok{df=}\NormalTok{v, }\AttributeTok{lower.tail=}\ConstantTok{FALSE}\NormalTok{)}\SpecialCharTok{*}\DecValTok{2}
+\FunctionTok{c}\NormalTok{(tobs, tcrit, pvalue)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]   2.881270e+01  -1.644920e+00  2.391262e-179
+\end{verbatim}
+
+Podemos observar que el valor observado es 28.8127, el valor crítico es
+- 1.64492 y el p valor es de 2.391262e-179.
+
+\hypertarget{conclusiuxf3n-1}{%
+\subsection{4.6 Conclusión}\label{conclusiuxf3n-1}}
+
+Dado que hemos obtenido un valor inferior al alfa definido de 0.05
+podemos rechazar la hipótesis nula de que el promedio salarial de los
+hombres es igual al promedio salarial de las mujeres, por lo que se
+acepta la hipótesis alternativa de que el promedio salarial de los
+hombres es superior al de las mujeres.
+
+\hypertarget{comprobaciuxf3n-1}{%
+\subsection{4.7 Comprobación}\label{comprobaciuxf3n-1}}
+
+Realizamos la comprobación del test de homoscedasticidad con la función
+de R var.test.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{var.test}\NormalTok{(H,D)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  F test to compare two variances
+## 
+## data:  H and D
+## F = 1.4084, num df = 38903, denom df = 11619, p-value < 2.2e-16
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  1.367605 1.450156
+## sample estimates:
+## ratio of variances 
+##           1.408441
+\end{verbatim}
+
+Podemos comprobar que el p valor devuelto por la función también es
+inferior a 0.05 por lo que son varianzas desconocidas diferentes.
+
+Realizamos la comprobación del contraste de hipótesis empelando la
+función R t.test
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{t.test}\NormalTok{(H,D)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Welch Two Sample t-test
+## 
+## data:  H and D
+## t = 28.813, df = 22274, p-value < 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  63.43579 72.69661
+## sample estimates:
+## mean of x mean of y 
+##  449.4311  381.3649
+\end{verbatim}
+
+Observamos de nuevo que el p valor devuelto es inferior al alfa definido
+por lo que comprobamos que se rechaza la hipótesis nula.
+
+\hypertarget{salario-semanal-ii}{%
+\section{5 Salario semanal (II)}\label{salario-semanal-ii}}
+
+\hypertarget{escribid-la-hipuxf3tesis-nula-y-la-alternativa-2}{%
+\subsection{5.1 Escribid la hipótesis nula y la
+alternativa}\label{escribid-la-hipuxf3tesis-nula-y-la-alternativa-2}}
+
+Definimos la hipótesis nula y alternativa:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Hipótesis nula:} el promedio de la diferencia del salario
+  semanal del hombre y la mujer es igual a 50. \[H_0: µ_d = 50\]
+\item
+  \textbf{Hipótesis alternativa:} el promedio de la diferencia del
+  salario semanal del hombre y la mujer es mayor que 50.
+  \[H_1: µ_d > 50\]
+\end{itemize}
+
+\hypertarget{justificaciuxf3n-del-test-a-aplicar-2}{%
+\subsection{5.2 Justificación del test a
+aplicar}\label{justificaciuxf3n-del-test-a-aplicar-2}}
+
+Para este caso se aplicará un contraste de hipótesis sobre dos muestras
+emparejadas, una para cada sexo, aplicado sobre la diferencia de la
+media salarial semanal y unilateralmente por la derecha dado que se
+pretende comprobar si el salario promedio de los hombres es al menos 50
+euros mayor que el de las mujeres.
+
+\hypertarget{cuxe1lculos-2}{%
+\subsection{5.3 Cálculos}\label{cuxe1lculos-2}}
+
+Aplicamos los cálculos relativos al contraste de dos muestras
+emparejadas sobre la media.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{woman }\OtherTok{\textless{}{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{WeeklyWages[claim}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"F"}\NormalTok{]}
+\NormalTok{man }\OtherTok{\textless{}{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{WeeklyWages[claim}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"M"}\NormalTok{]}
+
+\NormalTok{mean }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(d)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(d)}
+\NormalTok{n}\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(d)}
+
+\NormalTok{tobs }\OtherTok{\textless{}{-}}\NormalTok{ (mean }\SpecialCharTok{{-}} \DecValTok{50}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(s}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(n))}
+\NormalTok{tcrit }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(alfa, }\AttributeTok{df=}\NormalTok{n}\DecValTok{{-}1}\NormalTok{)}
+\NormalTok{pvalue }\OtherTok{\textless{}{-}} \FunctionTok{pt}\NormalTok{(tobs, }\AttributeTok{lower.tail=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{df=}\NormalTok{n}\DecValTok{{-}1}\NormalTok{)}
+\FunctionTok{c}\NormalTok{(tobs, tcrit, pvalue)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -21.282732  -1.644884   1.000000
+\end{verbatim}
+
+Podemos ver que el valor observado es de -21.287 , que el valor crítico
+es de -1.64488 y el p valor es de 1.
+
+\hypertarget{conclusiuxf3n-2}{%
+\subsection{5.4 Conclusión}\label{conclusiuxf3n-2}}
+
+Observamos que el p valor devuelto es superior al alfa definido que es
+de 0.05 por lo que podemos asumir que la hipótesis nula es cierta y por
+tanto rechazamos la hipótesis alternativa de que el promedio del salario
+de los hombres es al menos 50 euros mayor que el de las mujeres con un
+95\% de confianza.
+
+\hypertarget{comprobaciuxf3n-2}{%
+\subsection{5.5 Comprobación}\label{comprobaciuxf3n-2}}
+
+Realizamos la comprobación utilizando la función de R t.test
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{t.test}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{IniCost,claim}\SpecialCharTok{$}\NormalTok{UltCost, }\AttributeTok{paired=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{alternative=}\StringTok{"greater"}\NormalTok{, }\AttributeTok{mu=}\DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Paired t-test
+## 
+## data:  claim$IniCost and claim$UltCost
+## t = -21.283, df = 50525, p-value = 1
+## alternative hypothesis: true difference in means is greater than 50
+## 95 percent confidence interval:
+##  -2330.107       Inf
+## sample estimates:
+## mean of the differences 
+##               -2159.352
+\end{verbatim}
+
+Podemos observar que la función acepta la hipótesis nula debido a que el
+p valor es superior al alfa definido de 0.05, por lo que con un 95\% de
+confianza el promedio del salario de los hombres no es al menos 50 euros
+mayor que el de las mujeres.
+
+\hypertarget{diferencia-de-jornada-seguxfan-guxe9nero}{%
+\section{6 Diferencia de jornada según
+género}\label{diferencia-de-jornada-seguxfan-guxe9nero}}
+
+\hypertarget{anuxe1lisis-visual-2}{%
+\subsection{6.1 Análisis visual}\label{anuxe1lisis-visual-2}}
+
+Mostramos un diagrama de barras con las categorías de la variable
+PartTimeFullTime según el género.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Obtenemos las muestras para hombres y para mujeres}
+\NormalTok{woman }\OtherTok{\textless{}{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{PartTimeFullTime[claim}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"F"}\NormalTok{]}
+\NormalTok{man }\OtherTok{\textless{}{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{PartTimeFullTime[claim}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"M"}\NormalTok{]}
+
+\CommentTok{\#Calculamos la frecuencia de cada una de las variables y obtenemos sus porcentajes}
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\StringTok{"Gender"} \OtherTok{=} \FunctionTok{c}\NormalTok{(}\StringTok{"M"}\NormalTok{, }\StringTok{"M"}\NormalTok{, }\StringTok{"F"}\NormalTok{, }\StringTok{"F"}\NormalTok{), }\StringTok{"PartTimeFullTime"} \OtherTok{=} \FunctionTok{c}\NormalTok{(}\StringTok{"P"}\NormalTok{, }\StringTok{"F"}\NormalTok{, }\StringTok{"P"}\NormalTok{, }\StringTok{"F"}\NormalTok{))}
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{freq }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{length}\NormalTok{(man[man }\SpecialCharTok{==} \StringTok{"P"}\NormalTok{]), }\FunctionTok{length}\NormalTok{(man[man }\SpecialCharTok{==} \StringTok{"F"}\NormalTok{]), }\FunctionTok{length}\NormalTok{(woman[woman }\SpecialCharTok{==} \StringTok{"P"}\NormalTok{]),}\FunctionTok{length}\NormalTok{(woman[woman }\SpecialCharTok{==} \StringTok{"F"}\NormalTok{]))}
+\NormalTok{percentageMP }\OtherTok{\textless{}{-}}\NormalTok{ (df}\SpecialCharTok{$}\NormalTok{freq[df}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"M"} \SpecialCharTok{\&}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{PartTimeFullTime }\SpecialCharTok{==} \StringTok{"P"}\NormalTok{]}\SpecialCharTok{/}\FunctionTok{length}\NormalTok{(man)) }\SpecialCharTok{*} \DecValTok{100} 
+\NormalTok{percentageMF }\OtherTok{\textless{}{-}}\NormalTok{ (df}\SpecialCharTok{$}\NormalTok{freq[df}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"M"} \SpecialCharTok{\&}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{PartTimeFullTime }\SpecialCharTok{==} \StringTok{"F"}\NormalTok{]}\SpecialCharTok{/}\FunctionTok{length}\NormalTok{(man)) }\SpecialCharTok{*} \DecValTok{100}
+\NormalTok{percentageFP }\OtherTok{\textless{}{-}}\NormalTok{ (df}\SpecialCharTok{$}\NormalTok{freq[df}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"F"} \SpecialCharTok{\&}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{PartTimeFullTime }\SpecialCharTok{==} \StringTok{"P"}\NormalTok{]}\SpecialCharTok{/}\FunctionTok{length}\NormalTok{(woman)) }\SpecialCharTok{*} \DecValTok{100} 
+\NormalTok{percentageFF }\OtherTok{\textless{}{-}}\NormalTok{ (df}\SpecialCharTok{$}\NormalTok{freq[df}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"F"} \SpecialCharTok{\&}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{PartTimeFullTime }\SpecialCharTok{==} \StringTok{"F"}\NormalTok{]}\SpecialCharTok{/}\FunctionTok{length}\NormalTok{(woman)) }\SpecialCharTok{*} \DecValTok{100}
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{Percentage }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(percentageMP, percentageMF, percentageFP, percentageFF)}
+\end{Highlighting}
+\end{Shaded}
+
+Mostramos el diagrama de barras de los porcentajes.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data=}\NormalTok{df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Gender, }\AttributeTok{fill=}\NormalTok{PartTimeFullTime, }\AttributeTok{y=}\NormalTok{Percentage))}\SpecialCharTok{+}\FunctionTok{geom\_col}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Porcentaje PartTimeFulltime por Género"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Actividad2_files/figure-latex/unnamed-chunk-22-1.pdf}
+
+Mostramos también el gráfico con los datos totales.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data=}\NormalTok{claim, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Gender,}\AttributeTok{fill=}\NormalTok{PartTimeFullTime))}\SpecialCharTok{+}\FunctionTok{geom\_bar}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"PartTimeFulltime por Género"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Actividad2_files/figure-latex/unnamed-chunk-23-1.pdf}
+
+\hypertarget{interpretaciuxf3n-1}{%
+\subsection{6.2 Interpretación}\label{interpretaciuxf3n-1}}
+
+De los gráficos obtenidos en el apartado anterior podemos observar que
+el porcentaje de hombres que trabajan a jornada completa es mayor al
+porcentaje de mujeres que trabaja a tiempo completo. También podemos
+observar que la muestra posee un mayor número de registros para hombres
+que para mujeres.
+
+\hypertarget{hipuxf3tesis-nula-y-alternativa}{%
+\subsection{6.3 Hipótesis nula y
+alternativa}\label{hipuxf3tesis-nula-y-alternativa}}
+
+Definimos la hipótesis nula y alternativa:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Hipótesis nula:} la proporción de hombres que trabajan a
+  tiempo completo es igual a la proporción de mujeres que trabajan a
+  tiempo completo \[H_0: p_1 = p_2\]
+\item
+  \textbf{Hipótesis alternativa:} la proporción de hombres que trabajan
+  a tiempo completo es diferente a la proporción de mujeres que trabajan
+  a tiempo completo \[H_1: p_1 ≠ p_2\]
+\end{itemize}
+
+\hypertarget{tipo-de-test}{%
+\subsection{6.4 Tipo de test}\label{tipo-de-test}}
+
+Para este caso se va a utilizar un contraste de hipótesis sobre dos
+muestras, una para hombres y otra para mujeres, aplicado sobre la
+proporción del tipo de jornada laboral. el contraste a aplicar es un
+contraste bilateral.
+
+\hypertarget{cuxe1lculos-3}{%
+\subsection{6.5 Cálculos}\label{cuxe1lculos-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alfa }\OtherTok{\textless{}{-}} \DecValTok{1}\FloatTok{{-}0.95}
+\NormalTok{x1 }\OtherTok{\textless{}{-}}\NormalTok{ man[man }\SpecialCharTok{==} \StringTok{\textquotesingle{}F\textquotesingle{}}\NormalTok{]}
+\NormalTok{x2 }\OtherTok{\textless{}{-}}\NormalTok{ woman[woman }\SpecialCharTok{==} \StringTok{\textquotesingle{}F\textquotesingle{}}\NormalTok{]}
+
+\NormalTok{n1 }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(man)}
+\NormalTok{n2 }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(woman)}
+
+\NormalTok{p1 }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{length}\NormalTok{(x1))}\SpecialCharTok{/}\NormalTok{n1}
+\NormalTok{p2 }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{length}\NormalTok{(x2))}\SpecialCharTok{/}\NormalTok{n2}
+
+\FunctionTok{c}\NormalTok{(p1,p2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9489513 0.7744406
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p }\OtherTok{\textless{}{-}}\NormalTok{ (n1}\SpecialCharTok{*}\NormalTok{p1 }\SpecialCharTok{+}\NormalTok{ n2}\SpecialCharTok{*}\NormalTok{p2) }\SpecialCharTok{/}\NormalTok{ (n1}\SpecialCharTok{+}\NormalTok{n2)}
+\NormalTok{zobs }\OtherTok{\textless{}{-}}\NormalTok{ (p1}\SpecialCharTok{{-}}\NormalTok{p2)}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{((p}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{p))}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{n1}\SpecialCharTok{+}\DecValTok{1}\SpecialCharTok{/}\NormalTok{n2)))}
+\NormalTok{zcrit }\OtherTok{\textless{}{-}} \FunctionTok{qnorm}\NormalTok{(alfa, }\AttributeTok{lower.tail =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{pvalue }\OtherTok{\textless{}{-}} \FunctionTok{pnorm}\NormalTok{(zobs, }\AttributeTok{lower.tail=}\ConstantTok{FALSE}\NormalTok{)}
+
+\FunctionTok{c}\NormalTok{(p1,p2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9489513 0.7744406
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(zobs, zcrit,pvalue)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 57.342302  1.644854  0.000000
+\end{verbatim}
+
+Podemos ver que el valor observado obtenido es 57.3423, el valor crítico
+es de 1.64485 y el p valor es de 0.
+
+\hypertarget{conclusiuxf3n-3}{%
+\subsection{6.6 Conclusión}\label{conclusiuxf3n-3}}
+
+Con los resultados de los cálculos podemos rechazar la hipótesis nula
+debido a que el p-valor es inferior a nuestro alfa de 0.05, por lo que
+podemos concluir que la proporción de hombres que trabajan a tiempo
+completo es diferente a la proporción de mujeres que trabajan a tiempo
+completo con un nivel de confianza del 95\%
+
+\hypertarget{comprobaciuxf3n-3}{%
+\subsection{6.7 Comprobación}\label{comprobaciuxf3n-3}}
+
+Realizamos la comprobación utilizando la función de R prop.test.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{success }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(p1}\SpecialCharTok{*}\NormalTok{n1, p2}\SpecialCharTok{*}\NormalTok{n2)}
+\NormalTok{nn }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(n1,n2)}
+\FunctionTok{prop.test}\NormalTok{(success, nn, }\AttributeTok{alternative=}\StringTok{"greater"}\NormalTok{, }\AttributeTok{correct=}\ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  2-sample test for equality of proportions without continuity
+##  correction
+## 
+## data:  success out of nn
+## X-squared = 3288.1, df = 1, p-value < 2.2e-16
+## alternative hypothesis: greater
+## 95 percent confidence interval:
+##  0.1678743 1.0000000
+## sample estimates:
+##    prop 1    prop 2 
+## 0.9489513 0.7744406
+\end{verbatim}
+
+Podemos observar que la función también rechaza la hipótesis nula.
+
+\hypertarget{salario-por-hora}{%
+\section{7 Salario por hora}\label{salario-por-hora}}
+
+\hypertarget{hipuxf3tesis-nula-y-alternativa-1}{%
+\subsection{7.1 Hipótesis nula y
+alternativa}\label{hipuxf3tesis-nula-y-alternativa-1}}
+
+Definimos la hipótesis nula y alternativa:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Hipótesis nula:} el promedio del salario por hora trabajada de
+  los hombres es igual al promedio del salario por hora trabajada de las
+  mujeres \[H_0: µ_1 = µ_2 \]
+\item
+  \textbf{Hipótesis alternativa:} el promedio del salario por hora
+  trabajada de los hombres es mayor que el `promedio del salario por
+  horas trabajadas de las mujeres \[H_1: µ_1 > µ_2\]
+\end{itemize}
+
+\hypertarget{tipo-de-test-1}{%
+\subsection{7.2 Tipo de test}\label{tipo-de-test-1}}
+
+Para este caso se va a utilizar un contraste de hipótesis sobre dos
+muestras, una correspondiente al salario por hora de los hombres y otra
+al salario por hora de las mujeres. Aplicaremos el contraste de
+hipótesis sobre la media del salario por hora. El contraste de hipótesis
+a utilizar es un contraste unilateral por la derecha.
+
+\hypertarget{cuxe1lculos-4}{%
+\subsection{7.3 Cálculos}\label{cuxe1lculos-4}}
+
+Incialmente para poder aplicar el contraste de hipótesis debemos de
+calcular el salario por hora tanto para hombres como para mujeres
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Obtenemos el salario por horas}
+\NormalTok{claim}\SpecialCharTok{$}\NormalTok{HourWages }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{((claim}\SpecialCharTok{$}\NormalTok{WeeklyWages}\SpecialCharTok{/}\NormalTok{claim}\SpecialCharTok{$}\NormalTok{DaysWeek)}\SpecialCharTok{/}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{HoursWeek}\SpecialCharTok{/}\NormalTok{claim}\SpecialCharTok{$}\NormalTok{DaysWeek),}\DecValTok{2}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(claim}\SpecialCharTok{$}\NormalTok{HourWages)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 13.16 13.58 18.66 14.62  9.92  5.26
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Obtenemos la muestra para hombres y mujeres}
+\NormalTok{woman }\OtherTok{\textless{}{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{HourWages[claim}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"F"}\NormalTok{]}
+\NormalTok{man }\OtherTok{\textless{}{-}}\NormalTok{ claim}\SpecialCharTok{$}\NormalTok{HourWages[claim}\SpecialCharTok{$}\NormalTok{Gender }\SpecialCharTok{==} \StringTok{"M"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Realizamos el test de homoscedasticidad para comprobar si las varianzas
+son iguales o diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alfa }\OtherTok{\textless{}{-}} \DecValTok{1}\FloatTok{{-}0.95}
+\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ man}
+\NormalTok{D }\OtherTok{\textless{}{-}}\NormalTok{ woman}
+\NormalTok{mean1 }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(H)}
+\NormalTok{n1 }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(H)}
+\NormalTok{s1 }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(H)}
+\NormalTok{mean2 }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(D)}
+\NormalTok{n2 }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(D)}
+\NormalTok{s2 }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(D)}
+\FunctionTok{c}\NormalTok{(mean1, mean2, s1,s2,n1,n2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]    11.829776    11.763123     7.349630     9.303727 38904.000000
+## [6] 11620.000000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fobs }\OtherTok{\textless{}{-}}\NormalTok{ s1}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{s2}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{fcrit }\OtherTok{\textless{}{-}} \FunctionTok{qf}\NormalTok{(alfa, }\AttributeTok{df1=}\NormalTok{n1}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{df2=}\NormalTok{n2}\DecValTok{{-}2}\NormalTok{)}
+\NormalTok{pvalue }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(}\FunctionTok{pf}\NormalTok{(fobs, }\AttributeTok{df1=}\NormalTok{n1}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{df2=}\NormalTok{n2}\DecValTok{{-}2}\NormalTok{, }\AttributeTok{lower.tail=}\ConstantTok{FALSE}\NormalTok{), }\FunctionTok{pf}\NormalTok{(fobs, }\AttributeTok{df1=}\NormalTok{n1}\DecValTok{{-}1}\NormalTok{, }\AttributeTok{df2=}\NormalTok{n2}\DecValTok{{-}2}\NormalTok{))}\SpecialCharTok{*}\DecValTok{2}
+\FunctionTok{c}\NormalTok{(fobs, fcrit, pvalue)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  6.240466e-01  9.757980e-01 3.524475e-236
+\end{verbatim}
+
+Dado que el p valor es inferior al alfa que hemos definido de 0.05
+podemos asumir que las varianzas son diferentes por lo tanto aplicaremos
+el estadístico del contraste de dos muestras sobre la media con
+varianzas desconocidas diferentes.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alfa }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{{-}} \FloatTok{0.95}
+\NormalTok{dfMean }\OtherTok{\textless{}{-}}\NormalTok{ mean1 }\SpecialCharTok{{-}}\NormalTok{ mean2}
+\NormalTok{v }\OtherTok{\textless{}{-}}\NormalTok{ ((s1}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n1)}\SpecialCharTok{+}\NormalTok{(s2}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n2))}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/}\NormalTok{ (((s2}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n1)}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{(n1}\DecValTok{{-}1}\NormalTok{)) }\SpecialCharTok{+}\NormalTok{ ((s2}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n2)}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{(n2}\DecValTok{{-}1}\NormalTok{)))}
+\NormalTok{tobs }\OtherTok{\textless{}{-}}\NormalTok{ dfMean}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{((s1}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n1 }\SpecialCharTok{+}\NormalTok{ s2}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{n2))}
+\NormalTok{tcrit }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(alfa, v)}
+\NormalTok{pvalue }\OtherTok{\textless{}{-}} \FunctionTok{pt}\NormalTok{(}\FunctionTok{abs}\NormalTok{(tobs), }\AttributeTok{df=}\NormalTok{v, }\AttributeTok{lower.tail=}\ConstantTok{FALSE}\NormalTok{)}\SpecialCharTok{*}\DecValTok{2}
+\FunctionTok{c}\NormalTok{(tobs, tcrit, pvalue)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  0.7090120 -1.6449493  0.4783274
+\end{verbatim}
+
+Podemos observar que el valor observado es 0.709, el valor crítico es
+-1.6449 y el p valor es 0.4783274.
+
+\hypertarget{conclusiuxf3n-4}{%
+\subsection{7.4 Conclusión}\label{conclusiuxf3n-4}}
+
+Podemos observar en los cálculos realizados en el apartado anterior que
+el p valor es mayor al alfa definido de 0.05 por lo que podemos aceptar
+la hipótesisis nula y podemos asumir que el promedio de salario por hora
+de los hombres es igual al promedio de salario por hora de las mujeres.
+
+\hypertarget{comprobaciuxf3n-4}{%
+\subsection{7.5 Comprobación}\label{comprobaciuxf3n-4}}
+
+Realizamos la comprobación del test de homoscedasticidad con la función
+de R var.test.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{var.test}\NormalTok{(H,D)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  F test to compare two variances
+## 
+## data:  H and D
+## F = 0.62405, num df = 38903, denom df = 11619, p-value < 2.2e-16
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  0.6059530 0.6425295
+## sample estimates:
+## ratio of variances 
+##          0.6240466
+\end{verbatim}
+
+Podemos comprobar que el p valor devuelto por la función también es
+inferior a 0.05 por lo que son varianzas desconocids diferentes.
+
+Realizamos la comprobaciópn del contraste de hipótesis empleando la
+función de R t.test.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{t.test}\NormalTok{(H,D)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Welch Two Sample t-test
+## 
+## data:  H and D
+## t = 0.70901, df = 16186, p-value = 0.4783
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.1176142  0.2509208
+## sample estimates:
+## mean of x mean of y 
+##  11.82978  11.76312
+\end{verbatim}
+
+Observamos que el p valor devuelto por la función es el mísmo que el
+obtenido mediante los cálculos por lo que comprobamos que se acepta la
+hipótesis nula definida.
+
+\hypertarget{resumen-ejecutivo}{%
+\section{8 Resumen ejecutivo}\label{resumen-ejecutivo}}
+
+a lo largo de la actividad se han dado respuesta a diversas preguntas
+que se han formulado mediante contrastes de hipótesis. Las preguntas que
+han sido respondidas y sus correspondientes respuestas son:
+
+\begin{itemize}
+\tightlist
+\item
+  ¿Podemos aceptar que no hay diferencias entre IniCost y UltCost?
+\end{itemize}
+
+Con un 95\% de confianza podemos aceptar que no hay diferencias entre
+IniCost y UltCost.
+
+\begin{itemize}
+\tightlist
+\item
+  ¿Podemos aceptar que los hombres cobran más que las mujeres en
+  promedio a la semana?
+\end{itemize}
+
+Con un 95\% de confianza podemos aceptar que los hombres cobran más en
+promedio a la semana que las mujeres.
+
+\begin{itemize}
+\tightlist
+\item
+  ¿Podemos aceptar que los hombres cobran al menos 50 euros más que las
+  mujeres en promedio a la semana?
+\end{itemize}
+
+Coun un 95\% de confianza podemos rechazar que los hombres cobran al
+menos 50 euros más que las muejres en promedio a la semana.
+
+\begin{itemize}
+\tightlist
+\item
+  ¿La proporción de personas que trabajan a tiempo completo es diferente
+  para hombres que para mujeres?
+\end{itemize}
+
+Con un 95\% de confianza podemos aceptar que la proporción de personas
+que trabajan a tiempo completo es diferente para hombres y mujeres.
+
+\begin{itemize}
+\tightlist
+\item
+  ¿Podemos afirmar que los hombres cobran más que las mujeres por hora
+  trabajada?
+\end{itemize}
+
+Con un 95\% de confianza podemos rechazar que los hombres cobran más que
+las mujeres por hora trabajada.
+
+\end{document}

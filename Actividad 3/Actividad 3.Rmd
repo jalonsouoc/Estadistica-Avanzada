@@ -1,30 +1,40 @@
 ---
-title: "Actividad 3"
+title: "Actividad 3 - Modelización predictiva"
 author: "Jorge Alonso Hernández"
-date: "11/24/2021"
-output: html_document
+date: '`r format(Sys.Date(),"%e de %B, %Y")`'
+output: 
+  html_document: 
+    toc: yes
+    toc_depth: 2
+  pdf_document: 
+    toc: yes
+    toc_depth: 2
+    latex_engine: xelatex
+classoption: a4paper
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# 1 Regresión lineal
 
-## R Markdown
+## 1.1 Estudio de correlación lineal
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## 1.2 Modelo de regresión lineal
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## 1.3 Modelo de regresión lineal múltiple
 
-```{r cars}
-summary(cars)
-```
+## 1.4 Diagnosis del modelo
 
-## Including Plots
+## 1.5 Predicción del modelo
 
-You can also embed plots, for example:
+# 2 Regresión logística
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+## 2.1 Estudio de relaciones entre variables. Análisis crudo de posibles factores de riesgo
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## 2.2 Modelo de regresión logística
+
+## 2.3 Predicción
+
+## 2.4 Bondad del ajuste
+
+## 2.5 Curva ROC
+
+# 3 Conclusiones del análisis

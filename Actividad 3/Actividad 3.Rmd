@@ -13,6 +13,19 @@ output:
 classoption: a4paper
 ---
 
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# Carga de librerías
+
+````
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+ruta_csv <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Estadística Avanzada\\Actividad 3\\dat_Air.csv"
+data_air <- read.csv(ruta_csv, na.strings="NA")
+
+head(data_air)
+````
+
 # 1 Regresión lineal
 
 ## 1.1 Estudio de correlación lineal

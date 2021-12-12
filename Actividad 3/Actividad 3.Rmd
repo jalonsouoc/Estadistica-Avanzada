@@ -30,6 +30,61 @@ head(data_air)
 
 ## 1.1 Estudio de correlación lineal
 
+Para realizar el calculo de la matriz de correlación entre las variables contaminantes: O3, NO2 y PM10 y las variables meteorológicas Tmp, HR, RS,Vel y Dir_Air obtendremos dichas variables en dos dataframe separados.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+data_air_cont<- data_air[,c("O3", "NO2", "PM10")]
+data_air_met <- data_air[,c("Tmp", "HR", "RS", "Vel", "Dir_Aire")]
+
+````
+
+Mostramos las cabeceras de ambos dataframes para corroborar que son las variables que queremos.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+head(data_air_cont)
+head(data_air_met)
+````
+
+Empleamos la función cor para obtener la matriz de correlación entre las variables contaminantes y las variables meteorológicas.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+cor_matrix <- cor(x=data_air_cont, y=data_air_met, method="pearson", use="pairwise.complete.obs")
+cor_matrix
+
+````
+
+Como podemos observar en la matriz de correlaciones el contaminante con mayor relación lineal con la variable meteorólogica RS es el O3 con un coeficiente de correlación positivo de 0.3707692. Pese a ello podemos observar que no es la relación lineal más fuerte de este contaminante, sino que es la más débil, siendo la correlación lineal más fuerte del O3 la variable meteorológica Vel con un coeficiente de correlación positivo de 0.5190711. Podemos destacar que de dicho contaminante las siguientes correlaciones lineales más fuertes son negativas y se producen con las variables meteorológicas Dir_Aire y HR con un valor de -0.4192682 y -0.4035054 respectivamente.
+
+
+Obtenemos ahora los datos referentes a las medias diarias de cada una de las variables tanto meteorológicas ocmo contaminantes. generamos de nuevo dos dataframe donde almacenamos los datos.
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+data_air_cont_mean <- aggregate(list(O3 = data_air$O3,NO2 = data_air$NO2, PM10 = data_air$PM10), by=list(Fecha = data_air$Fecha), FUN = mean)
+data_air_met_mean <- aggregate(list(Tmp = data_air$Tmp, HR = data_air$HR, RS =data_air$RS, Vel =  data_air$Vel, Dir_Aire = data_air$Dir_Aire), by=list(Fecha = data_air$Fecha), FUN = mean)
+
+````
+
+Para poder realizar el calculo eliminamos la variable referente a la fecha
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+cor_matrix <- cor(x=data_air_cont_mean, y=data_air_met_mean, method="pearson", use="pairwise.complete.obs")
+cor_matrix
+
+````
+
+Realizamos el calculo de la matriz de correlaciones de estos nuevos dataframe.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+cor_matrix <- cor(x=data_air_cont_mean, y=data_air_met_mean, method="pearson", use="pairwise.complete.obs")
+cor_matrix
+
+````
+
+Vemos que para las nuevas variables construidas existen diferencias con la matriz de correlaciones obtenida anteriormente. En este nuevo caso vemos que la mayor relación lineal con l avariable meteorlógica RS es el contaminante NO2 con un coeficiente de correlación negativo de -0.3891066 en detrimento del O3 que habíamos obtenido en el estudio anterior. A su vez vemos que la mayor relación lineal de este contaminante es con  la variable meteorológica Tmp con un coeficiente de correlación negativo de -0.4340779.
+
 ## 1.2 Modelo de regresión lineal
 
 ## 1.3 Modelo de regresión lineal múltiple
@@ -39,6 +94,20 @@ head(data_air)
 ## 1.5 Predicción del modelo
 
 # 2 Regresión logística
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+data_air$icO3 <- -1
+
+for (i in 1:length(data_air$O3)) {
+  data_air$icO3[i] <- ifelse(data_air$O3[i] <= 80, 0, 1)
+}
+
+data_air$O3[data_air$O3 > 80]
+head(data_air)
+table(data_air$icO3)
+
+````
 
 ## 2.1 Estudio de relaciones entre variables. Análisis crudo de posibles factores de riesgo
 

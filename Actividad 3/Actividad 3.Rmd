@@ -170,6 +170,23 @@ summary(modelo)
 
 ````
 
+Interpretamos del modelo resultante que la concentración de ozono en función de la radiación solar y la dirección del viento es O3 = 51.053991 + 0.043900 * RS - 0.080691 * Dir_aire. Interpretamos la función, lo que nos indica que por cada vatio por metro cuadrado de radiación solar la concentración de ozono aumenta en  0.043900 microgramos por metro cúbico y que por cada grado de la dirección del viento la concentración de ozono disminuye en 0.080691 microgramos por metro cúbico.
+
+Vemos que este modelo mejora al anterior ya que el coeficiente de determinación de 0.2457 lo que nos indica que el modelo de regresión lineal sólo nos explica el 24,57% de la varianza de las observaciones, lo que mejora el porcentage de 13,4698% obtenido en el modelo previo.
+
+
+Añadiremos ahora al modelo la variable  NO2. Calculamos el modelo que explique la variable O3 en función de las variables RS, Dir_Aire y NO2.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+modelo <- lm(formula = data_air$O3 ~ data_air$RS + data_air$Dir_Aire + data_air$NO2, na.action=na.exclude)
+summary(modelo)
+
+````
+
+Interpretamos del modelo resultante que la concentración de ozono en función de la radaición solar, la dirección del vientoy  la concentración de dióxido de nitrógeno es O3 = 67.863089 + 0.034141 * RS - 0.063742 * Dir_Aire - 1.435140 * NO2. Interpretamos la función y lo que indica es que por cada vatio por metro cuadrado de radiación solar la concentración de ozono aumenta en 0.034141 nicrogramos por metro cúbico, que por cada grado de la dirección del viento la concentración de ozono disminuye en 0.063742 microgramos por metro cúbico y que por cada microgramo por metro cúbico de concentración de dióxido de nitrógeno la concentración de ozono disminuye en 1.435140 microgramos por metro cúbico.
+
+Vemos que este modelo mejora a los anteriores ya que el coeficiente de determinación es de 0.5808 lo que nos indica que el modelo de regresión lineal nos explica el 58,05% de la varianza de las observaciones, lo que mejora el porcentage de 24,57% obtenido por el modelo anterior.
 
 ## 1.4 Diagnosis del modelo
 

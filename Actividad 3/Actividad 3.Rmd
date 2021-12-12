@@ -70,8 +70,8 @@ Para poder realizar el calculo eliminamos la variable referente a la fecha
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
-cor_matrix <- cor(x=data_air_cont_mean, y=data_air_met_mean, method="pearson", use="pairwise.complete.obs")
-cor_matrix
+data_air_cont_mean <- data_air_cont_mean[, !(names(data_air_cont_mean) == "Fecha")]
+data_air_met_mean <- data_air_met_mean[, !(names(data_air_met_mean) == "Fecha")]
 
 ````
 
@@ -87,7 +87,89 @@ Vemos que para las nuevas variables construidas existen diferencias con la matri
 
 ## 1.2 Modelo de regresión lineal
 
+Previo a realizar el modelo de regresión lineal observamos el diagrama de dispersión para las variables O3 y RS.
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(data_air$O3 ~ data_air$RS)
+````
+
+Obtenemos ahora el modelo d regresión lineal simple empleando la función de R lm()
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+modelo <- lm(formula = data_air$O3 ~ data_air$RS)
+
+summary(modelo)
+````
+
+Interpretamos del modelo resultante que la concentración de ozono en función de la radiación solar es O3 = 34.365621 + 0.059115 * RS. Interpretamos la función lo que nos indica que por cada vatio por metro cuadrado de radiación solar la concentración de ozono aumenta en 0.059115 microgramos por metro cúbico.
+
+Mostramos la recta de la regresión sobre el diagrama de dispersión.
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(data_air$O3 ~ data_air$RS)
+abline(modelo, col = "red")
+````
+
+Obtenemos el coeficiente de determinación para calcular la bondad del ajuste. Para eso obtenemos el coeficiente de correlación entre las variables de la concentración de Ozono y la radiación solar.
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+coef_cor <- cor(data_air$O3, data_air$RS, use="pairwise.complete.obs")
+coef_det <- coef_cor ^ 2
+c(coef_cor, coef_det)
+````
+
+Obtenemos un coeficiente de determinación de 0.1374698 lo que nos indica que el modelo de regresión lineal sólo nos explica el 13,4698 % de la varianza de las observaciones.
+
+
+Obtenemos la variable explicativa del índice de la calidad del aire en función de la variable PM10.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+data_air$PM10_cat <- ""
+
+for (i in 1:length(data_air$PM10)) {
+  if (!is.na(data_air$PM10[i])) {
+    if(data_air$PM10[i] > 0 & data_air$PM10[i] <= 40){
+    data_air$PM10_cat[i] <- "Muy buena"
+    } else if (data_air$PM10[i] > 40 & data_air$PM10[i] <= 60) {
+        data_air$PM10_cat[i] <- "Buena"
+    }else if (data_air$PM10[i] > 60 & data_air$PM10[i] <= 120) {
+      data_air$PM10_cat[i] <- "Mejorable"
+    }else if (data_air$PM10[i] > 120 & data_air$PM10[i] <= 160) {
+      data_air$PM10_cat[i] <- "Mala"
+    }else if (data_air$PM10[i] > 160 & data_air$PM10[i] <= 724) {
+      data_air$PM10_cat[i] <- "Muy mala"
+    } 
+  }
+  else {
+    data_air$PM10_cat[i] <- NA
+  }
+
+}
+
+table(data_air$PM10_cat)
+
+````
+
 ## 1.3 Modelo de regresión lineal múltiple
+
+Para la obtención del modelo de regresión lineal múltiple nos basamos en el modelo de regresión lineal simple calculado en el apartado anterior para explicar la variable O3 en función de la variable RS. En primer lugrar añadiremos al modelo la variable explicativa de la dirección del viento. Por lo tanto crearemos un modelo que explique la variable O3 en función de las variables RS y Dir_Aire.
+
+Para obtener el modelo empelamos de nueva la función en R lm().
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+modelo <- lm(formula = data_air$O3 ~ data_air$RS + data_air$Dir_Aire, na.action=na.exclude)
+summary(modelo)
+
+````
+
 
 ## 1.4 Diagnosis del modelo
 
@@ -103,7 +185,6 @@ for (i in 1:length(data_air$O3)) {
   data_air$icO3[i] <- ifelse(data_air$O3[i] <= 80, 0, 1)
 }
 
-data_air$O3[data_air$O3 > 80]
 head(data_air)
 table(data_air$icO3)
 

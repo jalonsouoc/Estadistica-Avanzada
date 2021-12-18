@@ -1,0 +1,60 @@
+---
+title: "Actividad 4 - Análisis de la varianza y repaso del curso"
+author: "Jorge Alonso Hernández"
+date: '`r format(Sys.Date(),"%e de %B, %Y")`'
+output: 
+  html_document: 
+    toc: yes
+    toc_depth: 2
+  pdf_document: 
+    toc: yes
+    toc_depth: 2
+    latex_engine: xelatex
+classoption: a4paper
+---
+
+# 1 Introducción
+
+# 2 Lectura del archivo y preparación de los datos
+
+## 2.1 Preparación de los datos
+
+## 2.2 Análisis visual
+
+# 3 Estadística inferencial
+
+## 3.1 Contraste de hipótesis
+
+# 4 Modelo de regresión lineal
+
+## 4.1 Estimación de modelos
+
+## 4.2 Interpretación de los modelos
+
+## 4.3 Análisis de residuos
+
+## 4.4 Predicción
+
+# 5 Regresión logística
+
+## 5.1 Generación de los conjuntos de entrenamiento de test
+
+## 5.2 Modelo predictivo
+
+## 5.3 Interpretación
+
+## 5.4 Matriz de confusión
+
+## 5.5 Predicción
+
+# 6 Análisis de la varianza (ANOVA) de un factor
+
+## 6.1 Visualización
+
+## 6.2 Modelo ANOVA
+
+# 7 ANOVA multifactorial
+
+## 7.1 Estudio visual de la interacción
+
+# 8 Conclusiones

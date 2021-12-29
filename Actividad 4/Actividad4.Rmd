@@ -17,7 +17,9 @@ classoption: a4paper
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 # Carga de librerías
-
+if (!require('stringr')) install.packages('stringr'); library('stringr')
+if (!require('plyr')) install.packages('plyr'); library('plyr')
+if (!require('nortest')) install.packages('nortest'); library('nortest')
 ````
 
 # 2 Lectura del archivo y preparación de los datos
@@ -29,9 +31,26 @@ ruta_txt <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Estadística Avanza
 adult <- read.table(ruta_txt, header = TRUE)
 ````
 
+Vemos los tipos de datos con los que han sido cargadas las variables.
+
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 str(adult)
+````
+
+Vemos que casi todas son de tipo cadena a excepción de age, education_num y hours_per_week que son de tipo entero y de la variable income que es de tipo numérica.
+
+
+vemos el resumen de la muestra de datos.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
 summary(adult)
+````
+
+Del resumen podemos destacar que la edad mínima es de 17 años y la edad máxima de 90 años. También podemos observar que el salario mínimo está en 22540 € anuales y el máximo en 68370 € anuales.
+
+Por último observamos un apequeña muestra de los datos del conjunto de datos.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
 head(adult)
 ````
 
@@ -43,6 +62,52 @@ Inicialmente comprobaremos la existencia de valores perdidos o valores nulos
 colSums(is.na(adult))
 colSums(adult == "")
 ````
+
+Comprobamos que no existen valores perdidos o vacíos en nuestra muestra de datos. Una vez realizada esta comprobación eliminaremos los espacios en blanco iniciales de las variables categóricas para obtener una muestra de mayor calidad.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# Patrón para reemplazar los espacios en blanco iniciales
+patron <- "^\\s+"
+# Valor a sustituir por los espacios en blanco
+sust <- ""
+
+# Reemplazamos en las variables categóricas
+adult$sex <- str_replace_all(adult$sex, pattern = patron, sust)
+adult$workclass <- str_replace_all(adult$workclass, pattern = patron, sust)
+adult$marital_status <- str_replace_all(adult$marital_status, pattern = patron, sust)
+adult$occupation <- str_replace_all(adult$occupation, pattern = patron, sust)
+adult$race <- str_replace_all(adult$race, pattern = patron, sust)
+
+````
+
+Corregimos el nombrede la séptima variable de forma que pase de llamarse "sex" a llamarse "gender".
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+adult = rename(adult, c(sex="gender")) 
+names(adult)
+````
+
+Podemos ver que se realiza correctamente la modificación del nombre de la variable.
+
+Comprobamos ahora la normalidad de la variable salario.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+# Histograma
+hist(adult$income)
+
+#Gráfico de densidad
+plot(density(adult$income))
+````
+
+Vemos que los datos tienen una densidad asimétrica, empleamos el test de Lilliefors para comprobar la normalidad de la variable
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+lillie.test(adult$income)
+````
+
+Vemos que el p-valor es menor de 0.05 por lo tanto vemos que los datos del salario no siguen una distribución normal.
+
 
 ## 2.2 Análisis visual
 

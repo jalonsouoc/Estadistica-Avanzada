@@ -15,9 +15,34 @@ classoption: a4paper
 
 # 1 Introducción
 
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# Carga de librerías
+
+````
+
 # 2 Lectura del archivo y preparación de los datos
 
+Realizamos la carga del fichero de datos. En este caso nos encontramos con un fichero txt con lo que emplearemos la función en R read.table, emplearemos una variable ruta_txt para almacenar la ruta del fichero con los datos. Dicha ruta la obtenemos con la función en R file.choose.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+ruta_txt <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Estadística Avanzada\\Actividad 4\\CensusIncomedata.txt"
+adult <- read.table(ruta_txt, header = TRUE)
+````
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+str(adult)
+summary(adult)
+head(adult)
+````
+
 ## 2.1 Preparación de los datos
+
+Inicialmente comprobaremos la existencia de valores perdidos o valores nulos
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+colSums(is.na(adult))
+colSums(adult == "")
+````
 
 ## 2.2 Análisis visual
 

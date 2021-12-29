@@ -166,7 +166,7 @@ pre code {
 
 <h1 class="title toc-ignore">Actividad 4 - Análisis de la varianza y repaso del curso</h1>
 <h4 class="author">Jorge Alonso Hernández</h4>
-<h4 class="date">18 de December, 2021</h4>
+<h4 class="date">29 de December, 2021</h4>
 
 </div>
 
@@ -212,11 +212,74 @@ pre code {
 
 <div id="introducción" class="section level1">
 <h1>1 Introducción</h1>
+<pre class="r"><code># Carga de librerías</code></pre>
 </div>
 <div id="lectura-del-archivo-y-preparación-de-los-datos" class="section level1">
 <h1>2 Lectura del archivo y preparación de los datos</h1>
+<p>Realizamos la carga del fichero de datos. En este caso nos encontramos con un fichero txt con lo que emplearemos la función en R read.table, emplearemos una variable ruta_txt para almacenar la ruta del fichero con los datos. Dicha ruta la obtenemos con la función en R file.choose.</p>
+<pre class="r"><code>ruta_txt &lt;- &quot;C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Estadística Avanzada\\Actividad 4\\CensusIncomedata.txt&quot;
+adult &lt;- read.table(ruta_txt, header = TRUE)</code></pre>
+<pre class="r"><code>str(adult)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    32560 obs. of  9 variables:
+##  $ age           : int  50 38 53 28 37 49 52 31 42 37 ...
+##  $ workclass     : chr  &quot; Self-Employed&quot; &quot; Private&quot; &quot; Private&quot; &quot; Private&quot; ...
+##  $ education_num : int  13 9 7 13 14 5 9 14 13 10 ...
+##  $ marital_status: chr  &quot; Married&quot; &quot; Divorced&quot; &quot; Married&quot; &quot; Married&quot; ...
+##  $ occupation    : chr  &quot; White-Collar&quot; &quot; Blue-Collar&quot; &quot; Blue-Collar&quot; &quot; Professional&quot; ...
+##  $ race          : chr  &quot; White&quot; &quot; White&quot; &quot; Black&quot; &quot; Black&quot; ...
+##  $ sex           : chr  &quot; Male&quot; &quot; Male&quot; &quot; Male&quot; &quot; Female&quot; ...
+##  $ hours_per_week: int  13 40 40 40 40 16 45 50 40 80 ...
+##  $ income        : num  53.8 51.7 50.1 44.2 48.9 ...</code></pre>
+<pre class="r"><code>summary(adult)</code></pre>
+<pre><code>##       age         workclass         education_num   marital_status    
+##  Min.   :17.00   Length:32560       Min.   : 1.00   Length:32560      
+##  1st Qu.:28.00   Class :character   1st Qu.: 9.00   Class :character  
+##  Median :37.00   Mode  :character   Median :10.00   Mode  :character  
+##  Mean   :38.58                      Mean   :10.08                     
+##  3rd Qu.:48.00                      3rd Qu.:12.00                     
+##  Max.   :90.00                      Max.   :16.00                     
+##   occupation            race               sex            hours_per_week 
+##  Length:32560       Length:32560       Length:32560       Min.   : 1.00  
+##  Class :character   Class :character   Class :character   1st Qu.:40.00  
+##  Mode  :character   Mode  :character   Mode  :character   Median :40.00  
+##                                                           Mean   :40.44  
+##                                                           3rd Qu.:45.00  
+##                                                           Max.   :99.00  
+##      income     
+##  Min.   :22.54  
+##  1st Qu.:43.22  
+##  Median :49.71  
+##  Mean   :48.75  
+##  3rd Qu.:54.32  
+##  Max.   :68.37</code></pre>
+<pre class="r"><code>head(adult)</code></pre>
+<pre><code>##   age      workclass education_num marital_status    occupation   race     sex
+## 1  50  Self-Employed            13        Married  White-Collar  White    Male
+## 2  38        Private             9       Divorced   Blue-Collar  White    Male
+## 3  53        Private             7        Married   Blue-Collar  Black    Male
+## 4  28        Private            13        Married  Professional  Black  Female
+## 5  37        Private            14        Married  White-Collar  White  Female
+## 6  49        Private             5        Married       Service  Black  Female
+##   hours_per_week income
+## 1             13  53.80
+## 2             40  51.67
+## 3             40  50.08
+## 4             40  44.21
+## 5             40  48.91
+## 6             16  43.93</code></pre>
 <div id="preparación-de-los-datos" class="section level2">
 <h2>2.1 Preparación de los datos</h2>
+<p>Inicialmente comprobaremos la existencia de valores perdidos o valores nulos</p>
+<pre class="r"><code>colSums(is.na(adult))</code></pre>
+<pre><code>##            age      workclass  education_num marital_status     occupation 
+##              0              0              0              0              0 
+##           race            sex hours_per_week         income 
+##              0              0              0              0</code></pre>
+<pre class="r"><code>colSums(adult == &quot;&quot;)</code></pre>
+<pre><code>##            age      workclass  education_num marital_status     occupation 
+##              0              0              0              0              0 
+##           race            sex hours_per_week         income 
+##              0              0              0              0</code></pre>
 </div>
 <div id="análisis-visual" class="section level2">
 <h2>2.2 Análisis visual</h2>

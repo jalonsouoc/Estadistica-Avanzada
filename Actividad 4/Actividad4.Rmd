@@ -108,6 +108,24 @@ lillie.test(adult$income)
 
 Vemos que el p-valor es menor de 0.05 por lo tanto vemos que los datos del salario no siguen una distribución normal.
 
+Creamos una nueva variable dicotómica denominada "Less50"  de forma que calificaremos binariamente el salario. Dicha variable tomará el valor 1 cuando el salario anual sea inferior a 50000 € y el valor 0 en caso contrario.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+adult$Less50 <- -1
+# Variable clasificatoria
+limit <- 50
+
+for (i in 1:length(adult$Less50)) {
+  adult$Less50[i] <- ifelse(adult$income[i] < limit, 1, 0)
+}
+
+#Convertimos a tipo entero
+adult$Less50 <- as.integer(adult$Less50)
+
+head(adult)
+````
+
+Comprobamos que se ha generado correctamente la nueva variable con los valores establecidos
 
 ## 2.2 Análisis visual
 

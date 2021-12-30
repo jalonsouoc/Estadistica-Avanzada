@@ -131,37 +131,57 @@ Comprobamos que se ha generado correctamente la nueva variable con los valores e
 
 ## 2.2 Análisis visual
 
-`````{r echo=TRUE, message=FALSE, warning=FALSE}
-boxplot(formula = income  ~ gender, data = adult)
-````
+Mostramos los diagramas de caha de la variable income en función del resto de variables cualitativas.
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
-boxplot(formula = income  ~ race, data = adult)
+boxplot(formula = income  ~ gender, data = adult, main = "income en función de gender")
 ````
 
-`````{r echo=TRUE, message=FALSE, warning=FALSE}
-boxplot(formula = income  ~ workclass, data = adult)
-````
+Se puede apreciar como los salarios son mayores en hombres que en mujeres.
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
-boxplot(formula = income  ~ marital_status, data = adult)
+boxplot(formula = income  ~ race, data = adult, main = "income en función de race")
 ````
 
+En este caso podemos apreciar que los salarios de las personas de raza blanca son mayores que los del resto de razas.
+
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
-boxplot(formula = income  ~ occupation, data = adult)
+boxplot(formula = income  ~ workclass, data = adult, main = "income en función de workclass")
 ````
+
+En cuanto al perfil laboral s eobserva que los salarios mayores se encuentran en los trabajadores gubernamentales.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(formula = income  ~ marital_status, data = adult, main = "income en función de marital_status")
+````
+
+Podemos observar que los salarios más altos se pueden encotnrar en las personas casadas.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(formula = income  ~ occupation, data = adult, main = "income en función de occupation")
+````
+
+Por último vemos que los trabajadores con un mayor salario se encuentran en los denominados trabajadores de cuello blanco que hace referencia a llos trabajadores que realizan trabajos semiprofesionales o profesionales de oficina, administración y coordinación de ventas.
+
+Observamos las variables cuantitativas.
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
 hist(adult$age, main = "Age")
 ````
 
+Observamos que las edades predominantes se encuentran entre los 20 y 40 años.
+
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
 hist(adult$hours_per_week, main = "Hours per week")
 ````
 
+Para la shoras semanales podemos observar que la gran mayoría se encuentra entre las 35 y las 40 horas semanales
+
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
 hist(adult$education_num, main = "Education num")
 ````
+
+Por último observamos que el número de años de formación educativa predominanate es el de 9 años.
 
 # 3 Estadística inferencial
 

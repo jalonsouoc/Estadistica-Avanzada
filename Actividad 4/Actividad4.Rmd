@@ -222,6 +222,8 @@ Para la pregunta según la raza se va a emplear un contraste de hipótesis sobre
 
 ### 3.1.3 Aplicación, interpretación y comprobación del test
 
+**Por el género**
+
 Inicialmente realizamos los cálculos para la pregunta por el género. Debemos derealizar el test de homocedasticidad para comprobar si las varianzas son iguales o diferentes.
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -273,16 +275,93 @@ t.test(H,D)
 
 De nuevo se observa que el p valor devuelto es inferior al alfa definido por lo que comprobamos que se rechaza la hipótesis nula.
 
+**Por el caso racial**
 
+Realizamos ahora los cálculos para la preunta según el caso racial. Para este caso aplicamos los cálculos relativos al contraste de hipótesis de dos muestras emparejadas sobre la media.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+#d <- white - black
+
+#mean <- mean(d)
+#s <- sd(d)
+#n <- length(d)
+
+#tobs <- (mean - 6450)/(s/sqrt(n))
+#tcrit <- qt(alfa, df=n-1)
+#pvalue <- pt(tobs, lower.tail=FALSE, df=n-1)
+#c(tobs, tcrit, pvalue)
+````
+
+
+
+Realizamos la comprobación utilizando la función de R t.test.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+#t.test(white, black, paired=TRUE, alternative="greater", mu=6450)
+````
 # 4 Modelo de regresión lineal
 
 ## 4.1 Estimación de modelos
+
+Creamos un modelo de regresión lineal míltiple empleando la variable dependiente Income y las variables explicativas age,education_num, hours_per_week y gender. Para la creación del modelo empleamos la función en R lm().
+
+Antes de generar el modelo debemos de crear 
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+modelo1 <- lm(formula = adult$income ~ adult$age + adult$education_num + adult$hours_per_week + adult$gender, na.action = na.exclude)
+summary(modelo1)
+````
+
+El modelo resultante para obtener la variable income es:
+
+````
+income = 31.315777 + 0.082515 * age + 0.446817 * education_num + 0.073834 * hours_per_week + 10.108404 * Male
+````
+
+Obtenemos un segundo modelo añadiendo al anterior la variable race.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+modelo2 <- lm(formula = adult$income ~ adult$age + adult$education_num + adult$hours_per_week + adult$gender + adult$race, na.action = na.exclude)
+summary(modelo2)
+````
+
+
+El modelo resultante es el siguiente
+
+````
+income = 26.183312 + 0.078247 * age + 0.419036 * education_num + 0.071274 * hours_per_week + 9.780936 * Male -0.214519 * Asian_pac_Islander + 2.382315 * Black - 3.562672 * Other + 6.681488 * White
+````
+
 
 ## 4.2 Interpretación de los modelos
 
 ## 4.3 Análisis de residuos
 
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(modelo2$fitted.values, modelo2$residuals)
+````
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+qqplot(modelo2$residuals, adult$income)
+````
+
 ## 4.4 Predicción
+
+Realizamos el cálculo en función del modelo obtenido en el primer apartado.
+
+````
+income = 26.183312 + 0.078247 * age + 0.419036 * education_num + 0.071274 * hours_per_week + 9.780936 * Male -0.214519 * Asian_pac_Islander + 2.382315 * Black - 3.562672 * Other + 6.681488 * White
+````
+
+Aplicamos osbre las variables los valores especificados en el enunciado.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+income <- 26.183312 + 0.078247 * 24 + 0.419036 * 4 + 0.071274 * 40 + 9.780936 * 0 - 0.214519 * 0 + 2.382315 * 1 - 3.562672 * 0 + 6.681488 * 0
+income
+````
+
+Obtenemos que el salario anual sería de 34.970 € 
+
 
 # 5 Regresión logística
 

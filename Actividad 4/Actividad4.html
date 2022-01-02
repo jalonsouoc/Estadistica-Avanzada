@@ -398,17 +398,77 @@ black &lt;- adult$income[adult$race == &quot;Black&quot;]
 white &lt;- adult$income[adult$race == &quot;White&quot;]</code></pre>
 <div id="hipótesis-nula-y-alternativa" class="section level3">
 <h3>3.1.1 Hipótesis nula y alternativa</h3>
-<p>Definimos la hipótesis nula y alternativa por género: * <strong>Hipótesis nula:</strong> el promedio salarial anual de los hombres es igual al promedio salarial anual de las mujeres <span class="math display">\[H_O: µ_1 = µ_2\]</span> * <strong>Hipótesis alternativa:</strong> el promedio salarial anual de los hombres es mayor que el promedio salarial anual de las mujeres <span class="math display">\[H_1: µ_1 &gt; µ_2\]</span> Definimos la hipótesis nula y alternativa por raza</p>
+<p>Definimos la hipótesis nula y alternativa por género:</p>
 <ul>
-<li><strong>Hipótesis nula:</strong> el promedio de la diferencia salarial anual de la gente blanca y la gente negra es 6450€ <span class="math display">\[H_0: µ_d = 6450\]</span></li>
-<li><strong>Hipótesis alternativa:</strong> el promedio salarial de la diferencia del salario anual de la gente blanca y negra es mayor que 6450€ <span class="math display">\[H_1: µ_d &gt; 6450\]</span></li>
+<li><p><strong>Hipótesis nula:</strong> el promedio salarial anual de los hombres es igual al promedio salarial anual de las mujeres <span class="math display">\[H_O: µ_1 = µ_2\]</span></p></li>
+<li><p><strong>Hipótesis alternativa:</strong> el promedio salarial anual de los hombres es mayor que el promedio salarial anual de las mujeres <span class="math display">\[H_1: µ_1 &gt; µ_2\]</span> Definimos la hipótesis nula y alternativa por raza</p></li>
+<li><p><strong>Hipótesis nula:</strong> el promedio de la diferencia salarial anual de la gente blanca y la gente negra es 6450€ <span class="math display">\[H_0: µ_d = 6450\]</span></p></li>
+<li><p><strong>Hipótesis alternativa:</strong> el promedio salarial de la diferencia del salario anual de la gente blanca y negra es mayor que 6450€ <span class="math display">\[H_1: µ_d &gt; 6450\]</span></p></li>
 </ul>
 </div>
 <div id="justificación-del-test-a-aplicar" class="section level3">
 <h3>3.1.2 Justificación del test a aplicar</h3>
+<p>Para la pregunta según el género se va a emplear un contraste de hipótesis de dos muestra emparejadas sobre la media del salario anual y unilateralemnte por la derecho dado que se pretende comprobar si el salario anual de los hombres es mayor al de las mujeres.</p>
+<p>Para la pregunta según la raza se va a emplear un contraste de hipótesis sobre dos muestras emparejadas, una para cada raza, aplicado sobre la diferencia de la media salarial anual y unilateralmente por la derecha dado que se pretende comprobar si el salario promedio de la gente blanca es al menos 6450 € mayor que el de la gente de raza negra.</p>
 </div>
 <div id="aplicación-interpretación-y-comprobación-del-test" class="section level3">
 <h3>3.1.3 Aplicación, interpretación y comprobación del test</h3>
+<p>Inicialmente realizamos los cálculos para la pregunta por el género. Debemos derealizar el test de homocedasticidad para comprobar si las varianzas son iguales o diferentes.</p>
+<pre class="r"><code>alfa &lt;- 1 - 0.95
+H &lt;- man
+D &lt;- woman
+mean1 &lt;- mean(H)
+n1 &lt;- length(H)
+s1 &lt;- sd(H)
+mean2 &lt;- mean(D)
+n2 &lt;- length(D)
+s2 &lt;- sd(D)
+fobs &lt;- s1^2/s2^2
+fcritL &lt;- qf(alfa, df1=n1-1, df2=n2-2)
+fcritU &lt;- qf(1 - alfa, df1=n1-1, df2=n2-2)
+pvalue &lt;- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
+c(mean1, mean2, s1, s2, n1, n2)</code></pre>
+<pre><code>## [1]    52.32476    41.52959     5.17160     4.48258 21789.00000 10771.00000</code></pre>
+<pre class="r"><code>c(fobs, fcritL, fcritU, pvalue)</code></pre>
+<pre><code>## [1] 1.331048e+00 9.730416e-01 1.027857e+00 7.830117e-64</code></pre>
+<p>Dado que el p valor es inferior al alfa definido de 0.05 podemos asumir que las varianzas son diferentes por lo tanto aplicaremos el estadístco del contraste de dos muestras sobre la media con varianzas desconocidas.</p>
+<pre class="r"><code>alfa &lt;- 1-0.95
+dfMean = mean1 -mean2
+v &lt;- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
+
+tobs &lt;- dfMean/sqrt((s1^2/n1 + s2^2/n2))
+tcrit &lt;- qt(alfa, v)
+pvalue &lt;- pt(abs(tobs), df=v, lower.tail=FALSE)*2
+c(tobs, tcrit, pvalue)</code></pre>
+<pre><code>## [1] 194.106433  -1.644911   0.000000</code></pre>
+<p>Podemos ver que el valor observado es de 194.106, el valor crítico es -1.6449 y el p-valor es 0.</p>
+<p>Dado que hemos obtenido un valor inferior al alfa definido de 0.05 podemos rechazar la hipótesis nula de que l promedio salarial anual de los hombres es igual a l promedio salarial anual de las mujeres, por lo que se acepta la hipótesis alternativa de que el promedio salarial anual de los hombres es superior al de las mujeres.</p>
+<p>Rrealizamos las comprobaciones mediante las funciones de R. Inicialmente realizamos la comprobación del test de homocedasticidad con la función var.test.</p>
+<pre class="r"><code>var.test(H,D)</code></pre>
+<pre><code>## 
+##  F test to compare two variances
+## 
+## data:  H and D
+## F = 1.331, num df = 21788, denom df = 10770, p-value &lt; 2.2e-16
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  1.288172 1.375099
+## sample estimates:
+## ratio of variances 
+##           1.331048</code></pre>
+<p>Realizamos la comprobación del contraste de hipótesis empleando la función R t.test.</p>
+<pre class="r"><code>t.test(H,D)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  H and D
+## t = 194.11, df = 24387, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  10.68616 10.90418
+## sample estimates:
+## mean of x mean of y 
+##  52.32476  41.52959</code></pre>
 </div>
 </div>
 </div>

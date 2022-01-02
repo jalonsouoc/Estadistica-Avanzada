@@ -222,6 +222,58 @@ Para la pregunta según la raza se va a emplear un contraste de hipótesis sobre
 
 ### 3.1.3 Aplicación, interpretación y comprobación del test
 
+Inicialmente realizamos los cálculos para la pregunta por el género. Debemos derealizar el test de homocedasticidad para comprobar si las varianzas son iguales o diferentes.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+alfa <- 1 - 0.95
+H <- man
+D <- woman
+mean1 <- mean(H)
+n1 <- length(H)
+s1 <- sd(H)
+mean2 <- mean(D)
+n2 <- length(D)
+s2 <- sd(D)
+fobs <- s1^2/s2^2
+fcritL <- qf(alfa, df1=n1-1, df2=n2-2)
+fcritU <- qf(1 - alfa, df1=n1-1, df2=n2-2)
+pvalue <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
+c(mean1, mean2, s1, s2, n1, n2)
+c(fobs, fcritL, fcritU, pvalue)
+````
+
+Dado que el p valor es inferior al alfa definido de 0.05 podemos asumir que las varianzas son diferentes por lo tanto aplicaremos el estadístco del contraste de dos muestras sobre la media con varianzas desconocidas diferentes.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+alfa <- 1-0.95
+dfMean = mean1 -mean2
+v <- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
+
+tobs <- dfMean/sqrt((s1^2/n1 + s2^2/n2))
+tcrit <- qt(alfa, v)
+pvalue <- pt(abs(tobs), df=v, lower.tail=FALSE)*2
+c(tobs, tcrit, pvalue)
+````
+
+Podemos ver que el valor observado es de 194.106, el valor crítico es -1.6449 y el p-valor es 0.
+
+Dado que hemos obtenido un valor inferior al alfa definido de 0.05 podemos rechazar la hipótesis nula de que l promedio salarial anual de los hombres es igual a l promedio salarial anual de las mujeres, por lo que se acepta la hipótesis alternativa  de que el promedio salarial anual de los  hombres es superior al de las mujeres.
+
+Rrealizamos las comprobaciones mediante las funciones de R. Inicialmente realizamos la comprobación del test de homocedasticidad con la función var.test.
+
+`````````{r echo=TRUE, message=FALSE, warning=FALSE}
+var.test(H,D)
+````
+Comprobamos que el p valor devuelto en la función también es inferior a 0.05 por lo que son varianzas desconocidas diferentes
+Realizamos la comprobación del contraste de hipótesis empleando la función R t.test.
+
+`````````{r echo=TRUE, message=FALSE, warning=FALSE}
+t.test(H,D)
+````
+
+De nuevo se observa que el p valor devuelto es inferior al alfa definido por lo que comprobamos que se rechaza la hipótesis nula.
+
+
 # 4 Modelo de regresión lineal
 
 ## 4.1 Estimación de modelos

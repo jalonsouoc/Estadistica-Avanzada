@@ -363,15 +363,125 @@ income
 Obtenemos que el salario anual sería de 34.970 € 
 
 
-# 5 Regresión logística
+# 5 Regresión logística 
 
 ## 5.1 Generación de los conjuntos de entrenamiento de test
 
+Partiendo del conjunto de datos inicial obtenemos una muestra de entrenamiento y una muestra de teste. La muestra de entrenamienta estará conformada por el 80% de la muestra de datos y la muestra de testeo por el 20% de la muestra original.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+# Número de registros totales
+total <- nrow(adult)
+
+#límite para la muestra de entrenamiento
+tr_limit <- total * 0.8
+
+# límite para la muestra de testeo
+ts_limit <- tr_limit + 1
+
+# Muestra de entrenamiento
+train <- adult[1:tr_limit,]
+
+#Muestra de testeo
+test <- adult[ts_limit:total,]
+````
+
 ## 5.2 Modelo predictivo
+
+Para obtener el modelo predictivo mediante regresión logística, inicialmente realizamos un estudio de relaciones entre variables para comprobar entre que variables existe relación.
+
+Variable age.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab1 = table(train$Less50, train$age)
+chi.test <- chisq.test(tab1)
+print(chi.test)
+````
+
+Variable workclass.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab2 = table(train$Less50, train$workclass)
+chi.test <- chisq.test(tab2)
+print(chi.test)
+````
+
+Variable education_num.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab3 = table(train$Less50, train$education_num)
+chi.test <- chisq.test(tab3)
+print(chi.test)
+````
+
+variable marital_status.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab4 = table(train$Less50, train$marital_status)
+chi.test <- chisq.test(tab4)
+print(chi.test)
+````
+
+Variable occupation.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab5 = table(train$Less50, train$occupation)
+chi.test <- chisq.test(tab5)
+print(chi.test)
+````
+
+Variable race.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab6 = table(train$Less50, train$race)
+chi.test <- chisq.test(tab6)
+print(chi.test)
+````
+
+Variable gender
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab7 = table(train$Less50, train$gender)
+chi.test <- chisq.test(tab7)
+print(chi.test)
+````
+
+Variable hours_per_week.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab8 = table(train$Less50, train$hours_per_week)
+chi.test <- chisq.test(tab8)
+print(chi.test)
+````
+
+Podemos observar que todas las variables tienen un p-valor inferior al 0.05 por lo que podemos concluir que existe relación entre el salario anualy cada una de las variables de la muestra de datos.
+
+Construimos el modelo de regrión lgística en base a las variables mencianadas anteriormente
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+logit <- glm(formula = Less50 ~ age + workclass + education_num + marital_status + occupation + race + hours_per_week, data = train, family = binomial)
+summary(logit)
+````
+ 
 
 ## 5.3 Interpretación
 
 ## 5.4 Matriz de confusión
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+predicted_value <- predict(logit, test, type="response")
+predicted_class <- ifelse(predicted_value > 0.5, 1, 0)
+performance_data<-data.frame(observed=test$Less50,
+           predicted = predicted_class)
+head(performance_data)
+positive <- sum(performance_data$observed==1)
+negative <- sum(performance_data$observed==0)
+predicted_positive <- sum(performance_data$predicted==1)
+predicted_negative <- sum(performance_data$predicted==0)
+total <- nrow(performance_data)
+data.frame(positive, negative,predicted_positive,predicted_negative)
+````
 
 ## 5.5 Predicción
 

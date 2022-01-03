@@ -166,7 +166,7 @@ pre code {
 
 <h1 class="title toc-ignore">Actividad 4 - Análisis de la varianza y repaso del curso</h1>
 <h4 class="author">Jorge Alonso Hernández</h4>
-<h4 class="date">2 de January, 2022</h4>
+<h4 class="date">3 de January, 2022</h4>
 
 </div>
 
@@ -570,21 +570,175 @@ summary(modelo2)</code></pre>
 <pre class="r"><code>income &lt;- 26.183312 + 0.078247 * 24 + 0.419036 * 4 + 0.071274 * 40 + 9.780936 * 0 - 0.214519 * 0 + 2.382315 * 1 - 3.562672 * 0 + 6.681488 * 0
 income</code></pre>
 <pre><code>## [1] 34.97066</code></pre>
+<p>Obtenemos que el salario anual sería de 34.970 €</p>
 </div>
 </div>
 <div id="regresión-logística" class="section level1">
 <h1>5 Regresión logística</h1>
 <div id="generación-de-los-conjuntos-de-entrenamiento-de-test" class="section level2">
 <h2>5.1 Generación de los conjuntos de entrenamiento de test</h2>
+<p>Partiendo del conjunto de datos inicial obtenemos una muestra de entrenamiento y una muestra de teste. La muestra de entrenamienta estará conformada por el 80% de la muestra de datos y la muestra de testeo por el 20% de la muestra original.</p>
+<pre class="r"><code># Número de registros totales
+total &lt;- nrow(adult)
+
+#límite para la muestra de entrenamiento
+tr_limit &lt;- total * 0.8
+
+# límite para la muestra de testeo
+ts_limit &lt;- tr_limit + 1
+
+# Muestra de entrenamiento
+train &lt;- adult[1:tr_limit,]
+
+#Muestra de testeo
+test &lt;- adult[ts_limit:total,]</code></pre>
 </div>
 <div id="modelo-predictivo" class="section level2">
 <h2>5.2 Modelo predictivo</h2>
+<p>Para obtener el modelo predictivo mediante regresión logística, inicialmente realizamos un estudio de relaciones entre variables para comprobar entre que variables existe relación.</p>
+<p>Variable age.</p>
+<pre class="r"><code>tab1 = table(train$Less50, train$age)
+chi.test &lt;- chisq.test(tab1)
+print(chi.test)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab1
+## X-squared = 1928.9, df = 71, p-value &lt; 2.2e-16</code></pre>
+<p>Variable workclass.</p>
+<pre class="r"><code>tab2 = table(train$Less50, train$workclass)
+chi.test &lt;- chisq.test(tab2)
+print(chi.test)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab2
+## X-squared = 1120.4, df = 3, p-value &lt; 2.2e-16</code></pre>
+<p>Variable education_num.</p>
+<pre class="r"><code>tab3 = table(train$Less50, train$education_num)
+chi.test &lt;- chisq.test(tab3)
+print(chi.test)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab3
+## X-squared = 639.42, df = 15, p-value &lt; 2.2e-16</code></pre>
+<p>variable marital_status.</p>
+<pre class="r"><code>tab4 = table(train$Less50, train$marital_status)
+chi.test &lt;- chisq.test(tab4)
+print(chi.test)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab4
+## X-squared = 7275.2, df = 4, p-value &lt; 2.2e-16</code></pre>
+<p>Variable occupation.</p>
+<pre class="r"><code>tab5 = table(train$Less50, train$occupation)
+chi.test &lt;- chisq.test(tab5)
+print(chi.test)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab5
+## X-squared = 3041.5, df = 5, p-value &lt; 2.2e-16</code></pre>
+<p>Variable race.</p>
+<pre class="r"><code>tab6 = table(train$Less50, train$race)
+chi.test &lt;- chisq.test(tab6)
+print(chi.test)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab6
+## X-squared = 3062.6, df = 4, p-value &lt; 2.2e-16</code></pre>
+<p>Variable gender</p>
+<pre class="r"><code>tab7 = table(train$Less50, train$gender)
+chi.test &lt;- chisq.test(tab7)
+print(chi.test)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 
+## data:  tab7
+## X-squared = 10868, df = 1, p-value &lt; 2.2e-16</code></pre>
+<p>Variable hours_per_week.</p>
+<pre class="r"><code>tab8 = table(train$Less50, train$hours_per_week)
+chi.test &lt;- chisq.test(tab8)
+print(chi.test)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  tab8
+## X-squared = 2559, df = 93, p-value &lt; 2.2e-16</code></pre>
+<p>Podemos observar que todas las variables tienen un p-valor inferior al 0.05 por lo que podemos concluir que existe relación entre el salario anualy cada una de las variables de la muestra de datos.</p>
+<p>Construimos el modelo de regrión lgística en base a las variables mencianadas anteriormente</p>
+<pre class="r"><code>logit &lt;- glm(formula = Less50 ~ age + workclass + education_num + marital_status + occupation + race + hours_per_week, data = train, family = binomial)
+summary(logit)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = Less50 ~ age + workclass + education_num + marital_status + 
+##     occupation + race + hours_per_week, family = binomial, data = train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.3352  -0.5345   0.0382   0.5567   3.0200  
+## 
+## Coefficients:
+##                          Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)              7.777446   0.409719  18.982  &lt; 2e-16 ***
+## age                     -0.021239   0.001638 -12.966  &lt; 2e-16 ***
+## workclassOther/Unknown   4.554006   0.689643   6.603 4.02e-11 ***
+## workclassPrivate         1.187188   0.057375  20.692  &lt; 2e-16 ***
+## workclassSelf-Employed   2.151755   0.077295  27.838  &lt; 2e-16 ***
+## education_num           -0.191736   0.008534 -22.467  &lt; 2e-16 ***
+## marital_statusMarried   -2.880404   0.055169 -52.211  &lt; 2e-16 ***
+## marital_statusSeparated  0.068437   0.114420   0.598 0.549757    
+## marital_statusSingle    -0.365074   0.057293  -6.372 1.86e-10 ***
+## marital_statusWidowed    1.135395   0.141439   8.027 9.95e-16 ***
+## occupationOther/Unknown  0.611736   0.688375   0.889 0.374182    
+## occupationProfessional   2.354911   0.071214  33.068  &lt; 2e-16 ***
+## occupationSales          2.245619   0.065735  34.162  &lt; 2e-16 ***
+## occupationService        2.330048   0.062854  37.071  &lt; 2e-16 ***
+## occupationWhite-Collar   1.305955   0.051401  25.407  &lt; 2e-16 ***
+## raceAsian-Pac-Islander  -0.707042   0.411481  -1.718 0.085745 .  
+## raceBlack               -1.345741   0.392415  -3.429 0.000605 ***
+## raceOther                1.996456   1.087192   1.836 0.066307 .  
+## raceWhite               -5.070878   0.384609 -13.185  &lt; 2e-16 ***
+## hours_per_week          -0.034588   0.001618 -21.374  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 36089  on 26047  degrees of freedom
+## Residual deviance: 19758  on 26028  degrees of freedom
+## AIC: 19798
+## 
+## Number of Fisher Scoring iterations: 8</code></pre>
 </div>
 <div id="interpretación" class="section level2">
 <h2>5.3 Interpretación</h2>
 </div>
 <div id="matriz-de-confusión" class="section level2">
 <h2>5.4 Matriz de confusión</h2>
+<pre class="r"><code>predicted_value &lt;- predict(logit, test, type=&quot;response&quot;)
+predicted_class &lt;- ifelse(predicted_value &gt; 0.5, 1, 0)
+performance_data&lt;-data.frame(observed=test$Less50,
+           predicted = predicted_class)
+head(performance_data)</code></pre>
+<pre><code>##       observed predicted
+## 26049        1         1
+## 26050        1         1
+## 26051        1         1
+## 26052        0         1
+## 26053        0         1
+## 26054        1         1</code></pre>
+<pre class="r"><code>positive &lt;- sum(performance_data$observed==1)
+negative &lt;- sum(performance_data$observed==0)
+predicted_positive &lt;- sum(performance_data$predicted==1)
+predicted_negative &lt;- sum(performance_data$predicted==0)
+total &lt;- nrow(performance_data)
+data.frame(positive, negative,predicted_positive,predicted_negative)</code></pre>
+<pre><code>##   positive negative predicted_positive predicted_negative
+## 1     3338     3174               3284               3228</code></pre>
 </div>
 <div id="predicción-1" class="section level2">
 <h2>5.5 Predicción</h2>

@@ -590,4 +590,19 @@ Vemos un p-valor inferior al nivel de significación por lo que aceptarmos que e
 
 ## 7.1 Estudio visual de la interacción
 
+Mostramos la tabla cruzada entre las variables race y occupation.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+table(adult$race, adult$occupation)
+
+````
+
+Podemos observar que no es una tabla balanceada ya que la población de raza White posee muchos más registros en cada una de los diferentes trabajos en realción al resto de razas.
+
+Representamos la interacción entre ambos facotres mediante la función en R interaction.plot
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+interaction.plot(adult$race, adult$occupation, adult$income)
+````
+
 # 8 Conclusiones

@@ -166,7 +166,7 @@ pre code {
 
 <h1 class="title toc-ignore">Actividad 4 - Análisis de la varianza y repaso del curso</h1>
 <h4 class="author">Jorge Alonso Hernández</h4>
-<h4 class="date">3 de January, 2022</h4>
+<h4 class="date">9 de January, 2022</h4>
 
 </div>
 
@@ -751,6 +751,40 @@ data.frame(positive, negative,predicted_positive,predicted_negative)</code></pre
 </div>
 <div id="modelo-anova" class="section level2">
 <h2>6.2 Modelo ANOVA</h2>
+<div id="formula-el-modelo" class="section level3">
+<h3>6.2.1 Formula el modelo</h3>
+<p>Para nuestro queremos saber si existe diferencias significativas entre la variable dependiente income y el factor grupo racial. Para ello el estadístico planteado por el ANOVA es el siguiente</p>
+<p><span class="math display">\[y_{ij} = µ + α_i + e_{ij}\]</span> Donde µ es el salario medio total de los salarios anuales, <span class="math inline">\(α_i\)</span> es la diferencia entre cada una de las medias de cada grupo racial y <span class="math inline">\(e_{ij}\)</span> denotan los errores que son variable sindependientes.</p>
+</div>
+<div id="indica-las-hipótesis-nula-y-alternatica" class="section level3">
+<h3>6.2.2 Indica las hipótesis nula y alternatica</h3>
+<p>Para aplicar el contraste de hipótesis consideramos el factor con la razas diferentes y n réplicas en cada nivel, por lo que los índices van de i= 1, …, a y j= 1,…,n.</p>
+<ul>
+<li><strong>Hipótesis nula:</strong> Todos las medias de salario anual de cada grupo racial son iguales por lo que el factor raza no es significativo <span class="math display">\[H_0: α_1 = ... = α_a = 0\]</span></li>
+<li><strong>Hipótesis alternatica:</strong> Existe al menos una de las medias de salario anual de un grupo racial diferente al resto <span class="math display">\[H_1: α_i ≠ α_j, \hspace{0,2cm} \textrm{para algún}i ≠ j\]</span></li>
+</ul>
+</div>
+<div id="estima-la-significación-del-factor-grupo-racial" class="section level3">
+<h3>6.2.3 Estima la significación del factor grupo racial</h3>
+<p>Para obtener el modelo anova en primer lugar obtenemos el modelo de regresión lineal de la variable dependiente income en función de la variable race mediante la función en R aov. Una obtenido este modelo aplicamos la función en R anova sobre este.</p>
+<pre class="r"><code>modelo &lt;-aov(income ~race, data = adult)
+taov &lt;- anova(modelo)
+taov</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: income
+##              Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## race          4  211909   52977  1208.4 &lt; 2.2e-16 ***
+## Residuals 32555 1427206      44                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Observamos que el p-valor devuelto es inferior al nivel de significación del 5%, Por lo que aceptamos la hipótesis alternativa de que las razas es significativo.</p>
+</div>
+<div id="estima-los-efectos-de-los-niveles-de-factor" class="section level3">
+<h3>6.2.4 Estima los efectos de los niveles de factor</h3>
+<p>Como hemos visto en el apartado anterior, obtenemos un p-valor de 2.2e-16 un valor inferior al 5% de significación establecido, con lo cual rechazamos la hipótesis nula y aceptamos la hipótesis alternatia, por lo que podemos concluir que el factor de las razas es significativos en el salario anual.</p>
+<p>Podemos obtener también el valor de la suma de cuadrados que es de 211909, los cuadrados medios de valor 52977 y el valor del estadístico es de 1208.4.</p>
+</div>
 </div>
 </div>
 <div id="anova-multifactorial" class="section level1">

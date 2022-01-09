@@ -491,6 +491,42 @@ data.frame(positive, negative,predicted_positive,predicted_negative)
 
 ## 6.2 Modelo ANOVA
 
+### 6.2.1 Formula el modelo
+
+Para nuestro queremos saber si existe diferencias significativas entre la variable dependiente income y el factor grupo racial. Para ello el estadístico planteado por el ANOVA es el siguiente
+
+$$y_{ij} = µ + α_i + e_{ij}$$
+Donde µ es el salario medio total de los salarios anuales, $α_i$ es la diferencia entre cada una de las medias de cada grupo racial y $e_{ij}$ denotan los errores que son variable sindependientes.
+
+### 6.2.2 Indica las hipótesis nula y alternatica
+
+Para aplicar el contraste de hipótesis consideramos el factor con la razas diferentes y n réplicas en cada nivel, por lo que los índices van de  i= 1, ..., a y j= 1,...,n.
+
+* **Hipótesis nula:** Todos las medias de salario anual de cada grupo racial son iguales por lo que el factor raza no es significativo
+$$H_0: α_1 = ... = α_a = 0$$
+* **Hipótesis alternatica:** Existe al menos una de las medias de salario anual de un grupo racial diferente al resto
+$$H_1: α_i ≠ α_j, \hspace{0,2cm} \textrm{para algún}i ≠ j$$
+
+### 6.2.3 Estima la significación del factor grupo racial
+
+Para obtener el modelo anova en primer lugar obtenemos el modelo de regresión lineal de la variable dependiente income en función de la variable race mediante la función en R aov. Una obtenido este modelo aplicamos la función en R anova sobre este.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+modelo <-aov(income ~race, data = adult)
+taov <- anova(modelo)
+taov
+````
+
+Observamos que el p-valor devuelto es inferior al nivel de significación del 5%, Por lo que aceptamos la hipótesis alternativa de que las razas es significativo.
+
+### 6.2.4 Estima los efectos de los niveles de factor
+
+Como hemos visto en el apartado anterior, obtenemos un p-valor de 2.2e-16 un valor inferior al 5% de significación establecido, con lo cual rechazamos la hipótesis nula y aceptamos la hipótesis alternatia, por lo que podemos concluir que el factor de las razas es significativos en el salario anual.
+
+Podemos obtener también el valor de la suma de cuadrados que es de 211909, los cuadrados medios de valor 52977 y el valor del estadístico es de 1208.4.
+
+### 6.2.5 Realiza los contrastes dos-a-dos
+
 # 7 ANOVA multifactorial
 
 ## 7.1 Estudio visual de la interacción

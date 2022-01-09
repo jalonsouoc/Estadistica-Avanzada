@@ -490,6 +490,14 @@ data.frame(positive, negative,predicted_positive,predicted_negative)
 
 ## 6.1 Visualización
 
+Realizamos la visualización de los datos.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(income ~ race, data = adult)
+````
+
+Podemos observar que los salarios más altos los encontramos en las personas de raza White en contraparte de las razas Other que concentran los salarios más bajos.
+
 ## 6.2 Modelo ANOVA
 
 ### 6.2.1 Formula el modelo
@@ -539,11 +547,44 @@ Podemos observar que se forman 4 grupos, uno para las personas de raza White, ot
 
 Podemos ver que el grupo que más cobra anualmente es el de las personas de raza White y el que menos cobra el de la raza Other. Observamos que las personas de raza Black se sitúan en el segundo escalafón de personas con el mayor salario anual.
 
-### 6.2.6
+### 6.2.6 Adecuación del modelo
 
-#### 6.2.6.1
+#### 6.2.6.1 Homocedasticiad de los residuos
 
-#### 6.2.6.2
+Mostramos gráfico de Residuals vs Filtted.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(modelo, which=1)
+````
+
+Observamos que se forman 5 tiras verticales situadas en las medias de cada uno de los grupos raciales. Estos corresponden a los valores ajustados de las observaciones.
+ 
+Adicionalmente testeamos la hocmogenidad de las varianzas mediante el test de Bartlett.
+ 
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+bartlett.test(income ~ race, data = adult)
+````
+
+El p-valor devuelto es inferior al nivel de significación por lo que aceptamos la hipótesis alternativa de que las varianzas son diferentes.
+
+#### 6.2.6.2 Normalidad de los residuos
+
+Para observar la normalidad de los residuos inicialmente mostramos el gráfico.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+qqnorm(residuals(modelo))
+qqline(residuals(modelo))
+````
+
+Observamos que la mayoría de los residuos se ajustan a la recta por lo que no hay evidencia que contradiga el supuesto de normalidad.
+
+Aplicamos el test de Kruskal-Wallis mediante la función en r kruskal.test().
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+kruskal.test(income ~ race, data = adult)
+````
+
+Vemos un p-valor inferior al nivel de significación por lo que aceptarmos que existen diferencias significativas en el salario anual en función de la raza.
 
 # 7 ANOVA multifactorial
 

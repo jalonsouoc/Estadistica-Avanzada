@@ -20,6 +20,7 @@ classoption: a4paper
 if (!require('stringr')) install.packages('stringr'); library('stringr')
 if (!require('plyr')) install.packages('plyr'); library('plyr')
 if (!require('nortest')) install.packages('nortest'); library('nortest')
+if (!require('agricolae')) install.packages('agricolae'); library('agricolae')
 ````
 
 # 2 Lectura del archivo y preparación de los datos
@@ -526,6 +527,23 @@ Como hemos visto en el apartado anterior, obtenemos un p-valor de 2.2e-16 un val
 Podemos obtener también el valor de la suma de cuadrados que es de 211909, los cuadrados medios de valor 52977 y el valor del estadístico es de 1208.4.
 
 ### 6.2.5 Realiza los contrastes dos-a-dos
+
+Para realizae el constraste dos a dos empleamos la función HSD.test de R.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+HSD.test(modelo, "race", group=T, console=T)
+````
+
+Podemos observar que se forman 4 grupos, uno para las personas de raza White, otro para las personas de raza Black, otra para la raza Amer-Indian_eskimo y otra para la raza Other. Vemos que la raza Asia-Pac-Islander se encuentra ubicada entre el grupo de las personas de raza Black y las de raza Amer-Indian-Eskimo.
+
+
+Podemos ver que el grupo que más cobra anualmente es el de las personas de raza White y el que menos cobra el de la raza Other. Observamos que las personas de raza Black se sitúan en el segundo escalafón de personas con el mayor salario anual.
+
+### 6.2.6
+
+#### 6.2.6.1
+
+#### 6.2.6.2
 
 # 7 ANOVA multifactorial
 

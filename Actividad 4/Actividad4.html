@@ -215,7 +215,8 @@ pre code {
 <pre class="r"><code># Carga de librerías
 if (!require(&#39;stringr&#39;)) install.packages(&#39;stringr&#39;); library(&#39;stringr&#39;)
 if (!require(&#39;plyr&#39;)) install.packages(&#39;plyr&#39;); library(&#39;plyr&#39;)
-if (!require(&#39;nortest&#39;)) install.packages(&#39;nortest&#39;); library(&#39;nortest&#39;)</code></pre>
+if (!require(&#39;nortest&#39;)) install.packages(&#39;nortest&#39;); library(&#39;nortest&#39;)
+if (!require(&#39;agricolae&#39;)) install.packages(&#39;agricolae&#39;); library(&#39;agricolae&#39;)</code></pre>
 </div>
 <div id="lectura-del-archivo-y-preparación-de-los-datos" class="section level1">
 <h1>2 Lectura del archivo y preparación de los datos</h1>
@@ -784,6 +785,76 @@ taov</code></pre>
 <h3>6.2.4 Estima los efectos de los niveles de factor</h3>
 <p>Como hemos visto en el apartado anterior, obtenemos un p-valor de 2.2e-16 un valor inferior al 5% de significación establecido, con lo cual rechazamos la hipótesis nula y aceptamos la hipótesis alternatia, por lo que podemos concluir que el factor de las razas es significativos en el salario anual.</p>
 <p>Podemos obtener también el valor de la suma de cuadrados que es de 211909, los cuadrados medios de valor 52977 y el valor del estadístico es de 1208.4.</p>
+</div>
+<div id="realiza-los-contrastes-dos-a-dos" class="section level3">
+<h3>6.2.5 Realiza los contrastes dos-a-dos</h3>
+<pre class="r"><code>summary(modelo)</code></pre>
+<pre><code>##                Df  Sum Sq Mean Sq F value Pr(&gt;F)    
+## race            4  211909   52977    1208 &lt;2e-16 ***
+## Residuals   32555 1427206      44                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>HSD.test(modelo, &quot;race&quot;, group=T, console=T)</code></pre>
+<pre><code>## 
+## Study: modelo ~ &quot;race&quot;
+## 
+## HSD Test for income 
+## 
+## Mean Square Error:  43.83985 
+## 
+## race,  means
+## 
+##                      income      std     r   Min   Max
+## Amer-Indian-Eskimo 41.88682 4.498709   311 30.23 53.92
+## Asian-Pac-Islander 42.89898 4.805233  1039 27.61 55.77
+## Black              43.14683 4.694985  3124 28.97 58.07
+## Other              37.60339 5.766821   271 22.54 52.29
+## White              49.78750 6.886755 27815 28.73 68.37
+## 
+## Alpha: 0.05 ; DF Error: 32555 
+## Critical Value of Studentized Range: 3.857656 
+## 
+## Groups according to probability of means differences and alpha level( 0.05 )
+## 
+## Treatments with the same letter are not significantly different.
+## 
+##                      income groups
+## White              49.78750      a
+## Black              43.14683      b
+## Asian-Pac-Islander 42.89898     bc
+## Amer-Indian-Eskimo 41.88682      c
+## Other              37.60339      d</code></pre>
+<pre class="r"><code>LSD.test(modelo, &quot;race&quot;, group=T, p.adj=&quot;bonferroni&quot;, console=T)</code></pre>
+<pre><code>## 
+## Study: modelo ~ &quot;race&quot;
+## 
+## LSD t Test for income 
+## P value adjustment method: bonferroni 
+## 
+## Mean Square Error:  43.83985 
+## 
+## race,  means and individual ( 95 %) CI
+## 
+##                      income      std     r      LCL      UCL   Min   Max
+## Amer-Indian-Eskimo 41.88682 4.498709   311 41.15092 42.62272 30.23 53.92
+## Asian-Pac-Islander 42.89898 4.805233  1039 42.49636 43.30160 27.61 55.77
+## Black              43.14683 4.694985  3124 42.91464 43.37902 28.97 58.07
+## Other              37.60339 5.766821   271 36.81505 38.39174 22.54 52.29
+## White              49.78750 6.886755 27815 49.70969 49.86532 28.73 68.37
+## 
+## Alpha: 0.05 ; DF Error: 32555
+## Critical Value of t: 2.807225 
+## 
+## Groups according to probability of means differences and alpha level( 0.05 )
+## 
+## Treatments with the same letter are not significantly different.
+## 
+##                      income groups
+## White              49.78750      a
+## Black              43.14683      b
+## Asian-Pac-Islander 42.89898     bc
+## Amer-Indian-Eskimo 41.88682      c
+## Other              37.60339      d</code></pre>
 </div>
 </div>
 </div>

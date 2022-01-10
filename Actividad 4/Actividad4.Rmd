@@ -301,7 +301,7 @@ Realizamos ahora los cálculos para la preunta según el caso racial. Iniciamos 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 H <- white
 D <- black
-d <- 6.450 # Se expresa en decimal y aque el salario anual esta en k €
+d <- 6.450 # Se expresa en decimal ya que el salario anual esta en k €
 
 homocedasticidad(H,D)
 ````
@@ -367,11 +367,35 @@ income = 26.183312 + 0.078247 * age + 0.419036 * education_num + 0.071274 * hour
 
 ## 4.2 Interpretación de los modelos
 
+Los modelos obtenidos en el apartado anterior son
+
+````
+income = 31.315777 + 0.082515 * age + 0.446817 * education_num + 0.073834 * hours_per_week + 10.108404 * Male
+````
+
+Este modelo indica que por cada año de edad el salario anual aumenta en 0.082515 k euros, por cada año de formación el salario anual aumenta en 0.446817 k eruos, por cada hora de la semana trabajada el salario anual aumenta en 0.073834 euros y que para los trabajadores hombres el salario anual aumenta en 10.108404 k euros.
+
+Vemos que este modelo tiene un coeficiente de determinación de 0.5892 lo que nos inddica que el modelo de regresión lineal explica el 58,92% de las observaciones.
+
+EL segundo modelo obtenido es 
+
+````
+income = 26.183312 + 0.078247 * age + 0.419036 * education_num + 0.071274 * hours_per_week + 9.780936 * Male -0.214519 * Asian_pac_Islander + 2.382315 * Black - 3.562672 * Other + 6.681488 * White
+````
+
+El cual nos indica que por cada año de edad el salario anual aumenta en 0.078247 k euros, por cada año de formación el salario aumenta en 0.419036 k euros, por cada hora a la semana trabajada el salario anual aumenta en 0.071274 k euros, que para los trabajadores hombres el salario anual aumenta en 9.780936 k euros, para los trabajadores de raza Asian_pac_islander el salario disminuye en 0.214519 k euros, para los trabajadores de raza Black el salario aumenta en 2.382315 k euros, para los trabajadore sde raza Other el salario anual disminuye en 3.562672 k euros y para los trabajadores de raza White el salario anual aumenta en 6.681488 k euros.
+
+Este modelo tiene un coeficiente de determinación de 0.6674 lo que nos indica que el modelo de refresión lineal explica el 66,74% de las observaciones, lo que implica una mejora con respecto del primer modelo que no empleaba la variable race.
+
 ## 4.3 Análisis de residuos
+
+Mostramps el gráfico con los valores ajustados frente a los residuales
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 plot(modelo2$fitted.values, modelo2$residuals)
 ````
+
+Obtenemos el gráfico cuartil-cuartil en función de los residuos del modelo y el salario anual.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 qqplot(modelo2$residuals, adult$income)

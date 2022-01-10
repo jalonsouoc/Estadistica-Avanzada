@@ -727,4 +727,43 @@ Representamos la interacción entre ambos facotres mediante la función en R int
 interaction.plot(adult$race, adult$occupation, adult$income)
 ````
 
+Podemos ver que para todas las ocupaciones el pico superior de salario anual se encuentra en la raza White y el pico inferior n la raza Other como habíamos visto en el apartado anterior. También podemos ver que la oocupación White-Collar es la que mayor salario anual posee para las razas Amer-Indian-Eskimo y Black sin embargo para Other y White es la ocupación Professional.
+
 # 8 Conclusiones
+
+Como conclusión de la práctica, hemos realizado la lectura y preparacdión de los datos para poder realizar los análisis correspondientes posteriormente, aunque los datos venían en un formato bastante correcto.
+
+Se han respondido las preguntas
+
+* ¿Cobran los hombres más que las mujeres?
+
+Con un 95% podemos aceptar que los hombres cobran más anualmente que las mujeres
+
+* ¿Cobra la gente blanca 6450€ más al año que la gente negra?
+
+Con un 95€ de confianza podemos aceptar que la gente blanca cobra en promedio anual 6450€ más que la gente negra.
+
+Se han obtenido dos modelos de regresión lineal para predecir el salario anual.
+
+En primer lugar el modelo de regresión lineal para explicar la variable income en función de age, education_num, hours_per_week y gender es
+
+````
+income = 31.315777 + 0.082515 * age + 0.446817 * education_num + 0.073834 * hours_per_week + 10.108404 * Male
+````
+
+El segundo modelo de regresión lineal explica la variable income en función de age, education_num, hours_per_week, gender y race es
+
+````
+income = 26.183312 + 0.078247 * age + 0.419036 * education_num + 0.071274 * hours_per_week + 9.780936 * Male -0.214519 * Asian_pac_Islander + 2.382315 * Black - 3.562672 * Other + 6.681488 * White
+````
+
+Este último modelo es el que posee un mayor coeficiente de determinación siendo este 0.6674.
+
+SE ha obtenido un modelo de regresión logística para poder obtener la probabilidad de que un individuo posea un salario anual menor de 50k€ mediante el modelo:
+
+````
+Less50 = 7.777446 - 0.021239 * age + 4.554006 * Other/Unknow + 1.187188 * Private + 2.151755 * Self-Employed - 0.191736 * education_num - 2.880404 * Married +  0.068437 * Separated -0.365074 * Single + 1.135395 * Widowed + 0.611736 * Other/Unknown +  2.35491* Professional + 2.245619 * Sales + 2.330048 * Service + 1.305955 * White-Collar -0.707042 * Asian-Pac-Islander -1.345741 * Black + 1.996456 * Other -5.070878 * White -0.034588 * hours_per_week
+```` 
+
+Por último hemos analizado las diferencias significativas de income entre los diferentes grupos raciales. Obteniendo que el factor razas es significativo en el salario anual obteniendo 4 grupos salariales en función de la raza siendo el grupo de la raza WHite el que más cobra y el de la raza Other el que menos. También hemos podido observar como la ocupación White-Collar es la que más cobra anualmente en los grupos raciales Amer-Indian-Eskimo y Black y la ocupación Professional para los grupos raciales Other y White
+

@@ -1,0 +1,768 @@
+---
+title: "Actividad 4 - Análisis de la varianza y repaso del curso"
+author: "Jorge Alonso Hernández"
+date: '`r format(Sys.Date(),"%e de %B, %Y")`'
+output: 
+  html_document: 
+    toc: yes
+    toc_depth: 2
+  pdf_document: 
+    toc: yes
+    toc_depth: 2
+    latex_engine: xelatex
+classoption: a4paper
+---
+
+# 1 Introducción
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# Carga de librerías
+if (!require('stringr')) install.packages('stringr'); library('stringr')
+if (!require('plyr')) install.packages('plyr'); library('plyr')
+if (!require('nortest')) install.packages('nortest'); library('nortest')
+if (!require('agricolae')) install.packages('agricolae'); library('agricolae')
+````
+
+# 2 Lectura del archivo y preparación de los datos
+
+Realizamos la carga del fichero de datos. En este caso nos encontramos con un fichero txt con lo que emplearemos la función en R read.table, emplearemos una variable ruta_txt para almacenar la ruta del fichero con los datos. Dicha ruta la obtenemos con la función en R file.choose.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+ruta_txt <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Estadística Avanzada\\Actividad 4\\CensusIncomedata.txt"
+adult <- read.table(ruta_txt, header = TRUE)
+````
+
+Vemos los tipos de datos con los que han sido cargadas las variables.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+str(adult)
+````
+
+Vemos que casi todas son de tipo cadena a excepción de age, education_num y hours_per_week que son de tipo entero y de la variable income que es de tipo numérica.
+
+
+vemos el resumen de la muestra de datos.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+summary(adult)
+````
+
+Del resumen podemos destacar que la edad mínima es de 17 años y la edad máxima de 90 años. También podemos observar que el salario mínimo está en 22540 € anuales y el máximo en 68370 € anuales.
+
+Por último, observamos una pequeña muestra de los datos del conjunto de datos.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+head(adult)
+````
+
+## 2.1 Preparación de los datos
+
+Inicialmente comprobaremos la existencia de valores perdidos o valores nulos
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+colSums(is.na(adult))
+colSums(adult == "")
+````
+
+Comprobamos que no existen valores perdidos o vacíos en nuestra muestra de datos. Una vez realizada esta comprobación eliminaremos los espacios en blanco iniciales de las variables categóricas para obtener una muestra de mayor calidad.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# Patrón para reemplazar los espacios en blanco iniciales
+patron <- "^\\s+"
+# Valor a sustituir por los espacios en blanco
+sust <- ""
+
+# Reemplazamos en las variables categóricas
+adult$sex <- str_replace_all(adult$sex, pattern = patron, sust)
+adult$workclass <- str_replace_all(adult$workclass, pattern = patron, sust)
+adult$marital_status <- str_replace_all(adult$marital_status, pattern = patron, sust)
+adult$occupation <- str_replace_all(adult$occupation, pattern = patron, sust)
+adult$race <- str_replace_all(adult$race, pattern = patron, sust)
+
+````
+
+Corregimos el nombre de la séptima variable de forma que pase de llamarse "sex" a llamarse "gender".
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+adult = rename(adult, c(sex="gender")) 
+names(adult)
+````
+
+Podemos ver que se realiza correctamente la modificación del nombre de la variable.
+
+Comprobamos ahora la normalidad de la variable salario.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+# Histograma
+hist(adult$income)
+
+#Gráfico de densidad
+plot(density(adult$income))
+````
+
+Vemos que los datos tienen una densidad asimétrica, empleamos el test de Lilliefors para comprobar la normalidad de la variable
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+lillie.test(adult$income)
+````
+
+Vemos que el p-valor es menor de 0.05 por lo tanto vemos que los datos del salario no siguen una distribución normal.
+
+Creamos una nueva variable dicotómica denominada "Less50"  de forma que calificaremos binariamente el salario. Dicha variable tomará el valor 1 cuando el salario anual sea inferior a 50000 € y el valor 0 en caso contrario.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+adult$Less50 <- -1
+# Variable clasificatoria
+limit <- 50
+
+for (i in 1:length(adult$Less50)) {
+  adult$Less50[i] <- ifelse(adult$income[i] < limit, 1, 0)
+}
+
+#Convertimos a tipo entero
+adult$Less50 <- as.integer(adult$Less50)
+
+head(adult)
+
+levels(factor(adult$race))
+````
+
+Comprobamos que se ha generado correctamente la nueva variable con los valores establecidos
+
+## 2.2 Análisis visual
+
+Mostramos los diagramas de caja de la variable income en función del resto de variables cualitativas.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(formula = income  ~ gender, data = adult, main = "income en función de gender")
+````
+
+Se puede apreciar como los salarios son mayores en hombres que en mujeres.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(formula = income  ~ race, data = adult, main = "income en función de race")
+````
+
+En este caso podemos apreciar que los salarios de las personas de raza blanca son mayores que los del resto de razas.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(formula = income  ~ workclass, data = adult, main = "income en función de workclass")
+````
+
+En cuanto al perfil laboral se observa que los salarios mayores se encuentran en los trabajadores gubernamentales.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(formula = income  ~ marital_status, data = adult, main = "income en función de marital_status")
+````
+
+Podemos observar que los salarios más altos se pueden encontrar en las personas casadas.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(formula = income  ~ occupation, data = adult, main = "income en función de occupation")
+````
+
+Por último, vemos que los trabajadores con un mayor salario se encuentran en los denominados trabajadores de cuello blanco que hace referencia a los trabajadores que realizan trabajos semiprofesionales o profesionales de oficina, administración y coordinación de ventas.
+
+Observamos las variables cuantitativas.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+hist(adult$age, main = "Age")
+````
+
+Observamos que las edades predominantes se encuentran entre los 20 y 40 años.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+hist(adult$hours_per_week, main = "Hours per week")
+````
+
+Para las horas semanales podemos observar que la gran mayoría se encuentra entre las 35 y las 40 horas semanales
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+hist(adult$education_num, main = "Education num")
+````
+
+Por último, observamos que el número de años de formación educativa predominante es el de 9 años.
+
+# 3 Estadística inferencial
+
+## 3.1 Contraste de hipótesis
+
+Para realizar los contrastes de hipótesis obtenemos por un lado las muestras de los salarios para hombres y para mujeres y por otro lado las muestras de los salarios de los grupos raciales blanco y negro
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+# Por género
+woman <- adult$income[adult$gender == "Female"]
+man <- adult$income[adult$gender == "Male"]
+
+# Por raza
+black <- adult$income[adult$race == "Black"]
+white <- adult$income[adult$race == "White"]
+````
+
+### 3.1.1 Hipótesis nula y alternativa
+
+Definimos la hipótesis nula y alternativa por género:
+
+* **Hipótesis nula:** el promedio salarial anual de los hombres es igual al promedio salarial anual de las mujeres
+                                                  $$H_O: µ_1 = µ_2$$
+* **Hipótesis alternativa:** el promedio salarial anual de los hombres es mayor que el promedio salarial anual de las mujeres
+                                                  $$H_1: µ_1 > µ_2$$
+Definimos la hipótesis nula y alternativa por raza
+
+* **Hipótesis nula:** la diferencia del promedio salarial anual de la gente blanca y el promedio salarial anual de la gente negra es 6450 €
+                                                  $$H_0: µ_1 - µ_2  = 6450$$
+* **Hipótesis alternativa:** la diferencia del promedio salarial anual de la gente blanca y el promedio salarial anual de la gente negra es mayor que 6450€
+                                                  $$H_1: µ_1 - µ_2 > 6450$$
+
+### 3.1.2 Justificación del test a aplicar
+
+Para la pregunta según el género se va a emplear un contraste de hipótesis de dos muestras emparejadas sobre la media del salario anual y unilateralmente por la derecho dado que se pretende comprobar si el salario anual de los hombres es mayor al de las mujeres.
+
+Para la pregunta según la raza se va a emplear un contraste de hipótesis sobre dos muestras emparejadas, una para cada raza, aplicado sobre la media salarial anual y unilateralmente por la derecha dado que se pretende comprobar si el salario promedio de la gente blanca es al menos 6450 € mayor que el de la gente de raza negra.
+
+### 3.1.3 Aplicación, interpretación y comprobación del test
+
+**Por el género**
+
+Inicialmente realizamos los cálculos para la pregunta por el género. Debemos de realizar el test de homocedasticidad para comprobar si las varianzas son iguales o diferentes. Generamos una función denominada Homeocedasticidad con el fin de reaprovechar código más adelante.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+H <- man
+D <- woman
+d = 0
+
+homocedasticidad <- function(H,D){
+  alfa <- 1 - 0.95
+  mean1 <- mean(H)
+  n1 <- length(H)
+  s1 <- sd(H)
+  mean2 <- mean(D)
+  n2 <- length(D)
+  s2 <- sd(D)
+  fobs <- s1^2/s2^2
+  fcritL <- qf(alfa, df1=n1-1, df2=n2-2)
+  fcritU <- qf(1 - alfa, df1=n1-1, df2=n2-2)
+  pvalue <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
+  c(mean1, mean2, s1, s2, n1, n2)
+  c(fobs, fcritL, fcritU, pvalue)
+}
+  
+homocedasticidad(H,D)
+
+````
+
+Dado que el p valor es inferior al alfa definido de 0.05 podemos asumir que las varianzas son diferentes por lo tanto aplicaremos el estadístico del contraste de dos muestras sobre la media con varianzas desconocidas diferentes. De nuevo generamos una función para reutilizar código.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+contraste <- function(H,D, d0){
+  alfa <- 1-0.95
+  mean1 <- mean(H)
+  n1 <- length(H)
+  s1 <- sd(H)
+  mean2 <- mean(D)
+  n2 <- length(D)
+  s2 <- sd(D)
+  dfMean = mean1 -mean2 - d0
+  v <- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
+  
+  tobs <- dfMean/sqrt((s1^2/n1 + s2^2/n2))
+  tcrit <- qt(alfa, v)
+  pvalue <- pt(tobs, df=v, lower.tail=FALSE)
+  c(tobs, tcrit, pvalue)
+}
+
+contraste(H,D,d)
+````
+
+Podemos ver que el valor observado es de 194.106, el valor crítico es -1.6449 y el p-valor es 0.
+
+Dado que hemos obtenido un valor inferior al alfa definido de 0.05 podemos rechazar la hipótesis nula de que el promedio salarial anual de los hombres es igual a l promedio salarial anual de las mujeres, por lo que se acepta la hipótesis alternativa de que el promedio salarial anual de los hombres es superior al de las mujeres.
+
+Realizamos las comprobaciones mediante las funciones de R. Inicialmente realizamos la comprobación del test de homocedasticidad con la función var.test.
+
+`````````{r echo=TRUE, message=FALSE, warning=FALSE}
+var.test(H,D)
+````
+Comprobamos que el p valor devuelto en la función también es inferior a 0.05 por lo que son varianzas desconocidas diferentes.
+
+Realizamos la comprobación del contraste de hipótesis empleando la función R t.test.
+
+`````````{r echo=TRUE, message=FALSE, warning=FALSE}
+t.test(H,D)
+````
+
+De nuevo se observa que el p valor devuelto es inferior al alfa definido por lo que comprobamos que se rechaza la hipótesis nula.
+
+**Por el caso racial**
+
+Realizamos ahora los cálculos para la pregunta según el caso racial. Iniciamos de nuevo con el test de homocedasticidad para comprobar si las varianzas son iguales.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+H <- white
+D <- black
+d <- 6.450 # Se expresa en decimal ya que el salario anual esta en k €
+
+homocedasticidad(H,D)
+````
+
+Obtenemos un p-valor inferior al alfa definido de 0.05 por lo que podemos asumir que las varianzas son diferentes y por lo tanto aplicaremos el estadístico del contraste de hipótesis de dos muestras sobre la media con varianzas desconocidas diferentes. Emplearemos la función contraste definida anteriormente.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+contraste(H,D,d)
+````
+
+Podemos ver que el valor observado es de 2.03705114, el valor crítico es de -1.645171 y el p-valor es 0.02084979.
+
+Dado que hemos obtenido un p-valor inferior al alfa definido de 0.05 podemos rechazar la hipótesis nula de que la diferencia del promedio salarial anual de la gente blanca y el promedio salarial anual de la gente negra es 6450€, por lo que se acepta la hipótesis alternativa de que la diferencia del promedio salarial anual de las personas de raza blanca y el promedio salarial anual de las personas de raza negra es superior a 6450€.
+
+Realizamos las comprobaciones mediante las funciones de R. Primero comprobamos el test de homocedasticidad con la función var.test.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+var.test(H,D)
+````
+Comprobamos que el p-valor devuelto en la función también es inferior a 0.05 por lo que son varianzas desconocidas diferentes.
+
+Realizamos la comprobación del contraste de hipótesis empleando la función en R t.test
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+t.test(H,D, alternative="greater", mu=d, var.equal = FALSE)
+````
+
+Comprobamos que el p-valor devuelto es inferior al alfa definido por lo que comprobamos que se rechaza la hipótesis nula.
+
+# 4 Modelo de regresión lineal
+
+## 4.1 Estimación de modelos
+
+Creamos un modelo de regresión lineal múltiple empleando la variable dependiente Income y las variables explicativas age,education_num, hours_per_week y gender. Para la creación del modelo empleamos la función en R lm().
+
+Antes de generar el modelo debemos de crear 
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+modelo1 <- lm(formula = adult$income ~ adult$age + adult$education_num + adult$hours_per_week + adult$gender, na.action = na.exclude)
+summary(modelo1)
+````
+
+El modelo resultante para obtener la variable income es:
+
+````
+income = 31.315777 + 0.082515 * age + 0.446817 * education_num + 0.073834 * hours_per_week + 10.108404 * Male
+````
+
+Obtenemos un segundo modelo añadiendo al anterior la variable race.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+modelo2 <- lm(formula = adult$income ~ adult$age + adult$education_num + adult$hours_per_week + adult$gender + adult$race, na.action = na.exclude)
+summary(modelo2)
+````
+
+
+El modelo resultante es el siguiente
+
+````
+income = 26.183312 + 0.078247 * age + 0.419036 * education_num + 0.071274 * hours_per_week + 9.780936 * Male -0.214519 * Asian_pac_Islander + 2.382315 * Black - 3.562672 * Other + 6.681488 * White
+````
+
+
+## 4.2 Interpretación de los modelos
+
+Los modelos obtenidos en el apartado anterior son
+
+````
+income = 31.315777 + 0.082515 * age + 0.446817 * education_num + 0.073834 * hours_per_week + 10.108404 * Male
+````
+
+Este modelo indica que por cada año de la edad el salario anual aumenta en 0.082515 k euros, por cada año de formación el salario anual aumenta en 0.446817 k euros, por cada hora de la semana trabajada el salario anual aumenta en 0.073834 euros y que para los trabajadores hombres el salario anual aumenta en 10.108404 k euros.
+
+Vemos que este modelo tiene un coeficiente de determinación de 0.5892 lo que nos indica que el modelo de regresión lineal explica el 58,92% de las observaciones.
+
+EL segundo modelo obtenido es 
+
+````
+income = 26.183312 + 0.078247 * age + 0.419036 * education_num + 0.071274 * hours_per_week + 9.780936 * Male -0.214519 * Asian_pac_Islander + 2.382315 * Black - 3.562672 * Other + 6.681488 * White
+````
+
+El cual nos indica que por cada año de edad el salario anual aumenta en 0.078247 k euros, por cada año de formación el salario aumenta en 0.419036 k euros, por cada hora a la semana trabajada el salario anual aumenta en 0.071274 k euros, que para los trabajadores hombres el salario anual aumenta en 9.780936 k euros, para los trabajadores de raza Asian_pac_islander el salario disminuye en 0.214519 k euros, para los trabajadores de raza Black el salario aumenta en 2.382315 k euros, para los trabajadores de raza Other el salario anual disminuye en 3.562672 k euros y para los trabajadores de raza White el salario anual aumenta en 6.681488 k euros.
+
+Este modelo tiene un coeficiente de determinación de 0.6674 lo que nos indica que el modelo de regresiónlineal explica el 66,74% de las observaciones, lo que implica una mejora con respecto del primer modelo que no empleaba la variable race.
+
+## 4.3 Análisis de residuos
+
+Mostramos el gráfico con los valores ajustados frente a los residuales
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(modelo2$fitted.values, modelo2$residuals)
+````
+
+Obtenemos el gráfico cuartil-cuartil en función de los residuos del modelo y el salario anual.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+qqplot(modelo2$residuals, adult$income)
+````
+
+## 4.4 Predicción
+
+Realizamos el cálculo en función del modelo obtenido en el primer apartado.
+
+````
+income = 26.183312 + 0.078247 * age + 0.419036 * education_num + 0.071274 * hours_per_week + 9.780936 * Male -0.214519 * Asian_pac_Islander + 2.382315 * Black - 3.562672 * Other + 6.681488 * White
+````
+
+Aplicamos sobre las variables los valores especificados en el enunciado.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+income <- 26.183312 + 0.078247 * 24 + 0.419036 * 4 + 0.071274 * 40 + 9.780936 * 0 - 0.214519 * 0 + 2.382315 * 1 - 3.562672 * 0 + 6.681488 * 0
+income
+````
+
+Obtenemos que el salario anual sería de 34.970 € 
+
+
+# 5 Regresión logística 
+
+## 5.1 Generación de los conjuntos de entrenamiento de test
+
+Partiendo del conjunto de datos inicial obtenemos una muestra de entrenamiento y una muestra de teste. La muestra de entrenamiento estará conformada por el 80% de la muestra de datos y la muestra de testeo por el 20% de la muestra original.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+# Número de registros totales
+total <- nrow(adult)
+
+#límite para la muestra de entrenamiento
+tr_limit <- total * 0.8
+
+# límite para la muestra de testeo
+ts_limit <- tr_limit + 1
+
+# Muestra de entrenamiento
+train <- adult[1:tr_limit,]
+
+#Muestra de testeo
+test <- adult[ts_limit:total,]
+````
+
+## 5.2 Modelo predictivo
+
+Para obtener el modelo predictivo mediante regresión logística, inicialmente realizamos un estudio de relaciones entre variables para comprobar entre que variables existe relación.
+
+Variable age.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab1 = table(train$Less50, train$age)
+chi.test <- chisq.test(tab1)
+print(chi.test)
+````
+
+Variable workclass.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab2 = table(train$Less50, train$workclass)
+chi.test <- chisq.test(tab2)
+print(chi.test)
+````
+
+Variable education_num.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab3 = table(train$Less50, train$education_num)
+chi.test <- chisq.test(tab3)
+print(chi.test)
+````
+
+variable marital_status.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab4 = table(train$Less50, train$marital_status)
+chi.test <- chisq.test(tab4)
+print(chi.test)
+````
+
+Variable occupation.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab5 = table(train$Less50, train$occupation)
+chi.test <- chisq.test(tab5)
+print(chi.test)
+````
+
+Variable race.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab6 = table(train$Less50, train$race)
+chi.test <- chisq.test(tab6)
+print(chi.test)
+````
+
+Variable gender
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab7 = table(train$Less50, train$gender)
+chi.test <- chisq.test(tab7)
+print(chi.test)
+````
+
+Variable hours_per_week.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+tab8 = table(train$Less50, train$hours_per_week)
+chi.test <- chisq.test(tab8)
+print(chi.test)
+````
+
+Podemos observar que todas las variables tienen un p-valor inferior al 0.05 por lo que podemos concluir que existe relación entre el salario anual y cada una de las variables de la muestra de datos.
+
+Construimos el modelo de regresión logística en base a las variables mencionadas anteriormente
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+logit <- glm(formula = Less50 ~ age + workclass + education_num + marital_status + occupation + race + hours_per_week, data = train, family = binomial)
+summary(logit)
+````
+ 
+El modelo resultante sería
+
+````
+Less50 = 7.777446 - 0.021239 * age + 4.554006 * Other/Unknow + 1.187188 * Private + 2.151755 * Self-Employed - 0.191736 * education_num - 2.880404 * Married +  0.068437 * Separated -0.365074 * Single + 1.135395 * Widowed + 0.611736 * Other/Unknown +  2.35491* Professional + 2.245619 * Sales + 2.330048 * Service + 1.305955 * White-Collar -0.707042 * Asian-Pac-Islander -1.345741 * Black + 1.996456 * Other -5.070878 * White -0.034588 * hours_per_week
+```` 
+
+## 5.3 Interpretación
+
+Del modelo anterior podemos destacar que casi todas las variables poseen un coeficiente estadísticamente significativo para predecir los salarios de los individuos ya que obtenemos p-valores inferiores al 0,05 de significación definido. 
+
+Tenemos excepciones dentro de algunas variables ya que el martial_status Separated no es significativo a la hora de predecir el salario anual, al igual que la occupation Other/Unknown ya que poseen p-valores superiores al 0.05 de significación. Lo mismo ocurre con las razas Asian-Pac_islander y Other.
+
+## 5.4 Matriz de confusión
+
+Obtnemos los datos relativos a las predicciones y los valores observados para poder conformar la matriz de confusión
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+predicted_value <- predict(logit, test, type="response")
+predicted_class <- ifelse(predicted_value > 0.5, 1, 0)
+performance_data<-data.frame(observed=test$Less50,
+           predicted = predicted_class)
+less50 <- sum(performance_data$observed==1)
+more50 <- sum(performance_data$observed==0)
+predicted_less50 <- sum(performance_data$predicted==1)
+predicted_more50<- sum(performance_data$predicted==0)
+total <- nrow(performance_data)
+#Datos totales
+data.frame(less50, more50,predicted_less50,predicted_more50)
+# Predicciones coinciden con observaciones
+trueLess50 <- sum(performance_data$observed==1 & performance_data$predicted==1)
+trueMore50 <- sum(performance_data$observed==0 & performance_data$predicted==0)
+#Predicciones no coinciden con observaciones
+falseLess50 <- sum(performance_data$observed==0 & performance_data$predicted==1)
+falseMore50 <- sum(performance_data$observed==1 & performance_data$predicted==0)
+#Datos de la matriz de confusión
+data.frame(trueLess50, trueMore50,falseLess50,falseMore50)
+````
+
+
+De forma que la tabla final resultaría
+
+|              |Predicción     |
+|--------------|-------|-------|-------|
+|**Observado** |Less50 | More50|Total|
+|Less50        |2775   |563    |3338
+|More50        |509    |2665   |3174
+|              |3284   |3228   |
+
+## 5.5 Predicción
+
+Empleamos el modelo obtenido en los apartados anteriores para obtener la probabilidad de que el salario de un individuo sea menor de 50k€ para un hombre blanco de 20 años de edad, autónomo, con 3 años de estudios, soltero, trabajando en el sector profesional y trabajando actualmente unas 25 horas semanales.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+logit_less50 <- 7.777446 - 0.021239 * 20 + 4.554006 * 0 + 1.187188 * 0 + 2.151755 * 1 - 0.191736 * 3 - 2.880404 * 0 +  0.068437 * 0 -0.365074 * 1 + 1.135395 * 0 + 0.611736 * 0 +  2.35491 * 1 + 2.245619 * 0 + 2.330048 * 0 + 1.305955 * 0 -0.707042 * 0 - 1.345741 * 0 + 1.996456 * 0 -5.070878 * 1 - 0.034588 * 25
+
+prob1 <- exp(logit_less50)/(1+exp(logit_less50))
+prob1
+````
+
+Obtenemos que la probabilidad de que el salario sea menor de 50 k€ es de 0.9931964. Comprobamos el resultado con la función en R predict.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+pred1<-predict(logit, data.frame(age = 20, workclass="Self-Employed", education_num = 3, marital_status ="Single", occupation="Professional", race="White", hours_per_week = 25), type = "response")
+pred1
+
+````
+
+Comprobamos que obtenemos el mismo valor que el calculado.
+
+Obtenemos ahora la probabilidad de que el salario de un individuo sea menor de 50k€ para un hombre negro de 60 años de edad, con trabajo gubernamental, con 15 años de estudios, casado, trabajando como "white collar" y trabajando unas 35 horas semanales.
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+logit_less50 <- 7.777446 - 0.021239 * 60 + 4.554006 * 0 + 1.187188 * 0 + 2.151755 * 0 - 0.191736 * 15 - 2.880404 * 1 +  0.068437 * 0 -0.365074 * 0 + 1.135395 * 0 + 0.611736 * 0 +  2.35491* 0 + 2.245619 * 0 + 2.330048 * 0 + 1.305955 * 1 -0.707042 * 0 -1.345741 * 1 + 1.996456 * 0 -5.070878 * 0 -0.034588 * 35
+
+prob2 <- exp(logit_less50)/(1+exp(logit_less50))
+prob2
+````
+
+Obtenemos que la probabilidad de que el salario sea menor de 50 k€ es de 0.3766705. Comprobamos el resultado con la función en R predict.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+pred2<-predict(logit, data.frame(age = 60, workclass="Government", education_num = 15, marital_status ="Married", occupation="White-Collar", race="Black", hours_per_week = 35), type = "response")
+pred2
+````
+
+Comprobamos que obtenemos el mismo valor que el calculado.
+
+# 6 Análisis de la varianza (ANOVA) de un factor
+
+## 6.1 Visualización
+
+Realizamos la visualización de los datos.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+boxplot(income ~ race, data = adult)
+````
+
+Podemos observar que los salarios más altos los encontramos en las personas de raza White en contraparte de las razas Other que concentran los salarios más bajos.
+
+## 6.2 Modelo ANOVA
+
+### 6.2.1 Formula el modelo
+
+Para nuestro queremos saber si existe diferencias significativas entre la variable dependiente income y el factor grupo racial. Para ello el estadístico planteado por el ANOVA es el siguiente
+
+$$y_{ij} = µ + α_i + e_{ij}$$
+Donde µ es el salario medio total de los salarios anuales, $α_i$ es la diferencia entre cada una de las medias de cada grupo racial y $e_{ij}$ denotan los errores que son variables independientes.
+
+### 6.2.2 Indica las hipótesis nula y alternatica
+
+Para aplicar el contraste de hipótesis consideramos el factor con la razas diferentes y n réplicas en cada nivel, por lo que los índices van de  i= 1, ..., a y j= 1,...,n.
+
+* **Hipótesis nula:** Todos las medias de salario anual de cada grupo racial son iguales por lo que el factor raza no es significativo
+$$H_0: α_1 = ... = α_a = 0$$
+* **Hipótesis alternativa:** Existe al menos una de las medias de salario anual de un grupo racial diferente al resto
+$$H_1: α_i ≠ α_j, \hspace{0,2cm} \textrm{para algún}i ≠ j$$
+
+### 6.2.3 Estima la significación del factor grupo racial
+
+Para obtener el modelo anova en primer lugar obtenemos el modelo de regresión lineal de la variable dependiente income en función de la variable race mediante la función en R aov. Una obtenido este modelo aplicamos la función en R anova sobre este.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+modelo <-aov(income ~race, data = adult)
+taov <- anova(modelo)
+taov
+````
+
+Observamos que el p-valor devuelto es inferior al nivel de significación del 5%, Por lo que aceptamos la hipótesis alternativa de que las razas es significativo.
+
+### 6.2.4 Estima los efectos de los niveles de factor
+
+Como hemos visto en el apartado anterior, obtenemos un p-valor de 2.2e-16 un valor inferior al 5% de significación establecido, con lo cual rechazamos la hipótesis nula y aceptamos la hipótesis alternativa, por lo que podemos concluir que el factor de las razas es significativos en el salario anual.
+
+Podemos obtener también el valor de la suma de cuadrados que es de 211909, los cuadrados medios de valor 52977 y el valor del estadístico es de 1208.4.
+
+### 6.2.5 Realiza los contrastes dos-a-dos
+
+Para realizae el constraste dos a dos empleamos la función HSD.test de R.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+HSD.test(modelo, "race", group=T, console=T)
+````
+
+Podemos observar que se forman 4 grupos, uno para las personas de raza White, otro para las personas de raza Black, otra para la raza Amer-Indian_eskimo y otra para la raza Other. Vemos que la raza Asia-Pac-Islander se encuentra ubicada entre el grupo de las personas de raza Black y las de raza Amer-Indian-Eskimo.
+
+
+Podemos ver que el grupo que más cobra anualmente es el de las personas de raza White y el que menos cobra el de la raza Other. Observamos que las personas de raza Black se sitúan en el segundo escalafón de personas con el mayor salario anual.
+
+### 6.2.6 Adecuación del modelo
+
+#### 6.2.6.1 Homocedasticiad de los residuos
+
+Mostramos gráfico de Residuals vs Filtted.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(modelo, which=1)
+````
+
+Observamos que se forman 5 tiras verticales situadas en las medias de cada uno de los grupos raciales. Estos corresponden a los valores ajustados de las observaciones.
+ 
+Adicionalmente testeamos la homogeneidad de las varianzas mediante el test de Bartlett.
+ 
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+bartlett.test(income ~ race, data = adult)
+````
+
+El p-valor devuelto es inferior al nivel de significación por lo que aceptamos la hipótesis alternativa de que las varianzas son diferentes.
+
+#### 6.2.6.2 Normalidad de los residuos
+
+Para observar la normalidad de los residuos inicialmente mostramos el gráfico.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+qqnorm(residuals(modelo))
+qqline(residuals(modelo))
+````
+
+Observamos que la mayoría de los residuos se ajustan a la recta por lo que no hay evidencia que contradiga el supuesto de normalidad.
+
+Aplicamos el test de Kruskal-Wallis mediante la función en r kruskal.test().
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+kruskal.test(income ~ race, data = adult)
+````
+
+Vemos un p-valor inferior al nivel de significación por lo que aceptamos que existen diferencias significativas en el salario anual en función de la raza.
+
+# 7 ANOVA multifactorial
+
+## 7.1 Estudio visual de la interacción
+
+Mostramos la tabla cruzada entre las variables race y occupation.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+table(adult$race, adult$occupation)
+
+````
+
+Podemos observar que no es una tabla balanceada ya que la población de raza White posee muchos más registros en cada uno de los diferentes trabajos en relación con el resto de razas.
+
+Representamos la interacción entre ambos factores mediante la función en R interaction.plot
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+interaction.plot(adult$race, adult$occupation, adult$income)
+````
+
+Podemos ver que para todas las ocupaciones el pico superior de salario anual se encuentra en la raza White y el pico inferior n la raza Other como habíamos visto en el apartado anterior. También podemos ver que la ocupación White-Collar es la que mayor salario anual posee para las razas Amer-Indian-Eskimo y Black sin embargo para Other y White es la ocupación Professional.
+
+# 8 Conclusiones
+
+Como conclusión de la práctica, hemos realizado la lectura y preparación de los datos para poder realizar los análisis correspondientes posteriormente, aunque los datos venían en un formato bastante correcto.
+
+Se han respondido las preguntas
+
+* ¿Cobran los hombres más que las mujeres?
+
+Con un 95% podemos aceptar que los hombres cobran más anualmente que las mujeres
+
+* ¿Cobra la gente blanca 6450€ más al año que la gente negra?
+
+Con un 95€ de confianza podemos aceptar que la gente blanca cobra en promedio anual 6450€ más que la gente negra.
+
+Se han obtenido dos modelos de regresión lineal para predecir el salario anual.
+
+En primer lugar el modelo de regresión lineal para explicar la variable income en función de age, education_num, hours_per_week y gender es
+
+````
+income = 31.315777 + 0.082515 * age + 0.446817 * education_num + 0.073834 * hours_per_week + 10.108404 * Male
+````
+
+El segundo modelo de regresión lineal explica la variable income en función de age, education_num, hours_per_week, gender y race es
+
+````
+income = 26.183312 + 0.078247 * age + 0.419036 * education_num + 0.071274 * hours_per_week + 9.780936 * Male -0.214519 * Asian_pac_Islander + 2.382315 * Black - 3.562672 * Other + 6.681488 * White
+````
+
+Este último modelo es el que posee un mayor coeficiente de determinación siendo este 0.6674.
+
+SE ha obtenido un modelo de regresión logística para poder obtener la probabilidad de que un individuo posea un salario anual menor de 50k€ mediante el modelo:
+
+````
+Less50 = 7.777446 - 0.021239 * age + 4.554006 * Other/Unknow + 1.187188 * Private + 2.151755 * Self-Employed - 0.191736 * education_num - 2.880404 * Married +  0.068437 * Separated -0.365074 * Single + 1.135395 * Widowed + 0.611736 * Other/Unknown +  2.35491* Professional + 2.245619 * Sales + 2.330048 * Service + 1.305955 * White-Collar -0.707042 * Asian-Pac-Islander -1.345741 * Black + 1.996456 * Other -5.070878 * White -0.034588 * hours_per_week
+```` 
+
+Por último, hemos analizado las diferencias significativas de income entre los diferentes grupos raciales. Obteniendo que el factor razas es significativo en el salario anual obteniendo 4 grupos salariales en función de la raza siendo el grupo de la raza WHite el que más cobra y el de la raza Other el que menos. También hemos podido observar como la ocupación White-Collar es la que más cobra anualmente en los grupos raciales Amer-Indian-Eskimo y Black y la ocupación Professional para los grupos raciales Other y White

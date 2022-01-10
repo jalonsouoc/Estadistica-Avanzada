@@ -510,9 +510,9 @@ chi.test <- chisq.test(tab8)
 print(chi.test)
 ````
 
-Podemos observar que todas las variables tienen un p-valor inferior al 0.05 por lo que podemos concluir que existe relación entre el salario anualy cada una de las variables de la muestra de datos.
+Podemos observar que todas las variables tienen un p-valor inferior al 0.05 por lo que podemos concluir que existe relación entre el salario anual y cada una de las variables de la muestra de datos.
 
-Construimos el modelo de regrión lgística en base a las variables mencianadas anteriormente
+Construimos el modelo de regresión lgística en base a las variables mencianadas anteriormente
 
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -520,26 +520,93 @@ logit <- glm(formula = Less50 ~ age + workclass + education_num + marital_status
 summary(logit)
 ````
  
+El modelo resultante sería
+
+````
+Less50 = 7.777446 - 0.021239 * age + 4.554006 * Other/Unknow + 1.187188 * Private + 2.151755 * Self-Employed - 0.191736 * education_num - 2.880404 * Married +  0.068437 * Separated -0.365074 * Single + 1.135395 * Widowed + 0.611736 * Other/Unknown +  2.35491* Professional + 2.245619 * Sales + 2.330048 * Service + 1.305955 * White-Collar -0.707042 * Asian-Pac-Islander -1.345741 * Black + 1.996456 * Other -5.070878 * White -0.034588 * hours_per_week
+```` 
 
 ## 5.3 Interpretación
 
+Del modelo anterior podemos destacar que casi todas las variables poseen un coeficiente estadísticamente signidficativo para predecir los salarios de los individuos ya que obtenemos p-valores inferiores al 0,05 de significación definido. 
+
+Tenemos excepciones dentro de algunas variables ya que el martial_status Separated no es significativo a la hora de predecir el salario anual, al igual que la occupation Other/Unknown ya uqe poseen p-valores superiores al 0.05 de significación. Lo mismo ocurre con las razas Asian-Pac_islander y Other.
+
 ## 5.4 Matriz de confusión
+
+Obtnemos los datos relativos a las predicciones y los valores observados para poder conformar la matriz de confusión
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 predicted_value <- predict(logit, test, type="response")
 predicted_class <- ifelse(predicted_value > 0.5, 1, 0)
 performance_data<-data.frame(observed=test$Less50,
            predicted = predicted_class)
-head(performance_data)
-positive <- sum(performance_data$observed==1)
-negative <- sum(performance_data$observed==0)
-predicted_positive <- sum(performance_data$predicted==1)
-predicted_negative <- sum(performance_data$predicted==0)
+less50 <- sum(performance_data$observed==1)
+more50 <- sum(performance_data$observed==0)
+predicted_less50 <- sum(performance_data$predicted==1)
+predicted_more50<- sum(performance_data$predicted==0)
 total <- nrow(performance_data)
-data.frame(positive, negative,predicted_positive,predicted_negative)
+#Datos totales
+data.frame(less50, more50,predicted_less50,predicted_more50)
+# Predicciones coinciden con observaciones
+trueLess50 <- sum(performance_data$observed==1 & performance_data$predicted==1)
+trueMore50 <- sum(performance_data$observed==0 & performance_data$predicted==0)
+#Predicciones no coinciden con observaciones
+falseLess50 <- sum(performance_data$observed==0 & performance_data$predicted==1)
+falseMore50 <- sum(performance_data$observed==1 & performance_data$predicted==0)
+#Datos de la matriz de confusión
+data.frame(trueLess50, trueMore50,falseLess50,falseMore50)
 ````
 
+
+De forma que la tabla final resularía
+
+|              |Predicción     |
+|--------------|-------|-------|-------|
+|**Observado** |Less50 | More50|Total|
+|Less50        |2775   |563    |3338
+|More50        |509    |2665   |3174
+|              |3284   |3228   |
+
 ## 5.5 Predicción
+
+Empleamos el modelo obtenido en los apartados anteriores para obtener la probabilidad de que el salario de un individuo sea menor de 50k€ para un hombre blanco de 20 años de edad, autónomo, con 3 años de estudios, soltero, trabajando en el sector profesional y trabajando actualmente unas 25 horas semanales.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+logit_less50 <- 7.777446 - 0.021239 * 20 + 4.554006 * 0 + 1.187188 * 0 + 2.151755 * 1 - 0.191736 * 3 - 2.880404 * 0 +  0.068437 * 0 -0.365074 * 1 + 1.135395 * 0 + 0.611736 * 0 +  2.35491 * 1 + 2.245619 * 0 + 2.330048 * 0 + 1.305955 * 0 -0.707042 * 0 - 1.345741 * 0 + 1.996456 * 0 -5.070878 * 1 - 0.034588 * 25
+
+prob1 <- exp(logit_less50)/(1+exp(logit_less50))
+prob1
+````
+
+Obtenemos que la probabilidad de que el salario sea menor de 50 k€ es de 0.9931964. Comprobamos el resultado con la función en R predict.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+pred1<-predict(logit, data.frame(age = 20, workclass="Self-Employed", education_num = 3, marital_status ="Single", occupation="Professional", race="White", hours_per_week = 25), type = "response")
+pred1
+
+````
+
+Comprobamos que obtenemos el mismo valor que el calculado.
+
+Obtenemos ahora la probabilidad de que el salario de un individuo sea menor de 50k€ para un hombre negro de 60 años de edad, con traajo gubernamental, con 15 años de estudios, casado, trabajando como "white collar" y trabajando unas 35 horas semanales.
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+logit_less50 <- 7.777446 - 0.021239 * 60 + 4.554006 * 0 + 1.187188 * 0 + 2.151755 * 0 - 0.191736 * 15 - 2.880404 * 1 +  0.068437 * 0 -0.365074 * 0 + 1.135395 * 0 + 0.611736 * 0 +  2.35491* 0 + 2.245619 * 0 + 2.330048 * 0 + 1.305955 * 1 -0.707042 * 0 -1.345741 * 1 + 1.996456 * 0 -5.070878 * 0 -0.034588 * 35
+
+prob2 <- exp(logit_less50)/(1+exp(logit_less50))
+prob2
+````
+
+Obtenemos que la probabilidad de que el salario sea menor de 50 k€ es de 0.3766705. Comprobamos el resutado con el función en R predict.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+pred2<-predict(logit, data.frame(age = 60, workclass="Government", education_num = 15, marital_status ="Married", occupation="White-Collar", race="Black", hours_per_week = 35), type = "response")
+pred2
+````
+
+Comprobamos que obtenemos el mismo valor que el calculado.
 
 # 6 Análisis de la varianza (ANOVA) de un factor
 

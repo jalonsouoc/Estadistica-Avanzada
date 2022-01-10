@@ -210,52 +210,69 @@ Definimos la hipótesis nula y alternativa por género:
                                                   $$H_1: µ_1 > µ_2$$
 Definimos la hipótesis nula y alternativa por raza
 
-* **Hipótesis nula:** el promedio de la diferencia salarial anual de la gente blanca y la gente negra es 6450€
-                                                  $$H_0: µ_d = 6450$$
-* **Hipótesis alternativa:** el promedio salarial de la diferencia del salario anual de la gente blanca y negra es mayor que 6450€
-                                                  $$H_1: µ_d > 6450$$
+* **Hipótesis nula:** la diferencia del promedio salarial anual de la gente blanca y el promedio salarial anual de la gente negra es 6450 €
+                                                  $$H_0: µ_1 - µ_2  = 6450$$
+* **Hipótesis alternativa:** la diferencia del promedio salarial anual de la gente blanca y el promedio salarial anual de la gente negra es mayor que 6450€
+                                                  $$H_1: µ_1 - µ_2 > 6450$$
 
 ### 3.1.2 Justificación del test a aplicar
 
 Para la pregunta según el género se va a emplear un contraste de hipótesis de dos muestra emparejadas sobre la media del salario anual y unilateralemnte por la derecho dado que se pretende comprobar si el salario anual de los hombres es mayor al de las mujeres.
 
-Para la pregunta según la raza se va a emplear un contraste de hipótesis sobre dos muestras emparejadas, una para cada raza, aplicado sobre la diferencia de la media salarial anual y unilateralmente por la derecha dado que se pretende comprobar si el salario promedio de la gente blanca es al menos 6450 € mayor que el de la gente de raza negra.
+Para la pregunta según la raza se va a emplear un contraste de hipótesis sobre dos muestras emparejadas, una para cada raza, aplicado sobre la media salarial anual y unilateralmente por la derecha dado que se pretende comprobar si el salario promedio de la gente blanca es al menos 6450 € mayor que el de la gente de raza negra.
 
 ### 3.1.3 Aplicación, interpretación y comprobación del test
 
 **Por el género**
 
-Inicialmente realizamos los cálculos para la pregunta por el género. Debemos derealizar el test de homocedasticidad para comprobar si las varianzas son iguales o diferentes.
+Inicialmente realizamos los cálculos para la pregunta por el género. Debemos derealizar el test de homocedasticidad para comprobar si las varianzas son iguales o diferentes. Generamos una función denominada Homeocedasticidad con el fin de reaprovechar código más adelante.
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
-alfa <- 1 - 0.95
 H <- man
 D <- woman
-mean1 <- mean(H)
-n1 <- length(H)
-s1 <- sd(H)
-mean2 <- mean(D)
-n2 <- length(D)
-s2 <- sd(D)
-fobs <- s1^2/s2^2
-fcritL <- qf(alfa, df1=n1-1, df2=n2-2)
-fcritU <- qf(1 - alfa, df1=n1-1, df2=n2-2)
-pvalue <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
-c(mean1, mean2, s1, s2, n1, n2)
-c(fobs, fcritL, fcritU, pvalue)
+d = 0
+
+homocedasticidad <- function(H,D){
+  alfa <- 1 - 0.95
+  mean1 <- mean(H)
+  n1 <- length(H)
+  s1 <- sd(H)
+  mean2 <- mean(D)
+  n2 <- length(D)
+  s2 <- sd(D)
+  fobs <- s1^2/s2^2
+  fcritL <- qf(alfa, df1=n1-1, df2=n2-2)
+  fcritU <- qf(1 - alfa, df1=n1-1, df2=n2-2)
+  pvalue <- min(pf(fobs, df1=n1-1, df2=n2-2, lower.tail=FALSE), pf(fobs, df1=n1-1, df2=n2-2))*2
+  c(mean1, mean2, s1, s2, n1, n2)
+  c(fobs, fcritL, fcritU, pvalue)
+}
+  
+homocedasticidad(H,D)
+
 ````
 
-Dado que el p valor es inferior al alfa definido de 0.05 podemos asumir que las varianzas son diferentes por lo tanto aplicaremos el estadístco del contraste de dos muestras sobre la media con varianzas desconocidas diferentes.
+Dado que el p valor es inferior al alfa definido de 0.05 podemos asumir que las varianzas son diferentes por lo tanto aplicaremos el estadístco del contraste de dos muestras sobre la media con varianzas desconocidas diferentes. De nuevo generamos una función para reutilizar código.
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
-alfa <- 1-0.95
-dfMean = mean1 -mean2
-v <- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
+contraste <- function(H,D, d0){
+  alfa <- 1-0.95
+  mean1 <- mean(H)
+  n1 <- length(H)
+  s1 <- sd(H)
+  mean2 <- mean(D)
+  n2 <- length(D)
+  s2 <- sd(D)
+  dfMean = mean1 -mean2 - d0
+  v <- ((s1^2/n1)+(s2^2/n2))^2 / (((s2^2/n1)^2/(n1-1)) + ((s2^2/n2)^2/(n2-1)))
+  
+  tobs <- dfMean/sqrt((s1^2/n1 + s2^2/n2))
+  tcrit <- qt(alfa, v)
+  pvalue <- pt(tobs, df=v, lower.tail=FALSE)
+  c(tobs, tcrit, pvalue)
+}
 
-tobs <- dfMean/sqrt((s1^2/n1 + s2^2/n2))
-tcrit <- qt(alfa, v)
-pvalue <- pt(abs(tobs), df=v, lower.tail=FALSE)*2
-c(tobs, tcrit, pvalue)
+contraste(H,D,d)
 ````
 
 Podemos ver que el valor observado es de 194.106, el valor crítico es -1.6449 y el p-valor es 0.
@@ -267,7 +284,8 @@ Rrealizamos las comprobaciones mediante las funciones de R. Inicialmente realiza
 `````````{r echo=TRUE, message=FALSE, warning=FALSE}
 var.test(H,D)
 ````
-Comprobamos que el p valor devuelto en la función también es inferior a 0.05 por lo que son varianzas desconocidas diferentes
+Comprobamos que el p valor devuelto en la función también es inferior a 0.05 por lo que son varianzas desconocidas diferentes.
+
 Realizamos la comprobación del contraste de hipótesis empleando la función R t.test.
 
 `````````{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -278,28 +296,41 @@ De nuevo se observa que el p valor devuelto es inferior al alfa definido por lo 
 
 **Por el caso racial**
 
-Realizamos ahora los cálculos para la preunta según el caso racial. Para este caso aplicamos los cálculos relativos al contraste de hipótesis de dos muestras emparejadas sobre la media.
+Realizamos ahora los cálculos para la preunta según el caso racial. Iniciamos de nuevo con el test de homocedasticidad para comprobar si las varianzas son iguales.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-#d <- white - black
+H <- white
+D <- black
+d <- 6.450 # Se expresa en decimal y aque el salario anual esta en k €
 
-#mean <- mean(d)
-#s <- sd(d)
-#n <- length(d)
-
-#tobs <- (mean - 6450)/(s/sqrt(n))
-#tcrit <- qt(alfa, df=n-1)
-#pvalue <- pt(tobs, lower.tail=FALSE, df=n-1)
-#c(tobs, tcrit, pvalue)
+homocedasticidad(H,D)
 ````
 
-
-
-Realizamos la comprobación utilizando la función de R t.test.
+Obtenemos un p-valor inferior al alfa definido de 0.05 por loq ue podemos asumir que las varianzas son diferentes y por lo tanto aplicaremos el estadístico del contraste de hipótesis de dos muestras sobre la media con varianzas desconocidas diferentes. Emplearemos la función contraste definida anteriormente.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-#t.test(white, black, paired=TRUE, alternative="greater", mu=6450)
+contraste(H,D,d)
 ````
+
+Podemos ver que el valor observado es de 2.03705114, el valor crítico es de -1.645171 y el p-valor es 0.02084979.
+
+Dado que hemos obtenido un p-valor inferior al alfa definido de 0.05 podemos rechazar la hipótesis nula de que la diferencia del promedio salarial anual de la gente blanca y el promedio salarial anual de la gente negra es 6450€, por lo que se acepta la hipótesis alternativa de que la diferencia del prmedio salarial anual de las personas de raza blanca y el promedio salarial anual de las personas de raza negra es superior a 6450€.
+
+Realizamos la comprobaciones mediante las funciones de R. Primero comprobamos el test de homocedasticidad con la función var.test.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+var.test(H,D)
+````
+Comprobamos que el p-valor devuelto en la función también es inferior a 0.05 por lo que osn varianzas desconocidas diferentes.
+
+Realizamos la comprobación del contraste de hipótesis emplenado la función en R t.test
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+t.test(H,D, alternative="greater", mu=d, var.equal = FALSE)
+````
+
+Comprobamos que el p-valor devuelto es inferior al alfa definido por lo que comprobamos que se rechaza la hipótesis nula.
+
 # 4 Modelo de regresión lineal
 
 ## 4.1 Estimación de modelos
